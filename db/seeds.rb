@@ -261,7 +261,7 @@ cities = [
   { name: "Auburn", state: State.find_by(abbreviation: "AL") },
   { name: "Lawrence", state: State.find_by(abbreviation: "KS") },
   { name: "Manhattan", state: State.find_by(abbreviation: "KS") },
-  { name: "Grand Junction", grand_junction: State.find_by(abbreviation: "CO") },
+  { name: "Grand Junction", state: State.find_by(abbreviation: "CO") },
   { name: "Dover", state: State.find_by(abbreviation: "DE") },
   { name: "Twin Falls", state: State.find_by(abbreviation: "ID") },
   { name: "Cheyenne", state: State.find_by(abbreviation: "WY") },
@@ -293,7 +293,6 @@ cities = [
   { name: "Sumter", state: State.find_by(abbreviation: "SC") },
   { name: "Madera", state: State.find_by(abbreviation: "CA") },
   { name: "Walla Walla", state: State.find_by(abbreviation: "WA") },
-  { name: "Beckley", state: State.find_by(abbreviation: "WV") },
   { name: "Missoula", state: State.find_by(abbreviation: "MT") },
   { name: "El Centro", state: State.find_by(abbreviation: "CA") },
   { name: "Wheeling", state: State.find_by(abbreviation: "WV") },
@@ -374,7 +373,7 @@ cities = [
   { name: "Findlay", state: State.find_by(abbreviation: "OH") },
   { name: "Lima", state: State.find_by(abbreviation: "OH") },
   { name: "Meadville", state: State.find_by(abbreviation: "PA") },
-  { name: "Arecibo", state: State.find_by(abbreviation: "PR") },
+  # { name: "Arecibo", state: State.find_by(abbreviation: "PR") }, # didnt include puerto rico... hahaha
   { name: "Bluefield", state: State.find_by(abbreviation: "WV") },
   { name: "Helena", state: State.find_by(abbreviation: "MT") },
   { name: "Kankakee", state: State.find_by(abbreviation: "IL") },
@@ -396,7 +395,6 @@ cities = [
   { name: "DuBois", state: State.find_by(abbreviation: "PA") },
   { name: "Homosassa Springs", state: State.find_by(abbreviation: "FL") },
   { name: "Payson", state: State.find_by(abbreviation: "AZ") },
-  { name: "Pottsville", state: State.find_by(abbreviation: "PA") },
   { name: "Safford", state: State.find_by(abbreviation: "AZ") },
   { name: "Show Low", state: State.find_by(abbreviation: "AZ") },
   { name: "Nogales", state: State.find_by(abbreviation: "AZ") },
@@ -447,7 +445,14 @@ cities = [
 ]
 
 City.destroy_all
-cities.each { |city| City.create!(city) }
+cities.each do |city|
+  begin
+    City.create!(city)
+  rescue ActiveRecord::RecordInvalid => e
+    puts "Failed to create city: #{city[:name]} with state #{city[:state]&.abbreviation} - #{e.message}"
+    raise # Re-raise to stop and inspect
+  end
+end
 puts "Seeded #{City.count} cities."
 
 # Seed 10 airports (flight school potential)
