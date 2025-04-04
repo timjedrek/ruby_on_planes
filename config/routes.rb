@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   get "confirmation_pending", to: "pages#confirmation_pending" 
   get "account_confirmed", to: "pages#account_confirmed"
   resources :states, only: [:index, :show], param: :abbreviation
+  get "/airports", to: "airports#index", as: :airports
 
   get "up" => "rails/health#show", as: :rails_health_check
 end

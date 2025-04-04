@@ -1,21 +1,35 @@
-<div class="bg-gray-100 min-h-screen">
-  <div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold text-gray-800 mb-6"><%= @state.name %> Flight Schools</h1>
-    <p class="text-gray-600 mb-4">Abbreviation: <%= @state.abbreviation %></p>
-    
-    <% if @airports.any? %>
-      <h2 class="text-2xl font-semibold text-gray-700 mt-6 mb-4">Airports in <%= @state.name %></h2>
-      <ul class="list-disc pl-6">
-        <% @airports.each do |airport| %>
-          <li class="text-gray-800me-2 text-blue-600 hover:text-blue-800"><%= link_to airport.name, "#" %></li>
-        <% end %>
-      </ul>
-    <% else %>
-      <p class="text-gray-600">No airports listed yet for <%= @state.name %>.</p>
-    <% end %>
-    
-    <div class="mt-6">
-      <%= link_to "Back to All States", states_path, class: "inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors" %>
-    </div>
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <h1 class="text-4xl font-bold text-gray-900 mb-2"><%= @state.name %></h1>
+  <p class="text-lg text-gray-600 mb-6">Abbreviation: <%= @state.abbreviation %></p>
+
+  <div class="mb-8">
+    <%= link_to "List All Airports", airports_path(state: @state.abbreviation), class: "inline-block bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200" %>
   </div>
+
+  <% if @cities.any? %>
+    <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b-2 border-gray-200 pb-2">Cities in <%= @state.name %></h2>
+    <div class="space-y-8">
+      <% @cities.each do |city| %>
+        <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-100">
+          <h3 class="text-xl font-medium text-gray-800 mb-4"><%= city.name %></h3>
+          <% if city.airports.any? %>
+            <ul class="space-y-3">
+              <% city.airports.order(:name).each do |airport| %>
+                <li class="text-gray-700">
+                  <%= link_to airport.name, "#", class: "text-blue-600 hover:text-blue-800 hover:underline font-medium" %>
+                  <% if airport.icao_code.present? %>
+                    <span class="text-gray-500 text-sm">(<%= airport.icao_code %>)</span>
+                  <% end %>
+                </li>
+              <% end %>
+            </ul>
+          <% else %>
+            <p class="text-gray-500 italic text-sm">No airports listed yet.</p>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="text-gray-600 text-lg">No cities listed yet for <%= @state.name %>.</p>
+  <% end %>
 </div>

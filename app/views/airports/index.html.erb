@@ -1,0 +1,27 @@
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <h1 class="text-4xl font-bold text-gray-900 mb-6"><%= @title %></h1>
+
+  <% if @airports.any? %>
+    <ul class="space-y-4">
+      <% @airports.each do |airport| %>
+        <li class="bg-white rounded-lg shadow-sm p-4 border border-gray-100 flex items-center justify-between">
+          <div>
+            <%= link_to airport.name, "#", class: "text-blue-600 hover:text-blue-800 hover:underline font-medium text-lg" %>
+            <span class="text-gray-600 text-sm ml-2">- <%= airport.city.name %></span>
+            <% if airport.icao_code.present? %>
+              <span class="text-gray-500 text-sm ml-1">(<%= airport.icao_code %>)</span>
+            <% end %>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="text-gray-600 text-lg">No airports listed yet<%= @state ? " for #{@state.name}" : "" %>.</p>
+  <% end %>
+
+  <% if @state %>
+    <div class="mt-8">
+      <%= link_to "Back to #{@state.name}", state_path(@state.abbreviation), class: "inline-block bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200" %>
+    </div>
+  <% end %>
+</div>
