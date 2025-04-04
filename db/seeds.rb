@@ -478,7 +478,7 @@ puts "Seeded #{City.count} cities."
 
 # Seed 25 airports and link to cities
 airports_data = [
-  { code: "PHX", icao_code: "KPHX", name: "Phoenix Sky Harbor International Airport", nearby_towns: ["Tempe", "Scottsdale"], state_abbr: "AZ", primary_city: "Phoenix" },
+  { code: "PHX", icao_code: "KPHX", name: "Phoenix Sky Harbor International Airport", nearby_towns: ["Tempe", "Scottsdale", "Mesa"], state_abbr: "AZ", primary_city: "Phoenix" },
   { code: "LAX", icao_code: "KLAX", name: "Los Angeles International Airport", nearby_towns: ["El Segundo", "Inglewood"], state_abbr: "CA", primary_city: "Los Angeles" },
   { code: "SEE", icao_code: "KSEE", name: "Gillespie Field", nearby_towns: ["El Cajon", "Santee"], state_abbr: "CA", primary_city: "San Diego" },
   { code: "DAB", icao_code: "KDAB", name: "Daytona Beach International Airport", nearby_towns: ["Ormond Beach"], state_abbr: "FL", primary_city: "Daytona Beach" },
