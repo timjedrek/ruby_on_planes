@@ -42,7 +42,7 @@ Below is the summary of models and their relationships.
   - `has_many :schools, dependent: :restrict_with_error`
 
 ### 4. School
-- **Purpose**: The star of the show—flight schools like "RRM Flight School" with all the juicy details: plane counts, instructor numbers, training types, and certifications (Part 141/61). It’s where users land to read ratings, comments, and contact info, and where RRM clients get a `featured` boost. The `approved` flag lets admins vet user-submitted schools before they go live.
+- **Purpose**: The star of the show—flight schools like "RRM Flight School" with all the details: plane counts, instructor numbers, training types, and certifications (Part 141/61). It’s where users come to read ratings, comments, and contact info, and where the top schools get a `featured` boost. The `approved` flag lets admins vet user-submitted schools before they go live.
 - **Fields**:
   - `name:string` (required)
   - `description:text` (optional)
@@ -66,7 +66,7 @@ Below is the summary of models and their relationships.
   - `has_many :users, through: :user_schools`
 
 ### 5. ContactPerson
-- **Purpose**: Lists key people at each school—owners, CFIs, whoever’s running the show—with contact details. It’s the human connection on school pages, letting users reach out directly while giving admins a way to manage who’s listed.
+- **Purpose**: Lists key people at each school—owners, CFIs, whoever’s running the show — with contact details. It’s the human connection on school pages, letting users reach out directly while giving admins a way to manage who’s listed.
 - **Fields**:
   - `name:string` (required)
   - `role:string` (required)
@@ -77,7 +77,7 @@ Below is the summary of models and their relationships.
   - `belongs_to :school`
 
 ### 6. Rating
-- **Purpose**: Lets verified users slap a 1-5 star rating on schools, feeding into average ratings displayed on school pages. It’s instant feedback that helps pilots pick winners and gives schools a rep boost (or a reality check), all published right away for max transparency.
+- **Purpose**: Lets verified users give a 1-5 star rating on schools, feeding into average ratings displayed on school pages. It’s instant feedback that helps pilots pick winners and gives schools a rep boost (or a reality check), all published right away for max transparency.
 - **Fields**:
   - `user_id:references`
   - `school_id:references`
