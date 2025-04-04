@@ -1,13 +1,22 @@
-<div class="text-center py-10">
-  <h1 class="text-4xl font-bold text-gray-800">Welcome to Pilot Training Near Me</h1>
-  <p class="mt-4 text-lg text-gray-600">Find flight schools near you!</p>
-  <div class="mt-6">
+<div class="min-h-screen bg-gray-100 flex flex-col">
+  <!-- Hero Section -->
+<div class="bg-blue-900 text-white py-16 px-4 text-center">
+  <h1 class="text-5xl font-bold tracking-tight">Welcome to Flight School Finder</h1>
+  <p class="mt-4 text-xl text-blue-200">Find the best flight schools near you to start your aviation journey!</p>
+  <div class="mt-8 space-x-4">
     <% if user_signed_in? %>
-      <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "text-blue-600 hover:text-blue-800 underline bg-transparent border-none p-0" %>
+      <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "inline-block bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition duration-200" %>
     <% else %>
-      <%= link_to "Sign In", new_user_session_path, class: "text-blue-600 hover:text-blue-800 underline" %>
+      <%= link_to "Sign In", new_user_session_path, class: "inline-block bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition duration-200" %>
+      <%= link_to "Create Account", new_user_registration_path, class: "inline-block bg-green-600 text-white px-6 py-3 rounded-md hover:bg-green-700 transition duration-200" %>
     <% end %>
-    <br>
-    <%= link_to "Sign Up", new_user_registration_path, class: "text-blue-600 hover:text-blue-800 underline" %>
+  </div>
+</div>
+
+  <!-- Placeholder for Future Content -->
+  <div class="flex-grow container mx-auto px-4 py-12 text-center">
+    <h2 class="text-3xl font-semibold text-gray-800 mb-6">Ready to Become a Pilot?</h2>
+    <p class="text-lg text-gray-600 max-w-2xl mx-auto">Search for top-rated flight schools in your area. Whether you're a beginner or advancing your wings, we’ve got you covered.</p>
+    <!-- Add school search or listings here in Step 2 -->
   </div>
 </div>
