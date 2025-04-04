@@ -3,7 +3,7 @@
   <p class="mt-4 text-lg text-gray-600">Find flight schools near you!</p>
   <div class="mt-6">
     <% if user_signed_in? %>
-      <%= link_to "Sign Out", destroy_user_session_path, method: :delete, class: "text-blue-600 hover:text-blue-800 underline" %>
+      <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "text-blue-600 hover:text-blue-800 underline bg-transparent border-none p-0" %>
     <% else %>
       <%= link_to "Sign In", new_user_session_path, class: "text-blue-600 hover:text-blue-800 underline" %>
     <% end %>
