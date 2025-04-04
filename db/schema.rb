@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_04_091913) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_04_100429) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -37,6 +37,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_04_091913) do
     t.datetime "updated_at", null: false
     t.index ["state_id", "name"], name: "index_cities_on_state_id_and_name", unique: true
     t.index ["state_id"], name: "index_cities_on_state_id"
+  end
+
+  create_table "schools", force: :cascade do |t|
+    t.string "name"
+    t.string "website"
+    t.string "phone"
+    t.bigint "airport_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["airport_id", "name"], name: "index_schools_on_airport_id_and_name", unique: true
+    t.index ["airport_id"], name: "index_schools_on_airport_id"
   end
 
   create_table "states", force: :cascade do |t|
@@ -68,4 +79,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_04_091913) do
   add_foreign_key "airports", "cities"
   add_foreign_key "airports", "states"
   add_foreign_key "cities", "states"
+  add_foreign_key "schools", "airports"
 end

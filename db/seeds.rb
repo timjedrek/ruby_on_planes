@@ -29,7 +29,14 @@ states = [
 ]
 
 State.destroy_all
-states.each { |state| State.create!(state) }
+states.each do |state|
+  begin
+    State.create!(state)
+  rescue ActiveRecord::RecordInvalid => e
+    puts "Failed to create state: #{state[:name]} (#{state[:abbreviation]}) - #{e.message}"
+    raise
+  end
+end
 puts "Seeded #{State.count} states."
 
 # Seed 392 cities from MSAs (primary city per MSA, simplified state assignment)
@@ -441,7 +448,21 @@ cities = [
   { name: "Woodward", state: State.find_by(abbreviation: "OK") },
   { name: "Worthington", state: State.find_by(abbreviation: "MN") },
   { name: "Yankton", state: State.find_by(abbreviation: "SD") },
-  { name: "Zanesville", state: State.find_by(abbreviation: "OH") }
+  { name: "Zanesville", state: State.find_by(abbreviation: "OH") },
+    # Add missing ones
+    { name: "Sauget", state: State.find_by(abbreviation: "IL") },
+    { name: "Mesa", state: State.find_by(abbreviation: "AZ") },
+    { name: "Pembroke Pines", state: State.find_by(abbreviation: "FL") },
+    { name: "Pottstown", state: State.find_by(abbreviation: "PA") },
+    { name: "Lanett", state: State.find_by(abbreviation: "AL") },
+    { name: "Santa Teresa", state: State.find_by(abbreviation: "NM") },
+    { name: "Lee's Summit", state: State.find_by(abbreviation: "MO") },
+    { name: "Southport", state: State.find_by(abbreviation: "NC") },
+    { name: "Clearwater", state: State.find_by(abbreviation: "FL") },
+    { name: "Sarasota", state: State.find_by(abbreviation: "FL") },
+    { name: "Titusville", state: State.find_by(abbreviation: "FL") },
+    { name: "Hampton", state: State.find_by(abbreviation: "GA") }
+
 ]
 
 City.destroy_all
@@ -450,7 +471,7 @@ cities.each do |city|
     City.create!(city)
   rescue ActiveRecord::RecordInvalid => e
     puts "Failed to create city: #{city[:name]} with state #{city[:state]&.abbreviation} - #{e.message}"
-    raise # Re-raise to stop and inspect
+    raise
   end
 end
 puts "Seeded #{City.count} cities."
@@ -466,9 +487,65 @@ airports = [
   { code: "1H0", icao_code: nil, name: "Creve Coeur Airport", nearby_towns: ["Maryland Heights"], state: State.find_by(abbreviation: "MO"), city: City.find_by(name: "St. Louis") },
   { code: "DTO", icao_code: "KDTO", name: "Denton Enterprise Airport", nearby_towns: ["Argyle"], state: State.find_by(abbreviation: "TX"), city: City.find_by(name: "Dallas") },
   { code: "IAH", icao_code: "KIAH", name: "George Bush Intercontinental Airport", nearby_towns: ["Humble", "Spring"], state: State.find_by(abbreviation: "TX"), city: City.find_by(name: "Houston") },
-  { code: "SEA", icao_code: "KSEA", name: "Seattle-Tacoma International Airport", nearby_towns: ["Tacoma", "Renton"], state: State.find_by(abbreviation: "WA"), city: City.find_by(name: "Seattle") }
+  { code: "SEA", icao_code: "KSEA", name: "Seattle-Tacoma International Airport", nearby_towns: ["Tacoma", "Renton"], state: State.find_by(abbreviation: "WA"), city: City.find_by(name: "Seattle") },
+  # New 15 from schools list
+  { code: "CPS", icao_code: "KCPS", name: "St. Louis Downtown Airport", nearby_towns: ["Sauget"], state: State.find_by(abbreviation: "IL"), city: City.find_by(name: "St. Louis") },
+  { code: "FFZ", icao_code: "KFFZ", name: "Falcon Field", nearby_towns: ["Mesa"], state: State.find_by(abbreviation: "AZ"), city: City.find_by(name: "Mesa") },
+  { code: "HWO", icao_code: "KHWO", name: "North Perry Airport", nearby_towns: ["Pembroke Pines"], state: State.find_by(abbreviation: "FL"), city: City.find_by(name: "Pembroke Pines") },
+  { code: "PTW", icao_code: "KPTW", name: "Heritage Field", nearby_towns: ["Pottstown"], state: State.find_by(abbreviation: "PA"), city: City.find_by(name: "Pottstown") },
+  { code: "7A3", icao_code: "K7A3", name: "Lanett Municipal Airport", nearby_towns: ["Lanett"], state: State.find_by(abbreviation: "AL"), city: City.find_by(name: "Lanett") },
+  { code: "DNA", icao_code: "KDNA", name: "Dona Ana County International Jetport", nearby_towns: ["Santa Teresa"], state: State.find_by(abbreviation: "NM"), city: City.find_by(name: "Santa Teresa") },
+  { code: "LXT", icao_code: "KLXT", name: "Lee's Summit Municipal Airport", nearby_towns: ["Lee's Summit"], state: State.find_by(abbreviation: "MO"), city: City.find_by(name: "Lee's Summit") },
+  { code: "ACZ", icao_code: "KACZ", name: "Wallace-Pender Airport", nearby_towns: ["Southport"], state: State.find_by(abbreviation: "NC"), city: City.find_by(name: "Southport") }, # High Tide primary
+  { code: "CLW", icao_code: "KCLW", name: "Clearwater Air Park", nearby_towns: ["Clearwater"], state: State.find_by(abbreviation: "FL"), city: City.find_by(name: "Clearwater") }, # Tampa Bay primary
+  { code: "RAL", icao_code: "KRAL", name: "Riverside Municipal Airport", nearby_towns: ["Riverside"], state: State.find_by(abbreviation: "CA"), city: City.find_by(name: "Riverside") }, # NextGen primary
+  { code: "HSD", icao_code: "KHSD", name: "Sundance Airport", nearby_towns: ["Yukon"], state: State.find_by(abbreviation: "OK"), city: City.find_by(name: "Oklahoma City") },
+  { code: "SRQ", icao_code: "KSRQ", name: "Sarasota-Bradenton International Airport", nearby_towns: ["Sarasota"], state: State.find_by(abbreviation: "FL"), city: City.find_by(name: "Sarasota") },
+  { code: "VNY", icao_code: "KVNY", name: "Van Nuys Airport", nearby_towns: ["Van Nuys"], state: State.find_by(abbreviation: "CA"), city: City.find_by(name: "Los Angeles") },
+  { code: "OGD", icao_code: "KOGD", name: "Ogden-Hinckley Airport", nearby_towns: ["Ogden"], state: State.find_by(abbreviation: "UT"), city: City.find_by(name: "Ogden") },
+  { code: "HMP", icao_code: "KHMP", name: "Henry County Airport", nearby_towns: ["Hampton, Atlanta"], state: State.find_by(abbreviation: "GA"), city: City.find_by(name: "Hampton") },
+  { code: "TIX", icao_code: "KTIX", name: "Space Coast Regional Airport", nearby_towns: ["Titusville"], state: State.find_by(abbreviation: "FL"), city: City.find_by(name: "Titusville") }
 ]
 
 Airport.destroy_all
-airports.each { |airport| Airport.create!(airport) }
+airports.each do |airport|
+  begin
+    Airport.create!(airport)
+  rescue ActiveRecord::RecordInvalid => e
+    puts "Failed to create airport: #{airport[:name]} (#{airport[:code]}) - City: #{airport[:city]&.name}, State: #{airport[:state]&.abbreviation} - #{e.message}"
+    raise
+  end
+end
 puts "Seeded #{Airport.count} airports."
+
+
+# Seed 15 flight schools
+schools = [
+  { name: "Ideal Aviation", airport: Airport.find_by(code: "CPS") },
+  { name: "SimpliFly", airport: Airport.find_by(code: "FFZ") },
+  { name: "Sun City Aviation Academy", airport: Airport.find_by(code: "HWO") },
+  { name: "Pitcairn Flight Academy", airport: Airport.find_by(code: "PTW") },
+  { name: "Blue Skies Above", airport: Airport.find_by(code: "7A3") },
+  { name: "Red Arrow Flight Academy", airport: Airport.find_by(code: "DNA") },
+  { name: "Summit Flight", airport: Airport.find_by(code: "LXT") },
+  { name: "High Tide Aviation", airport: Airport.find_by(code: "ACZ") }, # KACZ as primary
+  { name: "Tampa Bay Aviation", airport: Airport.find_by(code: "CLW") }, # KCLW as primary
+  { name: "NextGen Flight Academy", airport: Airport.find_by(code: "RAL") }, # KRAL as primary
+  { name: "Alto Flight Academy", airport: Airport.find_by(code: "HSD") },
+  { name: "Universal Flight Training", airport: Airport.find_by(code: "SRQ") },
+  { name: "LA Flight Academy", airport: Airport.find_by(code: "VNY") },
+  { name: "Blitz Aviation", airport: Airport.find_by(code: "OGD") },
+  { name: "Speedway Flight Training", airport: Airport.find_by(code: "HMP") },
+  { name: "USATS", airport: Airport.find_by(code: "TIX") }
+]
+
+School.destroy_all
+schools.each do |school|
+  begin
+    School.create!(school)
+  rescue ActiveRecord::RecordInvalid => e
+    puts "Failed to create school: #{school[:name]} - Airport: #{school[:airport]&.code} - #{e.message}"
+    raise
+  end
+end
+puts "Seeded #{School.count} schools."
