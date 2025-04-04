@@ -4,6 +4,7 @@ states = [
   { name: "Arizona", abbreviation: "AZ" }, { name: "Arkansas", abbreviation: "AR" },
   { name: "California", abbreviation: "CA" }, { name: "Colorado", abbreviation: "CO" },
   { name: "Connecticut", abbreviation: "CT" }, { name: "Delaware", abbreviation: "DE" },
+  { name: "District of Columbia", abbreviation: "DC" },
   { name: "Florida", abbreviation: "FL" }, { name: "Georgia", abbreviation: "GA" },
   { name: "Hawaii", abbreviation: "HI" }, { name: "Idaho", abbreviation: "ID" },
   { name: "Illinois", abbreviation: "IL" }, { name: "Indiana", abbreviation: "IN" },
@@ -38,7 +39,7 @@ cities = [
   { name: "Chicago", state: State.find_by(abbreviation: "IL") },
   { name: "Dallas", state: State.find_by(abbreviation: "TX") },
   { name: "Houston", state: State.find_by(abbreviation: "TX") },
-  { name: "Washington", state: State.find_by(abbreviation: "DC") }, # DC as state for simplicity
+  { name: "Washington DC", state: State.find_by(abbreviation: "DC") }, # DC as state for simplicity
   { name: "Miami", state: State.find_by(abbreviation: "FL") },
   { name: "Philadelphia", state: State.find_by(abbreviation: "PA") },
   { name: "Atlanta", state: State.find_by(abbreviation: "GA") },
