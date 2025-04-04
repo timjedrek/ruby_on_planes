@@ -1,4 +1,13 @@
-<div>
-  <h1 class="font-bold text-4xl">States#index</h1>
-  <p>Find me in app/views/states/index.html.erb</p>
+<div class="bg-gray-100 min-h-screen">
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6">Flight Schools by State</h1>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <% @states.each do |state| %>
+        <div class="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow">
+          <%= link_to state.name, state_path(state.abbreviation), class: "text-blue-600 hover:text-blue-800 font-semibold" %>
+          <p class="text-gray-600 text-sm">(<%= state.abbreviation %>)</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
 </div>

@@ -7,3 +7,10 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+states = [
+  { name: "Missouri", abbreviation: "MO" },
+  { name: "Florida", abbreviation: "FL" },
+  { name: "California", abbreviation: "CA" }
+]
+states.each { |s| State.create!(s) }

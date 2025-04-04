@@ -1,4 +1,21 @@
-<div>
-  <h1 class="font-bold text-4xl">States#show</h1>
-  <p>Find me in app/views/states/show.html.erb</p>
+<div class="bg-gray-100 min-h-screen">
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6"><%= @state.name %> Flight Schools</h1>
+    <p class="text-gray-600 mb-4">Abbreviation: <%= @state.abbreviation %></p>
+    
+    <% if @airports.any? %>
+      <h2 class="text-2xl font-semibold text-gray-700 mt-6 mb-4">Airports in <%= @state.name %></h2>
+      <ul class="list-disc pl-6">
+        <% @airports.each do |airport| %>
+          <li class="text-gray-800me-2 text-blue-600 hover:text-blue-800"><%= link_to airport.name, "#" %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="text-gray-600">No airports listed yet for <%= @state.name %>.</p>
+    <% end %>
+    
+    <div class="mt-6">
+      <%= link_to "Back to All States", states_path, class: "inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors" %>
+    </div>
+  </div>
 </div>
