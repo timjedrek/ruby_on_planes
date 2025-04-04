@@ -5,7 +5,7 @@
     <% if @airport.icao_code.present? %>
       <span class="text-gray-500">(<%= @airport.icao_code %>)</span>
     <% end %>
-    - <%= @airport.city.name %>, <%= @state.abbreviation %>
+    - <%= @airport.cities.map { |c| link_to c.name, state_city_path(@state.abbreviation, c.name), class: "text-blue-600 hover:text-blue-800" }.join(", ").html_safe %>
   </p>
 
   <div class="mb-8">

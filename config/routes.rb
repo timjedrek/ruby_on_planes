@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  get "schools/show"
+  get "cities/show"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -19,7 +19,9 @@ Rails.application.routes.draw do
   root to: "pages#home"
   get "confirmation_pending", to: "pages#confirmation_pending" 
   get "account_confirmed", to: "pages#account_confirmed"
-  resources :states, only: [:index, :show], param: :abbreviation
+  resources :states, only: [:index, :show], param: :abbreviation do
+    resources :cities, only: [:show], param: :name
+  end
   resources :airports, only: [:index, :show], param: :code do
     resources :schools, only: [:show] # Nested, uses id by default
   end

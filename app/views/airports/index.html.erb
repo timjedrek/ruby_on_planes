@@ -8,10 +8,12 @@
           <div class="mb-2">
             <p class="text-lg font-medium text-gray-700">
               <%= link_to airport.name, airport_path(airport.code), class: "text-blue-600 hover:text-blue-800 hover:underline" %>
-              <span class="text-gray-600 text-sm ml-2">- <%= airport.city.name %></span>
               <% if airport.icao_code.present? %>
                 <span class="text-gray-500 text-sm ml-1">(<%= airport.icao_code %>)</span>
               <% end %>
+            </p>
+            <p class="text-gray-600 text-sm">
+              Cities: <%= airport.cities.map { |c| link_to c.name, state_city_path(@state&.abbreviation || c.state.abbreviation, c.name), class: "text-blue-600 hover:text-blue-800" }.join(", ").html_safe %>
             </p>
           </div>
           <% if airport.schools.any? %>

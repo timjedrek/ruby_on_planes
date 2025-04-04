@@ -476,47 +476,70 @@ cities.each do |city|
 end
 puts "Seeded #{City.count} cities."
 
-# Seed 10 airports (flight school potential)
-airports = [
-  { code: "PHX", icao_code: "KPHX", name: "Phoenix Sky Harbor International Airport", nearby_towns: ["Tempe", "Scottsdale"], state: State.find_by(abbreviation: "AZ"), city: City.find_by(name: "Phoenix") },
-  { code: "LAX", icao_code: "KLAX", name: "Los Angeles International Airport", nearby_towns: ["El Segundo", "Inglewood"], state: State.find_by(abbreviation: "CA"), city: City.find_by(name: "Los Angeles") },
-  { code: "SEE", icao_code: "KSEE", name: "Gillespie Field", nearby_towns: ["El Cajon", "Santee"], state: State.find_by(abbreviation: "CA"), city: City.find_by(name: "San Diego") },
-  { code: "DAB", icao_code: "KDAB", name: "Daytona Beach International Airport", nearby_towns: ["Ormond Beach"], state: State.find_by(abbreviation: "FL"), city: City.find_by(name: "Daytona Beach") },
-  { code: "MIA", icao_code: "KMIA", name: "Miami International Airport", nearby_towns: ["Coral Gables", "Hialeah"], state: State.find_by(abbreviation: "FL"), city: City.find_by(name: "Miami") },
-  { code: "ATL", icao_code: "KATL", name: "Hartsfield-Jackson Atlanta International Airport", nearby_towns: ["College Park", "East Point"], state: State.find_by(abbreviation: "GA"), city: City.find_by(name: "Atlanta") },
-  { code: "1H0", icao_code: nil, name: "Creve Coeur Airport", nearby_towns: ["Maryland Heights"], state: State.find_by(abbreviation: "MO"), city: City.find_by(name: "St. Louis") },
-  { code: "DTO", icao_code: "KDTO", name: "Denton Enterprise Airport", nearby_towns: ["Argyle"], state: State.find_by(abbreviation: "TX"), city: City.find_by(name: "Dallas") },
-  { code: "IAH", icao_code: "KIAH", name: "George Bush Intercontinental Airport", nearby_towns: ["Humble", "Spring"], state: State.find_by(abbreviation: "TX"), city: City.find_by(name: "Houston") },
-  { code: "SEA", icao_code: "KSEA", name: "Seattle-Tacoma International Airport", nearby_towns: ["Tacoma", "Renton"], state: State.find_by(abbreviation: "WA"), city: City.find_by(name: "Seattle") },
-  # New 15 from schools list
-  { code: "CPS", icao_code: "KCPS", name: "St. Louis Downtown Airport", nearby_towns: ["Sauget"], state: State.find_by(abbreviation: "IL"), city: City.find_by(name: "St. Louis") },
-  { code: "FFZ", icao_code: "KFFZ", name: "Falcon Field", nearby_towns: ["Mesa"], state: State.find_by(abbreviation: "AZ"), city: City.find_by(name: "Mesa") },
-  { code: "HWO", icao_code: "KHWO", name: "North Perry Airport", nearby_towns: ["Pembroke Pines"], state: State.find_by(abbreviation: "FL"), city: City.find_by(name: "Pembroke Pines") },
-  { code: "PTW", icao_code: "KPTW", name: "Heritage Field", nearby_towns: ["Pottstown"], state: State.find_by(abbreviation: "PA"), city: City.find_by(name: "Pottstown") },
-  { code: "7A3", icao_code: "K7A3", name: "Lanett Municipal Airport", nearby_towns: ["Lanett"], state: State.find_by(abbreviation: "AL"), city: City.find_by(name: "Lanett") },
-  { code: "DNA", icao_code: "KDNA", name: "Dona Ana County International Jetport", nearby_towns: ["Santa Teresa"], state: State.find_by(abbreviation: "NM"), city: City.find_by(name: "Santa Teresa") },
-  { code: "LXT", icao_code: "KLXT", name: "Lee's Summit Municipal Airport", nearby_towns: ["Lee's Summit"], state: State.find_by(abbreviation: "MO"), city: City.find_by(name: "Lee's Summit") },
-  { code: "ACZ", icao_code: "KACZ", name: "Wallace-Pender Airport", nearby_towns: ["Southport"], state: State.find_by(abbreviation: "NC"), city: City.find_by(name: "Southport") }, # High Tide primary
-  { code: "CLW", icao_code: "KCLW", name: "Clearwater Air Park", nearby_towns: ["Clearwater"], state: State.find_by(abbreviation: "FL"), city: City.find_by(name: "Clearwater") }, # Tampa Bay primary
-  { code: "RAL", icao_code: "KRAL", name: "Riverside Municipal Airport", nearby_towns: ["Riverside"], state: State.find_by(abbreviation: "CA"), city: City.find_by(name: "Riverside") }, # NextGen primary
-  { code: "HSD", icao_code: "KHSD", name: "Sundance Airport", nearby_towns: ["Yukon"], state: State.find_by(abbreviation: "OK"), city: City.find_by(name: "Oklahoma City") },
-  { code: "SRQ", icao_code: "KSRQ", name: "Sarasota-Bradenton International Airport", nearby_towns: ["Sarasota"], state: State.find_by(abbreviation: "FL"), city: City.find_by(name: "Sarasota") },
-  { code: "VNY", icao_code: "KVNY", name: "Van Nuys Airport", nearby_towns: ["Van Nuys"], state: State.find_by(abbreviation: "CA"), city: City.find_by(name: "Los Angeles") },
-  { code: "OGD", icao_code: "KOGD", name: "Ogden-Hinckley Airport", nearby_towns: ["Ogden"], state: State.find_by(abbreviation: "UT"), city: City.find_by(name: "Ogden") },
-  { code: "HMP", icao_code: "KHMP", name: "Henry County Airport", nearby_towns: ["Hampton, Atlanta"], state: State.find_by(abbreviation: "GA"), city: City.find_by(name: "Hampton") },
-  { code: "TIX", icao_code: "KTIX", name: "Space Coast Regional Airport", nearby_towns: ["Titusville"], state: State.find_by(abbreviation: "FL"), city: City.find_by(name: "Titusville") }
+# Seed 25 airports and link to cities
+airports_data = [
+  { code: "PHX", icao_code: "KPHX", name: "Phoenix Sky Harbor International Airport", nearby_towns: ["Tempe", "Scottsdale"], state_abbr: "AZ", primary_city: "Phoenix" },
+  { code: "LAX", icao_code: "KLAX", name: "Los Angeles International Airport", nearby_towns: ["El Segundo", "Inglewood"], state_abbr: "CA", primary_city: "Los Angeles" },
+  { code: "SEE", icao_code: "KSEE", name: "Gillespie Field", nearby_towns: ["El Cajon", "Santee"], state_abbr: "CA", primary_city: "San Diego" },
+  { code: "DAB", icao_code: "KDAB", name: "Daytona Beach International Airport", nearby_towns: ["Ormond Beach"], state_abbr: "FL", primary_city: "Daytona Beach" },
+  { code: "MIA", icao_code: "KMIA", name: "Miami International Airport", nearby_towns: ["Coral Gables", "Hialeah"], state_abbr: "FL", primary_city: "Miami" },
+  { code: "ATL", icao_code: "KATL", name: "Hartsfield-Jackson Atlanta International Airport", nearby_towns: ["College Park", "East Point"], state_abbr: "GA", primary_city: "Atlanta" },
+  { code: "1H0", icao_code: nil, name: "Creve Coeur Airport", nearby_towns: ["Maryland Heights"], state_abbr: "MO", primary_city: "St. Louis" },
+  { code: "DTO", icao_code: "KDTO", name: "Denton Enterprise Airport", nearby_towns: ["Argyle"], state_abbr: "TX", primary_city: "Dallas" },
+  { code: "IAH", icao_code: "KIAH", name: "George Bush Intercontinental Airport", nearby_towns: ["Humble", "Spring"], state_abbr: "TX", primary_city: "Houston" },
+  { code: "SEA", icao_code: "KSEA", name: "Seattle-Tacoma International Airport", nearby_towns: ["Tacoma", "Renton"], state_abbr: "WA", primary_city: "Seattle" },
+  { code: "CPS", icao_code: "KCPS", name: "St. Louis Downtown Airport", nearby_towns: ["Sauget"], state_abbr: "IL", primary_city: "St. Louis" },
+  { code: "FFZ", icao_code: "KFFZ", name: "Falcon Field", nearby_towns: ["Mesa"], state_abbr: "AZ", primary_city: "Mesa" },
+  { code: "HWO", icao_code: "KHWO", name: "North Perry Airport", nearby_towns: ["Pembroke Pines"], state_abbr: "FL", primary_city: "Pembroke Pines" },
+  { code: "PTW", icao_code: "KPTW", name: "Heritage Field", nearby_towns: ["Pottstown"], state_abbr: "PA", primary_city: "Pottstown" },
+  { code: "7A3", icao_code: "K7A3", name: "Lanett Municipal Airport", nearby_towns: ["Lanett"], state_abbr: "AL", primary_city: "Lanett" },
+  { code: "DNA", icao_code: "KDNA", name: "Dona Ana County International Jetport", nearby_towns: ["Santa Teresa"], state_abbr: "NM", primary_city: "Santa Teresa" },
+  { code: "LXT", icao_code: "KLXT", name: "Lee's Summit Municipal Airport", nearby_towns: ["Lee's Summit"], state_abbr: "MO", primary_city: "Lee's Summit" },
+  { code: "ACZ", icao_code: "KACZ", name: "Wallace-Pender Airport", nearby_towns: ["Southport"], state_abbr: "NC", primary_city: "Southport" },
+  { code: "CLW", icao_code: "KCLW", name: "Clearwater Air Park", nearby_towns: ["Clearwater"], state_abbr: "FL", primary_city: "Clearwater" },
+  { code: "RAL", icao_code: "KRAL", name: "Riverside Municipal Airport", nearby_towns: ["Riverside"], state_abbr: "CA", primary_city: "Riverside" },
+  { code: "HSD", icao_code: "KHSD", name: "Sundance Airport", nearby_towns: ["Yukon"], state_abbr: "OK", primary_city: "Oklahoma City" },
+  { code: "SRQ", icao_code: "KSRQ", name: "Sarasota-Bradenton International Airport", nearby_towns: ["Sarasota"], state_abbr: "FL", primary_city: "Sarasota" },
+  { code: "VNY", icao_code: "KVNY", name: "Van Nuys Airport", nearby_towns: ["Van Nuys"], state_abbr: "CA", primary_city: "Los Angeles" },
+  { code: "OGD", icao_code: "KOGD", name: "Ogden-Hinckley Airport", nearby_towns: ["Ogden"], state_abbr: "UT", primary_city: "Ogden" },
+  { code: "HMP", icao_code: "KHMP", name: "Henry County Airport", nearby_towns: ["Hampton"], state_abbr: "GA", primary_city: "Hampton" },
+  { code: "TIX", icao_code: "KTIX", name: "Space Coast Regional Airport", nearby_towns: ["Titusville"], state_abbr: "FL", primary_city: "Titusville" }
 ]
 
 Airport.destroy_all
-airports.each do |airport|
+airports_data.each do |airport_data|
+  state = State.find_by(abbreviation: airport_data[:state_abbr])
+  primary_city = City.find_by(name: airport_data[:primary_city], state: state)
+  nearby_towns = airport_data[:nearby_towns]
+
+  # Ensure all cities exist
+  all_city_names = ([airport_data[:primary_city]] + nearby_towns).uniq
+  all_city_names.each do |city_name|
+    unless City.find_by(name: city_name, state: state)
+      begin
+        City.create!(name: city_name, state: state)
+      rescue ActiveRecord::RecordInvalid => e
+        puts "Failed to create city: #{city_name} with state #{state.abbreviation} - #{e.message}"
+        raise
+      end
+    end
+  end
+
+  # Create airport
+  airport_attrs = airport_data.except(:nearby_towns, :state_abbr, :primary_city)
   begin
-    Airport.create!(airport)
+    airport = Airport.create!(airport_attrs.merge(state: state))
+    all_city_names.each do |city_name|
+      city = City.find_by(name: city_name, state: state)
+      airport.cities << city unless airport.cities.include?(city)
+    end
   rescue ActiveRecord::RecordInvalid => e
-    puts "Failed to create airport: #{airport[:name]} (#{airport[:code]}) - City: #{airport[:city]&.name}, State: #{airport[:state]&.abbreviation} - #{e.message}"
+    puts "Failed to create airport: #{airport_attrs[:name]} (#{airport_attrs[:code]}) - #{e.message}"
     raise
   end
 end
 puts "Seeded #{Airport.count} airports."
+puts "Total cities after airport associations: #{City.count}"
 
 
 # Seed 15 flight schools

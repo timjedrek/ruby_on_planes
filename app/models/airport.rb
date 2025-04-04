@@ -1,6 +1,6 @@
 class Airport < ApplicationRecord
   belongs_to :state
-  belongs_to :city
+  has_and_belongs_to_many :cities # Replaces belongs_to :city and nearby_towns
   has_many :schools, dependent: :restrict_with_error
 
   validates :code, :name, presence: true
