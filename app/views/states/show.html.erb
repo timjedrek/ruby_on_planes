@@ -17,7 +17,7 @@
               <% city.airports.order(:name).each do |airport| %>
                 <div>
                   <p class="text-gray-700 font-medium">
-                    <%= link_to airport.name, "#", class: "text-blue-600 hover:text-blue-800 hover:underline" %>
+                    <%= link_to airport.name, airport_path(airport.code), class: "text-blue-600 hover:text-blue-800 hover:underline" %>
                     <% if airport.icao_code.present? %>
                       <span class="text-gray-500 text-sm">(<%= airport.icao_code %>)</span>
                     <% end %>

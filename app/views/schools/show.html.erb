@@ -1,0 +1,32 @@
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <h1 class="text-4xl font-bold text-gray-900 mb-2"><%= @school.name %></h1>
+  <p class="text-lg text-gray-600 mb-6">
+    At <%= link_to @airport.name, airport_path(@airport.code), class: "text-blue-600 hover:text-blue-800" %>
+    <% if @airport.icao_code.present? %>
+      <span class="text-gray-500">(<%= @airport.icao_code %>)</span>
+    <% end %>
+    - <%= @airport.city.name %>, <%= @state.abbreviation %>
+  </p>
+
+  <div class="mb-8">
+    <%= link_to "Back to #{@airport.name}", airport_path(@airport.code), class: "inline-block bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200 mr-4" %>
+    <%= link_to "All Airports in #{@state.abbreviation}", airports_path(state: @state.abbreviation), class: "inline-block bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200" %>
+  </div>
+
+  <% if @school.website.present? || @school.phone.present? %>
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b-2 border-gray-200 pb-2">Contact Information</h2>
+    <ul class="space-y-2">
+      <% if @school.website.present? %>
+        <li class="text-gray-700">
+          <span class="font-medium">Website:</span>
+          <%= link_to @school.website, @school.website, target: "_blank", class: "text-blue-600 hover:text-blue-800" %>
+        </li>
+      <% end %>
+      <% if @school.phone.present? %>
+        <li class="text-gray-700">
+          <span class="font-medium">Phone:</span> <%= @school.phone %>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+</div>

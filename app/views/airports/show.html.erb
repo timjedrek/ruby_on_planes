@@ -1,0 +1,39 @@
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <h1 class="text-4xl font-bold text-gray-900 mb-2"><%= @airport.name %></h1>
+  <p class="text-lg text-gray-600 mb-6">
+    <%= @airport.code %>
+    <% if @airport.icao_code.present? %>
+      <span class="text-gray-500">(<%= @airport.icao_code %>)</span>
+    <% end %>
+    - <%= @airport.city.name %>, <%= @state.abbreviation %>
+  </p>
+
+  <div class="mb-8">
+    <%= link_to "Back to #{@state.name}", state_path(@state.abbreviation), class: "inline-block bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200 mr-4" %>
+    <%= link_to "All Airports in #{@state.abbreviation}", airports_path(state: @state.abbreviation), class: "inline-block bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200" %>
+  </div>
+
+  <% if @airport.nearby_towns.any? %>
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b-2 border-gray-200 pb-2">Nearby Towns</h2>
+    <p class="text-gray-700"><%= @airport.nearby_towns.join(", ") %></p>
+  <% end %>
+
+  <% if @airport.schools.any? %>
+    <h2 class="text-2xl font-semibold text-gray-800 mt-6 mb-4 border-b-2 border-gray-200 pb-2">Flight Schools</h2>
+    <ul class="space-y-4">
+      <% @airport.schools.order(:name).each do |school| %>
+        <li class="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
+          <%= link_to school.name, airport_school_path(@airport.code, school), class: "text-blue-600 hover:text-blue-800 hover:underline font-medium text-lg" %>
+          <% if school.website.present? %>
+            <%= link_to "(Website)", school.website, target: "_blank", class: "text-blue-500 hover:text-blue-600 ml-2 text-sm" %>
+          <% end %>
+          <% if school.phone.present? %>
+            <span class="text-gray-500 text-sm ml-2">(<%= school.phone %>)</span>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="text-gray-600 mt-6">No flight schools listed yet for <%= @airport.name %>.</p>
+  <% end %>
+</div>
