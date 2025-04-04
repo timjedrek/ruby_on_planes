@@ -31,14 +31,8 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 
-  # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
-
   # Make template changes take effect immediately.
   config.action_mailer.perform_caching = false
-
-  # Set localhost to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
@@ -73,13 +67,13 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address: "your.smtp.server.com",        # Replace with your SMTP server address
-    port: 587,                              # Common port (587 for TLS, 465 for SSL)
-    domain: "yourdomain.com",               # Your domain (e.g., pilottrainingnearme.com)
-    user_name: "your-username",             # SMTP username
-    password: "your-password",              # SMTP password
-    authentication: :plain,                 # :plain, :login, or :cram_md5 (check your provider)
-    enable_starttls_auto: true              # Use TLS if supported
+    address: ENV["SMTP_ADDRESS"],              
+    port: ENV["SMTP_PORT"].to_i,               
+    domain: ENV["SMTP_DOMAIN"],                
+    user_name: ENV["SMTP_USERNAME"],           
+    password: ENV["SMTP_PASSWORD"],            
+    authentication: ENV["SMTP_AUTHENTICATION"].to_sym,  
+    enable_starttls_auto: true                 
   }
   config.action_mailer.raise_delivery_errors = true  # Show errors if email fails
 end
