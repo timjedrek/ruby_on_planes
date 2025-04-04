@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
-  get "pages/home"
-  devise_for :users
+  devise_for :users, controllers: { registrations: "users/registrations", confirmations: "users/confirmations" }
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -14,4 +13,8 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
   root to: "pages#home"
+
+  get "confirmation_pending", to: "pages#confirmation_pending" 
+
+
 end
