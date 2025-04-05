@@ -26,13 +26,25 @@
     <ul class="space-y-4">
       <% @schools.each do |school| %>
         <li class="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
-          <%= link_to school.name, airport_school_path(@airport.code, school), class: "text-blue-600 hover:text-blue-800 hover:underline font-medium text-lg" %>
-          <% if school.website.present? %>
-            <%= link_to "(Website)", school.website, target: "_blank", class: "text-blue-500 hover:text-blue-600 ml-2 text-sm" %>
-          <% end %>
-          <% if school.phone.present? %>
-            <span class="text-gray-500 text-sm ml-2">(<%= school.phone %>)</span>
-          <% end %>
+          <div class="flex items-center justify-between">
+            <div>
+              <%= link_to school.name, airport_school_path(@airport.code, school), class: "text-blue-600 hover:text-blue-800 hover:underline font-medium text-lg" %>
+              <% if school.featured %>
+                <span class="inline-block bg-yellow-400 text-gray-800 text-sm font-semibold px-2 py-1 rounded-full ml-2">Featured</span>
+              <% end %>
+            </div>
+            <% if school.website.present? %>
+              <%= link_to "(Website)", school.website, target: "_blank", class: "text-blue-500 hover:text-blue-600 text-sm" %>
+            <% end %>
+          </div>
+          <p class="text-gray-600 text-sm mt-1">
+            <% if school.training_types.any? %>
+              <span>Training: <%= school.training_types.join(", ").capitalize %></span>
+            <% end %>
+            <% if school.part_141 || school.part_61 %>
+              <span class="ml-2">(<%= [school.part_141 ? "Part 141" : nil, school.part_61 ? "Part 61" : nil].compact.join(", ") %>)</span>
+            <% end %>
+          </p>
         </li>
       <% end %>
     </ul>

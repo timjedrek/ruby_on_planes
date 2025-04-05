@@ -55,9 +55,25 @@ airports_data.each do |airport_data|
 end
 puts "Seeded #{Airport.count} airports."
 
-# Seed 1 school with contact info
+# Seed 1 school with all fields
 schools_data = [
-  { name: "SimpliFly", airport_code: "PHX", website: "https://simpliflyco.com", phone: "480-555-1234" }
+  {
+    name: "SimpliFly",
+    airport_code: "PHX",
+    website: "https://simpliflyco.com",
+    phone: "480-555-1234",
+    description: "SimpliFly offers top-notch flight training in the heart of Phoenix, with a focus on personalized instruction.",
+    est_planes: 10,
+    est_cfis: 5,
+    part_141: true,
+    part_61: true,
+    training_types: ["private", "commercial", "instrument"],
+    accelerated_programs: true,
+    examining_authority: false,
+    date_established: Date.new(2015, 6, 1),
+    featured: true,
+    approved: true
+  }
 ]
 
 School.destroy_all
@@ -67,7 +83,18 @@ schools_data.each do |school_data|
     name: school_data[:name],
     airport: airport,
     website: school_data[:website],
-    phone: school_data[:phone]
+    phone: school_data[:phone],
+    description: school_data[:description],
+    est_planes: school_data[:est_planes],
+    est_cfis: school_data[:est_cfis],
+    part_141: school_data[:part_141],
+    part_61: school_data[:part_61],
+    training_types: school_data[:training_types],
+    accelerated_programs: school_data[:accelerated_programs],
+    examining_authority: school_data[:examining_authority],
+    date_established: school_data[:date_established],
+    featured: school_data[:featured],
+    approved: school_data[:approved]
   )
 end
 puts "Seeded #{School.count} schools."

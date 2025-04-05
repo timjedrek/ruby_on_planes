@@ -5,7 +5,10 @@
     <% if @airport.icao_code.present? %>
       <span class="text-gray-500">(<%= @airport.icao_code %>)</span>
     <% end %>
-    - <%= @airport.cities.map { |c| link_to c.name, state_city_path(@state.abbreviation, c.name), class: "text-blue-600 hover:text-blue-800" }.join(", ").html_safe %>
+    - <%= link_to @airport.city.name, state_city_path(@state.abbreviation, @airport.city.name), class: "text-blue-600 hover:text-blue-800" %>
+    <% if @school.featured %>
+      <span class="inline-block bg-yellow-400 text-gray-800 text-sm font-semibold px-2 py-1 rounded-full ml-2">Featured</span>
+    <% end %>
   </p>
 
   <div class="mb-8">
@@ -13,20 +16,63 @@
     <%= link_to "All Airports in #{@state.abbreviation}", airports_path(state: @state.abbreviation), class: "inline-block bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200" %>
   </div>
 
-  <% if @school.website.present? || @school.phone.present? %>
-    <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b-2 border-gray-200 pb-2">Contact Information</h2>
-    <ul class="space-y-2">
-      <% if @school.website.present? %>
-        <li class="text-gray-700">
-          <span class="font-medium">Website:</span>
-          <%= link_to @school.website, @school.website, target: "_blank", class: "text-blue-600 hover:text-blue-800" %>
-        </li>
-      <% end %>
-      <% if @school.phone.present? %>
-        <li class="text-gray-700">
-          <span class="font-medium">Phone:</span> <%= @school.phone %>
-        </li>
-      <% end %>
-    </ul>
+  <% if @school.description.present? %>
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b-2 border-gray-200 pb-2">Description</h2>
+    <p class="text-gray-700 mb-6"><%= @school.description %></p>
+  <% end %>
+
+  <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b-2 border-gray-200 pb-2">School Details</h2>
+  <ul class="space-y-2 mb-6">
+    <% if @school.website.present? %>
+      <li class="text-gray-700">
+        <span class="font-medium">Website:</span>
+        <%= link_to @school.website, @school.website, target: "_blank", class: "text-blue-600 hover:text-blue-800" %>
+      </li>
+    <% end %>
+    <% if @school.phone.present? %>
+      <li class="text-gray-700">
+        <span class="font-medium">Phone:</span> <%= @school.phone %>
+      </li>
+    <% end %>
+    <% if @school.est_planes.present? %>
+      <li class="text-gray-700">
+        <span class="font-medium">Estimated Planes:</span> <%= @school.est_planes %>
+      </li>
+    <% end %>
+    <% if @school.est_cfis.present? %>
+      <li class="text-gray-700">
+        <span class="font-medium">Estimated CFIs:</span> <%= @school.est_cfis %>
+      </li>
+    <% end %>
+    <% if @school.date_established.present? %>
+      <li class="text-gray-700">
+        <span class="font-medium">Established:</span> <%= @school.date_established.strftime("%B %d, %Y") %>
+      </li>
+    <% end %>
+  </ul>
+
+  <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b-2 border-gray-200 pb-2">Training Programs</h2>
+  <ul class="space-y-2 mb-6">
+    <% if @school.training_types.any? %>
+      <li class="text-gray-700">
+        <span class="font-medium">Training Types:</span> <%= @school.training_types.join(", ").capitalize %>
+      </li>
+    <% end %>
+    <li class="text-gray-700">
+      <span class="font-medium">Part 141:</span> <%= @school.part_141 ? "Yes" : "No" %>
+    </li>
+    <li class="text-gray-700">
+      <span class="font-medium">Part 61:</span> <%= @school.part_61 ? "Yes" : "No" %>
+    </li>
+    <li class="text-gray-700">
+      <span class="font-medium">Accelerated Programs:</span> <%= @school.accelerated_programs ? "Yes" : "No" %>
+    </li>
+    <li class="text-gray-700">
+      <span class="font-medium">Examining Authority:</span> <%= @school.examining_authority ? "Yes" : "No" %>
+    </li>
+  </ul>
+
+  <% unless @school.approved %>
+    <p class="text-red-600 italic">This school is pending admin approval.</p>
   <% end %>
 </div>

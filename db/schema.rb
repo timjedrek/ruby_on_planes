@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_05_035529) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_05_042225) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -45,6 +45,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_05_035529) do
     t.bigint "airport_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "description"
+    t.integer "est_planes"
+    t.integer "est_cfis"
+    t.boolean "part_141", default: false, null: false
+    t.boolean "part_61", default: false, null: false
+    t.string "training_types", default: [], null: false, array: true
+    t.boolean "accelerated_programs", default: false, null: false
+    t.boolean "examining_authority", default: false, null: false
+    t.date "date_established"
+    t.boolean "featured", default: false, null: false
+    t.boolean "approved", default: true, null: false
     t.index ["airport_id", "name"], name: "index_schools_on_airport_id_and_name", unique: true
     t.index ["airport_id"], name: "index_schools_on_airport_id"
   end
