@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_04_104641) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_05_035529) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -21,19 +21,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_04_104641) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "icao_code"
+    t.bigint "city_id", null: false
+    t.index ["city_id"], name: "index_airports_on_city_id"
     t.index ["code"], name: "index_airports_on_code", unique: true
     t.index ["icao_code"], name: "index_airports_on_icao_code", unique: true
     t.index ["state_id"], name: "index_airports_on_state_id"
-  end
-
-  create_table "airports_cities", force: :cascade do |t|
-    t.bigint "airport_id", null: false
-    t.bigint "city_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["airport_id", "city_id"], name: "index_airports_cities_on_airport_id_and_city_id", unique: true
-    t.index ["airport_id"], name: "index_airports_cities_on_airport_id"
-    t.index ["city_id"], name: "index_airports_cities_on_city_id"
   end
 
   create_table "cities", force: :cascade do |t|
@@ -41,6 +33,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_04_104641) do
     t.bigint "state_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "nearby_cities", default: [], null: false, array: true
     t.index ["state_id", "name"], name: "index_cities_on_state_id_and_name", unique: true
     t.index ["state_id"], name: "index_cities_on_state_id"
   end
@@ -82,9 +75,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_04_104641) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "airports", "cities"
   add_foreign_key "airports", "states"
-  add_foreign_key "airports_cities", "airports"
-  add_foreign_key "airports_cities", "cities"
   add_foreign_key "cities", "states"
   add_foreign_key "schools", "airports"
 end

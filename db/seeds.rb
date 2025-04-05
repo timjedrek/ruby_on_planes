@@ -476,34 +476,34 @@ cities.each do |city|
 end
 puts "Seeded #{City.count} cities."
 
-# Seed 25 airports and link to cities
+# Seed 25 airports with a single city
 airports_data = [
-  { code: "PHX", icao_code: "KPHX", name: "Phoenix Sky Harbor International Airport", nearby_towns: ["Tempe", "Scottsdale", "Mesa"], state_abbr: "AZ", primary_city: "Phoenix" },
-  { code: "LAX", icao_code: "KLAX", name: "Los Angeles International Airport", nearby_towns: ["El Segundo", "Inglewood"], state_abbr: "CA", primary_city: "Los Angeles" },
-  { code: "SEE", icao_code: "KSEE", name: "Gillespie Field", nearby_towns: ["El Cajon", "Santee"], state_abbr: "CA", primary_city: "San Diego" },
-  { code: "DAB", icao_code: "KDAB", name: "Daytona Beach International Airport", nearby_towns: ["Ormond Beach"], state_abbr: "FL", primary_city: "Daytona Beach" },
-  { code: "MIA", icao_code: "KMIA", name: "Miami International Airport", nearby_towns: ["Coral Gables", "Hialeah"], state_abbr: "FL", primary_city: "Miami" },
-  { code: "ATL", icao_code: "KATL", name: "Hartsfield-Jackson Atlanta International Airport", nearby_towns: ["College Park", "East Point"], state_abbr: "GA", primary_city: "Atlanta" },
-  { code: "1H0", icao_code: nil, name: "Creve Coeur Airport", nearby_towns: ["Maryland Heights"], state_abbr: "MO", primary_city: "St. Louis" },
-  { code: "DTO", icao_code: "KDTO", name: "Denton Enterprise Airport", nearby_towns: ["Argyle"], state_abbr: "TX", primary_city: "Dallas" },
-  { code: "IAH", icao_code: "KIAH", name: "George Bush Intercontinental Airport", nearby_towns: ["Humble", "Spring"], state_abbr: "TX", primary_city: "Houston" },
-  { code: "SEA", icao_code: "KSEA", name: "Seattle-Tacoma International Airport", nearby_towns: ["Tacoma", "Renton"], state_abbr: "WA", primary_city: "Seattle" },
-  { code: "CPS", icao_code: "KCPS", name: "St. Louis Downtown Airport", nearby_towns: ["Sauget"], state_abbr: "IL", primary_city: "St. Louis" },
-  { code: "FFZ", icao_code: "KFFZ", name: "Falcon Field", nearby_towns: ["Mesa"], state_abbr: "AZ", primary_city: "Mesa" },
-  { code: "HWO", icao_code: "KHWO", name: "North Perry Airport", nearby_towns: ["Pembroke Pines"], state_abbr: "FL", primary_city: "Pembroke Pines" },
-  { code: "PTW", icao_code: "KPTW", name: "Heritage Field", nearby_towns: ["Pottstown"], state_abbr: "PA", primary_city: "Pottstown" },
-  { code: "7A3", icao_code: "K7A3", name: "Lanett Municipal Airport", nearby_towns: ["Lanett"], state_abbr: "AL", primary_city: "Lanett" },
-  { code: "DNA", icao_code: "KDNA", name: "Dona Ana County International Jetport", nearby_towns: ["Santa Teresa"], state_abbr: "NM", primary_city: "Santa Teresa" },
-  { code: "LXT", icao_code: "KLXT", name: "Lee's Summit Municipal Airport", nearby_towns: ["Lee's Summit"], state_abbr: "MO", primary_city: "Lee's Summit" },
-  { code: "ACZ", icao_code: "KACZ", name: "Wallace-Pender Airport", nearby_towns: ["Southport"], state_abbr: "NC", primary_city: "Southport" },
-  { code: "CLW", icao_code: "KCLW", name: "Clearwater Air Park", nearby_towns: ["Clearwater"], state_abbr: "FL", primary_city: "Clearwater" },
-  { code: "RAL", icao_code: "KRAL", name: "Riverside Municipal Airport", nearby_towns: ["Riverside"], state_abbr: "CA", primary_city: "Riverside" },
-  { code: "HSD", icao_code: "KHSD", name: "Sundance Airport", nearby_towns: ["Yukon"], state_abbr: "OK", primary_city: "Oklahoma City" },
-  { code: "SRQ", icao_code: "KSRQ", name: "Sarasota-Bradenton International Airport", nearby_towns: ["Sarasota"], state_abbr: "FL", primary_city: "Sarasota" },
-  { code: "VNY", icao_code: "KVNY", name: "Van Nuys Airport", nearby_towns: ["Van Nuys"], state_abbr: "CA", primary_city: "Los Angeles" },
-  { code: "OGD", icao_code: "KOGD", name: "Ogden-Hinckley Airport", nearby_towns: ["Ogden"], state_abbr: "UT", primary_city: "Ogden" },
-  { code: "HMP", icao_code: "KHMP", name: "Henry County Airport", nearby_towns: ["Hampton"], state_abbr: "GA", primary_city: "Hampton" },
-  { code: "TIX", icao_code: "KTIX", name: "Space Coast Regional Airport", nearby_towns: ["Titusville"], state_abbr: "FL", primary_city: "Titusville" }
+  { code: "PHX", icao_code: "KPHX", name: "Phoenix Sky Harbor International Airport", state_abbr: "AZ", city_name: "Phoenix" },
+  { code: "FFZ", icao_code: "KFFZ", name: "Falcon Field", state_abbr: "AZ", city_name: "Mesa" },
+  { code: "LAX", icao_code: "KLAX", name: "Los Angeles International Airport", state_abbr: "CA", city_name: "Los Angeles" },
+  { code: "SEE", icao_code: "KSEE", name: "Gillespie Field", state_abbr: "CA", city_name: "San Diego" },
+  { code: "DAB", icao_code: "KDAB", name: "Daytona Beach International Airport", state_abbr: "FL", city_name: "Daytona Beach" },
+  { code: "MIA", icao_code: "KMIA", name: "Miami International Airport", state_abbr: "FL", city_name: "Miami" },
+  { code: "ATL", icao_code: "KATL", name: "Hartsfield-Jackson Atlanta International Airport", state_abbr: "GA", city_name: "Atlanta" },
+  { code: "1H0", icao_code: nil, name: "Creve Coeur Airport", state_abbr: "MO", city_name: "St. Louis" },
+  { code: "DTO", icao_code: "KDTO", name: "Denton Enterprise Airport", state_abbr: "TX", city_name: "Dallas" },
+  { code: "IAH", icao_code: "KIAH", name: "George Bush Intercontinental Airport", state_abbr: "TX", city_name: "Houston" },
+  { code: "SEA", icao_code: "KSEA", name: "Seattle-Tacoma International Airport", state_abbr: "WA", city_name: "Seattle" },
+  { code: "CPS", icao_code: "KCPS", name: "St. Louis Downtown Airport", state_abbr: "IL", city_name: "Sauget" },
+  { code: "HWO", icao_code: "KHWO", name: "North Perry Airport", state_abbr: "FL", city_name: "Pembroke Pines" },
+  { code: "PTW", icao_code: "KPTW", name: "Heritage Field", state_abbr: "PA", city_name: "Pottstown" },
+  { code: "7A3", icao_code: "K7A3", name: "Lanett Municipal Airport", state_abbr: "AL", city_name: "Lanett" },
+  { code: "DNA", icao_code: "KDNA", name: "Dona Ana County International Jetport", state_abbr: "NM", city_name: "Santa Teresa" },
+  { code: "LXT", icao_code: "KLXT", name: "Lee's Summit Municipal Airport", state_abbr: "MO", city_name: "Lee's Summit" },
+  { code: "ACZ", icao_code: "KACZ", name: "Wallace-Pender Airport", state_abbr: "NC", city_name: "Southport" },
+  { code: "CLW", icao_code: "KCLW", name: "Clearwater Air Park", state_abbr: "FL", city_name: "Clearwater" },
+  { code: "RAL", icao_code: "KRAL", name: "Riverside Municipal Airport", state_abbr: "CA", city_name: "Riverside" },
+  { code: "HSD", icao_code: "KHSD", name: "Sundance Airport", state_abbr: "OK", city_name: "Oklahoma City" },
+  { code: "SRQ", icao_code: "KSRQ", name: "Sarasota-Bradenton International Airport", state_abbr: "FL", city_name: "Sarasota" },
+  { code: "VNY", icao_code: "KVNY", name: "Van Nuys Airport", state_abbr: "CA", city_name: "Los Angeles" },
+  { code: "OGD", icao_code: "KOGD", name: "Ogden-Hinckley Airport", state_abbr: "UT", city_name: "Ogden" },
+  { code: "HMP", icao_code: "KHMP", name: "Henry County Airport", state_abbr: "GA", city_name: "Hampton" },
+  { code: "TIX", icao_code: "KTIX", name: "Space Coast Regional Airport", state_abbr: "FL", city_name: "Titusville" }
 ]
 
 Airport.destroy_all
@@ -524,6 +524,19 @@ airports_data.each do |airport_data|
       end
     end
   end
+
+  # Update cities with nearby_cities (example for AZ)
+  az = State.find_by(abbreviation: "AZ")
+  phoenix = City.find_by(name: "Phoenix", state: az)
+  tempe = City.find_by(name: "Tempe", state: az)
+  scottsdale = City.find_by(name: "Scottsdale", state: az)
+  mesa = City.find_by(name: "Mesa", state: az)
+
+  phoenix.update!(nearby_cities: ["Tempe", "Scottsdale", "Mesa"])
+  tempe.update!(nearby_cities: ["Phoenix", "Scottsdale", "Mesa"])
+  scottsdale.update!(nearby_cities: ["Phoenix", "Tempe", "Mesa"])
+  mesa.update!(nearby_cities: ["Phoenix", "Tempe", "Scottsdale"])
+
 
   # Create airport
   airport_attrs = airport_data.except(:nearby_towns, :state_abbr, :primary_city)
