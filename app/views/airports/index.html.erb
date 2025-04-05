@@ -13,7 +13,7 @@
               <% end %>
             </p>
             <p class="text-gray-600 text-sm">
-              Cities: <%= airport.cities.map { |c| link_to c.name, state_city_path(@state&.abbreviation || c.state.abbreviation, c.name), class: "text-blue-600 hover:text-blue-800" }.join(", ").html_safe %>
+              City: <%= link_to airport.city.name, state_city_path(@state&.abbreviation || airport.state.abbreviation, airport.city.name), class: "text-blue-600 hover:text-blue-800" %>
             </p>
           </div>
           <% if airport.schools.any? %>

@@ -1,587 +1,73 @@
-# Seed all 50 US states
-states = [
-  { name: "Alabama", abbreviation: "AL" }, { name: "Alaska", abbreviation: "AK" },
-  { name: "Arizona", abbreviation: "AZ" }, { name: "Arkansas", abbreviation: "AR" },
-  { name: "California", abbreviation: "CA" }, { name: "Colorado", abbreviation: "CO" },
-  { name: "Connecticut", abbreviation: "CT" }, { name: "Delaware", abbreviation: "DE" },
-  { name: "District of Columbia", abbreviation: "DC" },
-  { name: "Florida", abbreviation: "FL" }, { name: "Georgia", abbreviation: "GA" },
-  { name: "Hawaii", abbreviation: "HI" }, { name: "Idaho", abbreviation: "ID" },
-  { name: "Illinois", abbreviation: "IL" }, { name: "Indiana", abbreviation: "IN" },
-  { name: "Iowa", abbreviation: "IA" }, { name: "Kansas", abbreviation: "KS" },
-  { name: "Kentucky", abbreviation: "KY" }, { name: "Louisiana", abbreviation: "LA" },
-  { name: "Maine", abbreviation: "ME" }, { name: "Maryland", abbreviation: "MD" },
-  { name: "Massachusetts", abbreviation: "MA" }, { name: "Michigan", abbreviation: "MI" },
-  { name: "Minnesota", abbreviation: "MN" }, { name: "Mississippi", abbreviation: "MS" },
-  { name: "Missouri", abbreviation: "MO" }, { name: "Montana", abbreviation: "MT" },
-  { name: "Nebraska", abbreviation: "NE" }, { name: "Nevada", abbreviation: "NV" },
-  { name: "New Hampshire", abbreviation: "NH" }, { name: "New Jersey", abbreviation: "NJ" },
-  { name: "New Mexico", abbreviation: "NM" }, { name: "New York", abbreviation: "NY" },
-  { name: "North Carolina", abbreviation: "NC" }, { name: "North Dakota", abbreviation: "ND" },
-  { name: "Ohio", abbreviation: "OH" }, { name: "Oklahoma", abbreviation: "OK" },
-  { name: "Oregon", abbreviation: "OR" }, { name: "Pennsylvania", abbreviation: "PA" },
-  { name: "Rhode Island", abbreviation: "RI" }, { name: "South Carolina", abbreviation: "SC" },
-  { name: "South Dakota", abbreviation: "SD" }, { name: "Tennessee", abbreviation: "TN" },
-  { name: "Texas", abbreviation: "TX" }, { name: "Utah", abbreviation: "UT" },
-  { name: "Vermont", abbreviation: "VT" }, { name: "Virginia", abbreviation: "VA" },
-  { name: "Washington", abbreviation: "WA" }, { name: "West Virginia", abbreviation: "WV" },
-  { name: "Wisconsin", abbreviation: "WI" }, { name: "Wyoming", abbreviation: "WY" }
+# db/seeds.rb
+
+# Seed 1 state
+states_data = [
+  { name: "Arizona", abbreviation: "AZ" }
 ]
 
 State.destroy_all
-states.each do |state|
-  begin
-    State.create!(state)
-  rescue ActiveRecord::RecordInvalid => e
-    puts "Failed to create state: #{state[:name]} (#{state[:abbreviation]}) - #{e.message}"
-    raise
-  end
+states_data.each do |state_data|
+  State.create!(state_data)
 end
 puts "Seeded #{State.count} states."
 
-# Seed 392 cities from MSAs (primary city per MSA, simplified state assignment)
-cities = [
-  { name: "New York", state: State.find_by(abbreviation: "NY") },
-  { name: "Los Angeles", state: State.find_by(abbreviation: "CA") },
-  { name: "Chicago", state: State.find_by(abbreviation: "IL") },
-  { name: "Dallas", state: State.find_by(abbreviation: "TX") },
-  { name: "Houston", state: State.find_by(abbreviation: "TX") },
-  { name: "Washington DC", state: State.find_by(abbreviation: "DC") }, # DC as state for simplicity
-  { name: "Miami", state: State.find_by(abbreviation: "FL") },
-  { name: "Philadelphia", state: State.find_by(abbreviation: "PA") },
-  { name: "Atlanta", state: State.find_by(abbreviation: "GA") },
-  { name: "Phoenix", state: State.find_by(abbreviation: "AZ") },
-  { name: "Boston", state: State.find_by(abbreviation: "MA") },
-  { name: "San Francisco", state: State.find_by(abbreviation: "CA") },
-  { name: "Riverside", state: State.find_by(abbreviation: "CA") },
-  { name: "Detroit", state: State.find_by(abbreviation: "MI") },
-  { name: "Seattle", state: State.find_by(abbreviation: "WA") },
-  { name: "Minneapolis", state: State.find_by(abbreviation: "MN") },
-  { name: "San Diego", state: State.find_by(abbreviation: "CA") },
-  { name: "Tampa", state: State.find_by(abbreviation: "FL") },
-  { name: "Denver", state: State.find_by(abbreviation: "CO") },
-  { name: "St. Louis", state: State.find_by(abbreviation: "MO") },
-  { name: "Baltimore", state: State.find_by(abbreviation: "MD") },
-  { name: "Charlotte", state: State.find_by(abbreviation: "NC") },
-  { name: "Orlando", state: State.find_by(abbreviation: "FL") },
-  { name: "San Antonio", state: State.find_by(abbreviation: "TX") },
-  { name: "Portland", state: State.find_by(abbreviation: "OR") },
-  { name: "Sacramento", state: State.find_by(abbreviation: "CA") },
-  { name: "Pittsburgh", state: State.find_by(abbreviation: "PA") },
-  { name: "Las Vegas", state: State.find_by(abbreviation: "NV") },
-  { name: "Cincinnati", state: State.find_by(abbreviation: "OH") },
-  { name: "Austin", state: State.find_by(abbreviation: "TX") },
-  { name: "Columbus", state: State.find_by(abbreviation: "OH") },
-  { name: "Indianapolis", state: State.find_by(abbreviation: "IN") },
-  { name: "Cleveland", state: State.find_by(abbreviation: "OH") },
-  { name: "San Jose", state: State.find_by(abbreviation: "CA") },
-  { name: "Nashville", state: State.find_by(abbreviation: "TN") },
-  { name: "Virginia Beach", state: State.find_by(abbreviation: "VA") },
-  { name: "Providence", state: State.find_by(abbreviation: "RI") },
-  { name: "Jacksonville", state: State.find_by(abbreviation: "FL") },
-  { name: "Milwaukee", state: State.find_by(abbreviation: "WI") },
-  { name: "Oklahoma City", state: State.find_by(abbreviation: "OK") },
-  { name: "Raleigh", state: State.find_by(abbreviation: "NC") },
-  { name: "Memphis", state: State.find_by(abbreviation: "TN") },
-  { name: "Richmond", state: State.find_by(abbreviation: "VA") },
-  { name: "Louisville", state: State.find_by(abbreviation: "KY") },
-  { name: "Salt Lake City", state: State.find_by(abbreviation: "UT") },
-  { name: "New Orleans", state: State.find_by(abbreviation: "LA") },
-  { name: "Hartford", state: State.find_by(abbreviation: "CT") },
-  { name: "Buffalo", state: State.find_by(abbreviation: "NY") },
-  { name: "Birmingham", state: State.find_by(abbreviation: "AL") },
-  { name: "Rochester", state: State.find_by(abbreviation: "NY") },
-  { name: "Grand Rapids", state: State.find_by(abbreviation: "MI") },
-  { name: "Tucson", state: State.find_by(abbreviation: "AZ") },
-  { name: "Fresno", state: State.find_by(abbreviation: "CA") },
-  { name: "Tulsa", state: State.find_by(abbreviation: "OK") },
-  { name: "Urban Honolulu", state: State.find_by(abbreviation: "HI") },
-  { name: "Worcester", state: State.find_by(abbreviation: "MA") },
-  { name: "Omaha", state: State.find_by(abbreviation: "NE") },
-  { name: "Albuquerque", state: State.find_by(abbreviation: "NM") },
-  { name: "Albany", state: State.find_by(abbreviation: "NY") },
-  { name: "New Haven", state: State.find_by(abbreviation: "CT") },
-  { name: "Bakersfield", state: State.find_by(abbreviation: "CA") },
-  { name: "Knoxville", state: State.find_by(abbreviation: "TN") },
-  { name: "Greenville", state: State.find_by(abbreviation: "SC") },
-  { name: "Ventura", state: State.find_by(abbreviation: "CA") },
-  { name: "Allentown", state: State.find_by(abbreviation: "PA") },
-  { name: "El Paso", state: State.find_by(abbreviation: "TX") },
-  { name: "Baton Rouge", state: State.find_by(abbreviation: "LA") },
-  { name: "Columbia", state: State.find_by(abbreviation: "SC") },
-  { name: "Dayton", state: State.find_by(abbreviation: "OH") },
-  { name: "McAllen", state: State.find_by(abbreviation: "TX") },
-  { name: "Greensboro", state: State.find_by(abbreviation: "NC") },
-  { name: "Little Rock", state: State.find_by(abbreviation: "AR") },
-  { name: "Stockton", state: State.find_by(abbreviation: "CA") },
-  { name: "Charleston", state: State.find_by(abbreviation: "SC") },
-  { name: "Akron", state: State.find_by(abbreviation: "OH") },
-  { name: "Cape Coral", state: State.find_by(abbreviation: "FL") },
-  { name: "Colorado Springs", state: State.find_by(abbreviation: "CO") },
-  { name: "Syracuse", state: State.find_by(abbreviation: "NY") },
-  { name: "Winston-Salem", state: State.find_by(abbreviation: "NC") },
-  { name: "Boise City", state: State.find_by(abbreviation: "ID") },
-  { name: "Wichita", state: State.find_by(abbreviation: "KS") },
-  { name: "Springfield", state: State.find_by(abbreviation: "MO") },
-  { name: "Madison", state: State.find_by(abbreviation: "WI") },
-  { name: "Ogden", state: State.find_by(abbreviation: "UT") },
-  { name: "Lakeland", state: State.find_by(abbreviation: "FL") },
-  { name: "Daytona Beach", state: State.find_by(abbreviation: "FL") },
-  { name: "Des Moines", state: State.find_by(abbreviation: "IA") },
-  { name: "Jackson", state: State.find_by(abbreviation: "MS") },
-  { name: "Youngstown", state: State.find_by(abbreviation: "OH") },
-  { name: "Augusta", state: State.find_by(abbreviation: "GA") },
-  { name: "Scranton", state: State.find_by(abbreviation: "PA") },
-  { name: "Harrisburg", state: State.find_by(abbreviation: "PA") },
-  { name: "Toledo", state: State.find_by(abbreviation: "OH") },
-  { name: "Chattanooga", state: State.find_by(abbreviation: "TN") },
-  { name: "Modesto", state: State.find_by(abbreviation: "CA") },
-  { name: "Lancaster", state: State.find_by(abbreviation: "PA") },
-  { name: "Provo", state: State.find_by(abbreviation: "UT") },
-  { name: "Durham", state: State.find_by(abbreviation: "NC") },
-  { name: "Palm Bay", state: State.find_by(abbreviation: "FL") },
-  { name: "Santa Rosa", state: State.find_by(abbreviation: "CA") },
-  { name: "Springfield", state: State.find_by(abbreviation: "MA") },
-  { name: "Port St. Lucie", state: State.find_by(abbreviation: "FL") },
-  { name: "Lexington", state: State.find_by(abbreviation: "KY") },
-  { name: "Ann Arbor", state: State.find_by(abbreviation: "MI") },
-  { name: "Huntsville", state: State.find_by(abbreviation: "AL") },
-  { name: "Fort Wayne", state: State.find_by(abbreviation: "IN") },
-  { name: "Asheville", state: State.find_by(abbreviation: "NC") },
-  { name: "Santa Clarita", state: State.find_by(abbreviation: "CA") },
-  { name: "Mobile", state: State.find_by(abbreviation: "AL") },
-  { name: "Kissimmee", state: State.find_by(abbreviation: "FL") },
-  { name: "Trenton", state: State.find_by(abbreviation: "NJ") },
-  { name: "Fort Collins", state: State.find_by(abbreviation: "CO") },
-  { name: "Savannah", state: State.find_by(abbreviation: "GA") },
-  { name: "Eugene", state: State.find_by(abbreviation: "OR") },
-  { name: "Salem", state: State.find_by(abbreviation: "OR") },
-  { name: "Reading", state: State.find_by(abbreviation: "PA") },
-  { name: "Rockford", state: State.find_by(abbreviation: "IL") },
-  { name: "Lincoln", state: State.find_by(abbreviation: "NE") },
-  { name: "Myrtle Beach", state: State.find_by(abbreviation: "SC") },
-  { name: "Reno", state: State.find_by(abbreviation: "NV") },
-  { name: "Naples", state: State.find_by(abbreviation: "FL") },
-  { name: "Concord", state: State.find_by(abbreviation: "NC") },
-  { name: "Lansing", state: State.find_by(abbreviation: "MI") },
-  { name: "Denton", state: State.find_by(abbreviation: "TX") },
-  { name: "Peoria", state: State.find_by(abbreviation: "IL") },
-  { name: "Fayetteville", state: State.find_by(abbreviation: "NC") },
-  { name: "Gainesville", state: State.find_by(abbreviation: "FL") },
-  { name: "Anchorage", state: State.find_by(abbreviation: "AK") },
-  { name: "Hickory", state: State.find_by(abbreviation: "NC") },
-  { name: "Huntington", state: State.find_by(abbreviation: "WV") },
-  { name: "Salinas", state: State.find_by(abbreviation: "CA") },
-  { name: "Visalia", state: State.find_by(abbreviation: "CA") },
-  { name: "Killeen", state: State.find_by(abbreviation: "TX") },
-  { name: "Shreveport", state: State.find_by(abbreviation: "LA") },
-  { name: "Round Rock", state: State.find_by(abbreviation: "TX") },
-  { name: "Fargo", state: State.find_by(abbreviation: "ND") },
-  { name: "Beaumont", state: State.find_by(abbreviation: "TX") },
-  { name: "Lafayette", state: State.find_by(abbreviation: "LA") },
-  { name: "Wilmington", state: State.find_by(abbreviation: "NC") },
-  { name: "Vallejo", state: State.find_by(abbreviation: "CA") },
-  { name: "Spokane", state: State.find_by(abbreviation: "WA") },
-  { name: "Lynchburg", state: State.find_by(abbreviation: "VA") },
-  { name: "Evansville", state: State.find_by(abbreviation: "IN") },
-  { name: "Santa Barbara", state: State.find_by(abbreviation: "CA") },
-  { name: "Athens", state: State.find_by(abbreviation: "GA") },
-  { name: "Tyler", state: State.find_by(abbreviation: "TX") },
-  { name: "Kalamazoo", state: State.find_by(abbreviation: "MI") },
-  { name: "Corpus Christi", state: State.find_by(abbreviation: "TX") },
-  { name: "Davenport", state: State.find_by(abbreviation: "IA") },
-  { name: "Ocala", state: State.find_by(abbreviation: "FL") },
-  { name: "Burlington", state: State.find_by(abbreviation: "NC") },
-  { name: "Asheboro", state: State.find_by(abbreviation: "NC") },
-  { name: "Clarksville", state: State.find_by(abbreviation: "TN") },
-  { name: "Spring Hill", state: State.find_by(abbreviation: "FL") },
-  { name: "Longview", state: State.find_by(abbreviation: "TX") },
-  { name: "Green Bay", state: State.find_by(abbreviation: "WI") },
-  { name: "Bend", state: State.find_by(abbreviation: "OR") },
-  { name: "Bellingham", state: State.find_by(abbreviation: "WA") },
-  { name: "College Station", state: State.find_by(abbreviation: "TX") },
-  { name: "Roanoke", state: State.find_by(abbreviation: "VA") },
-  { name: "Murrieta", state: State.find_by(abbreviation: "CA") },
-  { name: "Lubbock", state: State.find_by(abbreviation: "TX") },
-  { name: "Sioux Falls", state: State.find_by(abbreviation: "SD") },
-  { name: "Fayetteville", state: State.find_by(abbreviation: "AR") },
-  { name: "Cedar Rapids", state: State.find_by(abbreviation: "IA") },
-  { name: "Manchester", state: State.find_by(abbreviation: "NH") },
-  { name: "Laredo", state: State.find_by(abbreviation: "TX") },
-  { name: "San Luis Obispo", state: State.find_by(abbreviation: "CA") },
-  { name: "Merced", state: State.find_by(abbreviation: "CA") },
-  { name: "Flint", state: State.find_by(abbreviation: "MI") },
-  { name: "Yakima", state: State.find_by(abbreviation: "WA") },
-  { name: "Charleston", state: State.find_by(abbreviation: "WV") },
-  { name: "Duluth", state: State.find_by(abbreviation: "MN") },
-  { name: "Bloomington", state: State.find_by(abbreviation: "IL") },
-  { name: "Olympia", state: State.find_by(abbreviation: "WA") },
-  { name: "Champaign", state: State.find_by(abbreviation: "IL") },
-  { name: "Waterloo", state: State.find_by(abbreviation: "IA") },
-  { name: "Prescott", state: State.find_by(abbreviation: "AZ") },
-  { name: "Fort Smith", state: State.find_by(abbreviation: "AR") },
-  { name: "Barnstable", state: State.find_by(abbreviation: "MA") },
-  { name: "Binghamton", state: State.find_by(abbreviation: "NY") },
-  { name: "Hagerstown", state: State.find_by(abbreviation: "MD") },
-  { name: "Muskegon", state: State.find_by(abbreviation: "MI") },
-  { name: "Springfield", state: State.find_by(abbreviation: "IL") },
-  { name: "Kennewick", state: State.find_by(abbreviation: "WA") },
-  { name: "Greeley", state: State.find_by(abbreviation: "CO") },
-  { name: "Lake Charles", state: State.find_by(abbreviation: "LA") },
-  { name: "Pueblo", state: State.find_by(abbreviation: "CO") },
-  { name: "Yuma", state: State.find_by(abbreviation: "AZ") },
-  { name: "Santa Cruz", state: State.find_by(abbreviation: "CA") },
-  { name: "Amarillo", state: State.find_by(abbreviation: "TX") },
-  { name: "Hilton Head Island", state: State.find_by(abbreviation: "SC") },
-  { name: "Medford", state: State.find_by(abbreviation: "OR") },
-  { name: "Waco", state: State.find_by(abbreviation: "TX") },
-  { name: "Appleton", state: State.find_by(abbreviation: "WI") },
-  { name: "Santa Maria", state: State.find_by(abbreviation: "CA") },
-  { name: "Macon", state: State.find_by(abbreviation: "GA") },
-  { name: "Bloomington", state: State.find_by(abbreviation: "IN") },
-  { name: "Chico", state: State.find_by(abbreviation: "CA") },
-  { name: "Hemet", state: State.find_by(abbreviation: "CA") },
-  { name: "Erie", state: State.find_by(abbreviation: "PA") },
-  { name: "Panama City", state: State.find_by(abbreviation: "FL") },
-  { name: "Oshkosh", state: State.find_by(abbreviation: "WI") },
-  { name: "Frederick", state: State.find_by(abbreviation: "MD") },
-  { name: "Redding", state: State.find_by(abbreviation: "CA") },
-  { name: "Topeka", state: State.find_by(abbreviation: "KS") },
-  { name: "Kingsport", state: State.find_by(abbreviation: "TN") },
-  { name: "Utica", state: State.find_by(abbreviation: "NY") },
-  { name: "South Bend", state: State.find_by(abbreviation: "IN") },
-  { name: "Burlington", state: State.find_by(abbreviation: "VT") },
-  { name: "Danville", state: State.find_by(abbreviation: "VA") },
-  { name: "Jacksonville", state: State.find_by(abbreviation: "NC") },
-  { name: "Florence", state: State.find_by(abbreviation: "SC") },
-  { name: "Elkhart", state: State.find_by(abbreviation: "IN") },
-  { name: "Sioux City", state: State.find_by(abbreviation: "IA") },
-  { name: "Harrisonburg", state: State.find_by(abbreviation: "VA") },
-  { name: "Rapid City", state: State.find_by(abbreviation: "SD") },
-  { name: "St. George", state: State.find_by(abbreviation: "UT") },
-  { name: "Iowa City", state: State.find_by(abbreviation: "IA") },
-  { name: "Warner Robins", state: State.find_by(abbreviation: "GA") },
-  { name: "St. Cloud", state: State.find_by(abbreviation: "MN") },
-  { name: "Columbia", state: State.find_by(abbreviation: "MO") },
-  { name: "Bismarck", state: State.find_by(abbreviation: "ND") },
-  { name: "Dothan", state: State.find_by(abbreviation: "AL") },
-  { name: "Auburn", state: State.find_by(abbreviation: "AL") },
-  { name: "Lawrence", state: State.find_by(abbreviation: "KS") },
-  { name: "Manhattan", state: State.find_by(abbreviation: "KS") },
-  { name: "Grand Junction", state: State.find_by(abbreviation: "CO") },
-  { name: "Dover", state: State.find_by(abbreviation: "DE") },
-  { name: "Twin Falls", state: State.find_by(abbreviation: "ID") },
-  { name: "Cheyenne", state: State.find_by(abbreviation: "WY") },
-  { name: "Joplin", state: State.find_by(abbreviation: "MO") },
-  { name: "Monroe", state: State.find_by(abbreviation: "LA") },
-  { name: "Morgantown", state: State.find_by(abbreviation: "WV") },
-  { name: "Pocatello", state: State.find_by(abbreviation: "ID") },
-  { name: "Dalton", state: State.find_by(abbreviation: "GA") },
-  { name: "Flagstaff", state: State.find_by(abbreviation: "AZ") },
-  { name: "Billings", state: State.find_by(abbreviation: "MT") },
-  { name: "Bowling Green", state: State.find_by(abbreviation: "KY") },
-  { name: "Owensboro", state: State.find_by(abbreviation: "KY") },
-  { name: "Logan", state: State.find_by(abbreviation: "UT") },
-  { name: "Hanford", state: State.find_by(abbreviation: "CA") },
-  { name: "Jonesboro", state: State.find_by(abbreviation: "AR") },
-  { name: "Idaho Falls", state: State.find_by(abbreviation: "ID") },
-  { name: "Terre Haute", state: State.find_by(abbreviation: "IN") },
-  { name: "Wausau", state: State.find_by(abbreviation: "WI") },
-  { name: "Albany", state: State.find_by(abbreviation: "GA") },
-  { name: "Rocky Mount", state: State.find_by(abbreviation: "NC") },
-  { name: "Brunswick", state: State.find_by(abbreviation: "GA") },
-  { name: "Valdosta", state: State.find_by(abbreviation: "GA") },
-  { name: "Williamsport", state: State.find_by(abbreviation: "PA") },
-  { name: "Muncie", state: State.find_by(abbreviation: "IN") },
-  { name: "Lebanon", state: State.find_by(abbreviation: "PA") },
-  { name: "Morristown", state: State.find_by(abbreviation: "TN") },
-  { name: "Yuba City", state: State.find_by(abbreviation: "CA") },
-  { name: "Jefferson City", state: State.find_by(abbreviation: "MO") },
-  { name: "Sumter", state: State.find_by(abbreviation: "SC") },
-  { name: "Madera", state: State.find_by(abbreviation: "CA") },
-  { name: "Walla Walla", state: State.find_by(abbreviation: "WA") },
-  { name: "Missoula", state: State.find_by(abbreviation: "MT") },
-  { name: "El Centro", state: State.find_by(abbreviation: "CA") },
-  { name: "Wheeling", state: State.find_by(abbreviation: "WV") },
-  { name: "Johnstown", state: State.find_by(abbreviation: "PA") },
-  { name: "Sherman", state: State.find_by(abbreviation: "TX") },
-  { name: "Decatur", state: State.find_by(abbreviation: "AL") },
-  { name: "Rome", state: State.find_by(abbreviation: "GA") },
-  { name: "Goldsboro", state: State.find_by(abbreviation: "NC") },
-  { name: "La Crosse", state: State.find_by(abbreviation: "WI") },
-  { name: "Anderson", state: State.find_by(abbreviation: "SC") },
-  { name: "Pine Bluff", state: State.find_by(abbreviation: "AR") },
-  { name: " Hattiesburg", state: State.find_by(abbreviation: "MS") },
-  { name: "Wenatchee", state: State.find_by(abbreviation: "WA") },
-  { name: "Altoona", state: State.find_by(abbreviation: "PA") },
-  { name: "Napa", state: State.find_by(abbreviation: "CA") },
-  { name: "Abilene", state: State.find_by(abbreviation: "TX") },
-  { name: "Sebring", state: State.find_by(abbreviation: "FL") },
-  { name: "Meridian", state: State.find_by(abbreviation: "MS") },
-  { name: "Hot Springs", state: State.find_by(abbreviation: "AR") },
-  { name: "Vineland", state: State.find_by(abbreviation: "NJ") },
-  { name: "Jamestown", state: State.find_by(abbreviation: "NY") },
-  { name: "Great Falls", state: State.find_by(abbreviation: "MT") },
-  { name: "Danville", state: State.find_by(abbreviation: "IL") },
-  { name: "Anniston", state: State.find_by(abbreviation: "AL") },
-  { name: "Gadsden", state: State.find_by(abbreviation: "AL") },
-  { name: "Grand Forks", state: State.find_by(abbreviation: "ND") },
-  { name: "Pittsfield", state: State.find_by(abbreviation: "MA") },
-  { name: "Cumberland", state: State.find_by(abbreviation: "MD") },
-  { name: "Carson City", state: State.find_by(abbreviation: "NV") },
-  { name: "Florence", state: State.find_by(abbreviation: "AL") },
-  { name: "Branson", state: State.find_by(abbreviation: "MO") },
-  { name: "Cleveland", state: State.find_by(abbreviation: "TN") },
-  { name: "Anderson", state: State.find_by(abbreviation: "IN") },
-  { name: "Texarkana", state: State.find_by(abbreviation: "TX") },
-  { name: "Michigan City", state: State.find_by(abbreviation: "IN") },
-  { name: "Kokomo", state: State.find_by(abbreviation: "IN") },
-  { name: "East Stroudsburg", state: State.find_by(abbreviation: "PA") },
-  { name: "Decatur", state: State.find_by(abbreviation: "IL") },
-  { name: "Glens Falls", state: State.find_by(abbreviation: "NY") },
-  { name: "Hinesville", state: State.find_by(abbreviation: "GA") },
-  { name: "Lawton", state: State.find_by(abbreviation: "OK") },
-  { name: "Chambersburg", state: State.find_by(abbreviation: "PA") },
-  { name: "Weirton", state: State.find_by(abbreviation: "WV") },
-  { name: "Columbus", state: State.find_by(abbreviation: "IN") },
-  { name: "Ames", state: State.find_by(abbreviation: "IA") },
-  { name: "Pottsville", state: State.find_by(abbreviation: "PA") },
-  { name: "Gulfport", state: State.find_by(abbreviation: "MS") },
-  { name: "New Bern", state: State.find_by(abbreviation: "NC") },
-  { name: "Victoria", state: State.find_by(abbreviation: "TX") },
-  { name: "Watertown", state: State.find_by(abbreviation: "NY") },
-  { name: "Parkersburg", state: State.find_by(abbreviation: "WV") },
-  { name: "Bangor", state: State.find_by(abbreviation: "ME") },
-  { name: "Fairbanks", state: State.find_by(abbreviation: "AK") },
-  { name: "Mansfield", state: State.find_by(abbreviation: "OH") },
-  { name: "Staunton", state: State.find_by(abbreviation: "VA") },
-  { name: "Ocean City", state: State.find_by(abbreviation: "NJ") },
-  { name: "Lewiston", state: State.find_by(abbreviation: "ID") },
-  { name: "Enid", state: State.find_by(abbreviation: "OK") },
-  { name: "Stillwater", state: State.find_by(abbreviation: "OK") },
-  { name: "Hobbs", state: State.find_by(abbreviation: "NM") },
-  { name: "Hanover", state: State.find_by(abbreviation: "PA") },
-  { name: "Albany", state: State.find_by(abbreviation: "OR") },
-  { name: "Laurinburg", state: State.find_by(abbreviation: "NC") },
-  { name: "Tullahoma", state: State.find_by(abbreviation: "TN") },
-  { name: "California", state: State.find_by(abbreviation: "MD") },
-  { name: "Manhattan", state: State.find_by(abbreviation: "NY") },
-  { name: "Clarksburg", state: State.find_by(abbreviation: "WV") },
-  { name: "Wilson", state: State.find_by(abbreviation: "NC") },
-  { name: "Grants Pass", state: State.find_by(abbreviation: "OR") },
-  { name: "Sandusky", state: State.find_by(abbreviation: "OH") },
-  { name: "Eau Claire", state: State.find_by(abbreviation: "WI") },
-  { name: "Farmington", state: State.find_by(abbreviation: "NM") },
-  { name: " Elizabethtown", state: State.find_by(abbreviation: "KY") },
-  { name: "Carbondale", state: State.find_by(abbreviation: "IL") },
-  { name: "Corvallis", state: State.find_by(abbreviation: "OR") },
-  { name: "Roseburg", state: State.find_by(abbreviation: "OR") },
-  { name: "Brunswick", state: State.find_by(abbreviation: "OH") },
-  { name: "Findlay", state: State.find_by(abbreviation: "OH") },
-  { name: "Lima", state: State.find_by(abbreviation: "OH") },
-  { name: "Meadville", state: State.find_by(abbreviation: "PA") },
-  # { name: "Arecibo", state: State.find_by(abbreviation: "PR") }, # didnt include puerto rico... hahaha
-  { name: "Bluefield", state: State.find_by(abbreviation: "WV") },
-  { name: "Helena", state: State.find_by(abbreviation: "MT") },
-  { name: "Kankakee", state: State.find_by(abbreviation: "IL") },
-  { name: "Coos Bay", state: State.find_by(abbreviation: "OR") },
-  { name: "Marion", state: State.find_by(abbreviation: "IN") },
-  { name: "Moscow", state: State.find_by(abbreviation: "ID") },
-  { name: "New Castle", state: State.find_by(abbreviation: "PA") },
-  { name: "Richmond", state: State.find_by(abbreviation: "IN") },
-  { name: "La Grande", state: State.find_by(abbreviation: "OR") },
-  { name: "Plattsburgh", state: State.find_by(abbreviation: "NY") },
-  { name: "Athens", state: State.find_by(abbreviation: "OH") },
-  { name: "Port Angeles", state: State.find_by(abbreviation: "WA") },
-  { name: "Beckley", state: State.find_by(abbreviation: "WV") },
-  { name: "Cullowhee", state: State.find_by(abbreviation: "NC") },
-  { name: "Somerset", state: State.find_by(abbreviation: "KY") },
-  { name: "Martinsburg", state: State.find_by(abbreviation: "WV") },
-  { name: "Klamath Falls", state: State.find_by(abbreviation: "OR") },
-  { name: "Marion", state: State.find_by(abbreviation: "OH") },
-  { name: "DuBois", state: State.find_by(abbreviation: "PA") },
-  { name: "Homosassa Springs", state: State.find_by(abbreviation: "FL") },
-  { name: "Payson", state: State.find_by(abbreviation: "AZ") },
-  { name: "Safford", state: State.find_by(abbreviation: "AZ") },
-  { name: "Show Low", state: State.find_by(abbreviation: "AZ") },
-  { name: "Nogales", state: State.find_by(abbreviation: "AZ") },
-  { name: "Pinehurst", state: State.find_by(abbreviation: "NC") },
-  { name: "Prineville", state: State.find_by(abbreviation: "OR") },
-  { name: "Rawlins", state: State.find_by(abbreviation: "WY") },
-  { name: "Riverton", state: State.find_by(abbreviation: "WY") },
-  { name: "Rock Springs", state: State.find_by(abbreviation: "WY") },
-  { name: "Ruidoso", state: State.find_by(abbreviation: "NM") },
-  { name: "Ruston", state: State.find_by(abbreviation: "LA") },
-  { name: "Salida", state: State.find_by(abbreviation: "CO") },
-  { name: "San Angelo", state: State.find_by(abbreviation: "TX") },
-  { name: "Sandpoint", state: State.find_by(abbreviation: "ID") },
-  { name: "Searcy", state: State.find_by(abbreviation: "AR") },
-  { name: "Selma", state: State.find_by(abbreviation: "AL") },
-  { name: "Seneca", state: State.find_by(abbreviation: "SC") },
-  { name: "Sheridan", state: State.find_by(abbreviation: "WY") },
-  { name: "Sidney", state: State.find_by(abbreviation: "OH") },
-  { name: "Sikeston", state: State.find_by(abbreviation: "MO") },
-  { name: "Somerset", state: State.find_by(abbreviation: "PA") },
-  { name: "Southern Pines", state: State.find_by(abbreviation: "NC") },
-  { name: "Spearfish", state: State.find_by(abbreviation: "SD") },
-  { name: "Starkville", state: State.find_by(abbreviation: "MS") },
-  { name: "Statesboro", state: State.find_by(abbreviation: "GA") },
-  { name: "Sterling", state: State.find_by(abbreviation: "CO") },
-  { name: "Stevens Point", state: State.find_by(abbreviation: "WI") },
-  { name: "Sulphur Springs", state: State.find_by(abbreviation: "TX") },
-  { name: "Sunbury", state: State.find_by(abbreviation: "PA") },
-  { name: "Talladega", state: State.find_by(abbreviation: "AL") },
-  { name: "Tifton", state: State.find_by(abbreviation: "GA") },
-  { name: "Toccoa", state: State.find_by(abbreviation: "GA") },
-  { name: "Troy", state: State.find_by(abbreviation: "AL") },
-  { name: "Tupelo", state: State.find_by(abbreviation: "MS") },
-  { name: "Union City", state: State.find_by(abbreviation: "TN") },
-  { name: "Vicksburg", state: State.find_by(abbreviation: "MS") },
-  { name: "Wabash", state: State.find_by(abbreviation: "IN") },
-  { name: "Wallace", state: State.find_by(abbreviation: "NC") },
-  { name: "Warren", state: State.find_by(abbreviation: "PA") },
-  { name: "Washington", state: State.find_by(abbreviation: "NC") },
-  { name: "Waycross", state: State.find_by(abbreviation: "GA") },
-  { name: "West Plains", state: State.find_by(abbreviation: "MO") },
-  { name: "Winchester", state: State.find_by(abbreviation: "VA") },
-  { name: "Wisconsin Rapids", state: State.find_by(abbreviation: "WI") },
-  { name: "Woodward", state: State.find_by(abbreviation: "OK") },
-  { name: "Worthington", state: State.find_by(abbreviation: "MN") },
-  { name: "Yankton", state: State.find_by(abbreviation: "SD") },
-  { name: "Zanesville", state: State.find_by(abbreviation: "OH") },
-    # Add missing ones
-    { name: "Sauget", state: State.find_by(abbreviation: "IL") },
-    { name: "Mesa", state: State.find_by(abbreviation: "AZ") },
-    { name: "Pembroke Pines", state: State.find_by(abbreviation: "FL") },
-    { name: "Pottstown", state: State.find_by(abbreviation: "PA") },
-    { name: "Lanett", state: State.find_by(abbreviation: "AL") },
-    { name: "Santa Teresa", state: State.find_by(abbreviation: "NM") },
-    { name: "Lee's Summit", state: State.find_by(abbreviation: "MO") },
-    { name: "Southport", state: State.find_by(abbreviation: "NC") },
-    { name: "Clearwater", state: State.find_by(abbreviation: "FL") },
-    { name: "Sarasota", state: State.find_by(abbreviation: "FL") },
-    { name: "Titusville", state: State.find_by(abbreviation: "FL") },
-    { name: "Hampton", state: State.find_by(abbreviation: "GA") }
-
+# Seed 1 city with 2 nearby towns
+cities_data = [
+  { name: "Phoenix", state_abbr: "AZ" },
+  { name: "Tempe", state_abbr: "AZ" },
+  { name: "Mesa", state_abbr: "AZ" }
 ]
 
 City.destroy_all
-cities.each do |city|
-  begin
-    City.create!(city)
-  rescue ActiveRecord::RecordInvalid => e
-    puts "Failed to create city: #{city[:name]} with state #{city[:state]&.abbreviation} - #{e.message}"
-    raise
-  end
+cities_data.each do |city_data|
+  state = State.find_by(abbreviation: city_data[:state_abbr])
+  City.create!(name: city_data[:name], state: state)
 end
 puts "Seeded #{City.count} cities."
 
-# Seed 25 airports with a single city
+# Set nearby_cities for Phoenix
+phoenix = City.find_by(name: "Phoenix", state: State.find_by(abbreviation: "AZ"))
+tempe = City.find_by(name: "Tempe", state: State.find_by(abbreviation: "AZ"))
+mesa = City.find_by(name: "Mesa", state: State.find_by(abbreviation: "AZ"))
+
+phoenix.update!(nearby_cities: ["Tempe", "Mesa"])
+tempe.update!(nearby_cities: ["Phoenix"])
+mesa.update!(nearby_cities: ["Phoenix"])
+
+# Seed 1 airport
 airports_data = [
-  { code: "PHX", icao_code: "KPHX", name: "Phoenix Sky Harbor International Airport", state_abbr: "AZ", city_name: "Phoenix" },
-  { code: "FFZ", icao_code: "KFFZ", name: "Falcon Field", state_abbr: "AZ", city_name: "Mesa" },
-  { code: "LAX", icao_code: "KLAX", name: "Los Angeles International Airport", state_abbr: "CA", city_name: "Los Angeles" },
-  { code: "SEE", icao_code: "KSEE", name: "Gillespie Field", state_abbr: "CA", city_name: "San Diego" },
-  { code: "DAB", icao_code: "KDAB", name: "Daytona Beach International Airport", state_abbr: "FL", city_name: "Daytona Beach" },
-  { code: "MIA", icao_code: "KMIA", name: "Miami International Airport", state_abbr: "FL", city_name: "Miami" },
-  { code: "ATL", icao_code: "KATL", name: "Hartsfield-Jackson Atlanta International Airport", state_abbr: "GA", city_name: "Atlanta" },
-  { code: "1H0", icao_code: nil, name: "Creve Coeur Airport", state_abbr: "MO", city_name: "St. Louis" },
-  { code: "DTO", icao_code: "KDTO", name: "Denton Enterprise Airport", state_abbr: "TX", city_name: "Dallas" },
-  { code: "IAH", icao_code: "KIAH", name: "George Bush Intercontinental Airport", state_abbr: "TX", city_name: "Houston" },
-  { code: "SEA", icao_code: "KSEA", name: "Seattle-Tacoma International Airport", state_abbr: "WA", city_name: "Seattle" },
-  { code: "CPS", icao_code: "KCPS", name: "St. Louis Downtown Airport", state_abbr: "IL", city_name: "Sauget" },
-  { code: "HWO", icao_code: "KHWO", name: "North Perry Airport", state_abbr: "FL", city_name: "Pembroke Pines" },
-  { code: "PTW", icao_code: "KPTW", name: "Heritage Field", state_abbr: "PA", city_name: "Pottstown" },
-  { code: "7A3", icao_code: "K7A3", name: "Lanett Municipal Airport", state_abbr: "AL", city_name: "Lanett" },
-  { code: "DNA", icao_code: "KDNA", name: "Dona Ana County International Jetport", state_abbr: "NM", city_name: "Santa Teresa" },
-  { code: "LXT", icao_code: "KLXT", name: "Lee's Summit Municipal Airport", state_abbr: "MO", city_name: "Lee's Summit" },
-  { code: "ACZ", icao_code: "KACZ", name: "Wallace-Pender Airport", state_abbr: "NC", city_name: "Southport" },
-  { code: "CLW", icao_code: "KCLW", name: "Clearwater Air Park", state_abbr: "FL", city_name: "Clearwater" },
-  { code: "RAL", icao_code: "KRAL", name: "Riverside Municipal Airport", state_abbr: "CA", city_name: "Riverside" },
-  { code: "HSD", icao_code: "KHSD", name: "Sundance Airport", state_abbr: "OK", city_name: "Oklahoma City" },
-  { code: "SRQ", icao_code: "KSRQ", name: "Sarasota-Bradenton International Airport", state_abbr: "FL", city_name: "Sarasota" },
-  { code: "VNY", icao_code: "KVNY", name: "Van Nuys Airport", state_abbr: "CA", city_name: "Los Angeles" },
-  { code: "OGD", icao_code: "KOGD", name: "Ogden-Hinckley Airport", state_abbr: "UT", city_name: "Ogden" },
-  { code: "HMP", icao_code: "KHMP", name: "Henry County Airport", state_abbr: "GA", city_name: "Hampton" },
-  { code: "TIX", icao_code: "KTIX", name: "Space Coast Regional Airport", state_abbr: "FL", city_name: "Titusville" }
+  { code: "PHX", icao_code: "KPHX", name: "Phoenix Sky Harbor International Airport", state_abbr: "AZ", city_name: "Phoenix" }
 ]
 
 Airport.destroy_all
 airports_data.each do |airport_data|
   state = State.find_by(abbreviation: airport_data[:state_abbr])
-  primary_city = City.find_by(name: airport_data[:primary_city], state: state)
-  nearby_towns = airport_data[:nearby_towns]
+  city = City.find_by(name: airport_data[:city_name], state: state)
+  raise "City not found for airport #{airport_data[:code]}" unless city
 
-  # Ensure all cities exist
-  all_city_names = ([airport_data[:primary_city]] + nearby_towns).uniq
-  all_city_names.each do |city_name|
-    unless City.find_by(name: city_name, state: state)
-      begin
-        City.create!(name: city_name, state: state)
-      rescue ActiveRecord::RecordInvalid => e
-        puts "Failed to create city: #{city_name} with state #{state.abbreviation} - #{e.message}"
-        raise
-      end
-    end
-  end
-
-  # Update cities with nearby_cities (example for AZ)
-  az = State.find_by(abbreviation: "AZ")
-  phoenix = City.find_by(name: "Phoenix", state: az)
-  tempe = City.find_by(name: "Tempe", state: az)
-  scottsdale = City.find_by(name: "Scottsdale", state: az)
-  mesa = City.find_by(name: "Mesa", state: az)
-
-  phoenix.update!(nearby_cities: ["Tempe", "Scottsdale", "Mesa"])
-  tempe.update!(nearby_cities: ["Phoenix", "Scottsdale", "Mesa"])
-  scottsdale.update!(nearby_cities: ["Phoenix", "Tempe", "Mesa"])
-  mesa.update!(nearby_cities: ["Phoenix", "Tempe", "Scottsdale"])
-
-
-  # Create airport
-  airport_attrs = airport_data.except(:nearby_towns, :state_abbr, :primary_city)
+  airport_attrs = airport_data.except(:city_name, :state_abbr)
   begin
-    airport = Airport.create!(airport_attrs.merge(state: state))
-    all_city_names.each do |city_name|
-      city = City.find_by(name: city_name, state: state)
-      airport.cities << city unless airport.cities.include?(city)
-    end
+    Airport.create!(airport_attrs.merge(state: state, city: city))
   rescue ActiveRecord::RecordInvalid => e
     puts "Failed to create airport: #{airport_attrs[:name]} (#{airport_attrs[:code]}) - #{e.message}"
     raise
   end
 end
 puts "Seeded #{Airport.count} airports."
-puts "Total cities after airport associations: #{City.count}"
 
-
-# Seed 15 flight schools
-schools = [
-  { name: "Ideal Aviation", airport: Airport.find_by(code: "CPS") },
-  { name: "SimpliFly", airport: Airport.find_by(code: "FFZ") },
-  { name: "Sun City Aviation Academy", airport: Airport.find_by(code: "HWO") },
-  { name: "Pitcairn Flight Academy", airport: Airport.find_by(code: "PTW") },
-  { name: "Blue Skies Above", airport: Airport.find_by(code: "7A3") },
-  { name: "Red Arrow Flight Academy", airport: Airport.find_by(code: "DNA") },
-  { name: "Summit Flight", airport: Airport.find_by(code: "LXT") },
-  { name: "High Tide Aviation", airport: Airport.find_by(code: "ACZ") }, # KACZ as primary
-  { name: "Tampa Bay Aviation", airport: Airport.find_by(code: "CLW") }, # KCLW as primary
-  { name: "NextGen Flight Academy", airport: Airport.find_by(code: "RAL") }, # KRAL as primary
-  { name: "Alto Flight Academy", airport: Airport.find_by(code: "HSD") },
-  { name: "Universal Flight Training", airport: Airport.find_by(code: "SRQ") },
-  { name: "LA Flight Academy", airport: Airport.find_by(code: "VNY") },
-  { name: "Blitz Aviation", airport: Airport.find_by(code: "OGD") },
-  { name: "Speedway Flight Training", airport: Airport.find_by(code: "HMP") },
-  { name: "USATS", airport: Airport.find_by(code: "TIX") }
+# Seed 1 school with contact info
+schools_data = [
+  { name: "SimpliFly", airport_code: "PHX", website: "https://simpliflyco.com", phone: "480-555-1234" }
 ]
 
 School.destroy_all
-schools.each do |school|
-  begin
-    School.create!(school)
-  rescue ActiveRecord::RecordInvalid => e
-    puts "Failed to create school: #{school[:name]} - Airport: #{school[:airport]&.code} - #{e.message}"
-    raise
-  end
+schools_data.each do |school_data|
+  airport = Airport.find_by(code: school_data[:airport_code])
+  School.create!(
+    name: school_data[:name],
+    airport: airport,
+    website: school_data[:website],
+    phone: school_data[:phone]
+  )
 end
 puts "Seeded #{School.count} schools."
