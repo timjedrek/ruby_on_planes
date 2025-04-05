@@ -10,24 +10,39 @@
     <ul class="space-y-4">
       <% @airports.each do |airport| %>
         <li class="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
-          <%= link_to airport.name, airport_path(airport.code), class: "text-blue-600 hover:text-blue-800 hover:underline font-medium text-lg" %>
-          <% if airport.icao_code.present? %>
-            <span class="text-gray-500 text-sm ml-1">(<%= airport.icao_code %>)</span>
-          <% end %>
+          <div class="flex items-center justify-between">
+            <div>
+              <%= link_to airport.name, airport_path(airport.code), class: "text-blue-600 hover:text-blue-800 hover:underline font-medium text-lg" %>
+              <% if airport.icao_code.present? %>
+                <span class="text-gray-500 text-sm ml-1">(<%= airport.icao_code %>)</span>
+              <% end %>
+            </div>
+          </div>
           <% if airport.schools.any? %>
             <ul class="mt-2 space-y-2 pl-4">
               <% airport.schools.order(:name).each do |school| %>
                 <li class="text-gray-700 text-sm">
                   <%= link_to school.name, airport_school_path(airport.code, school), class: "text-blue-600 hover:text-blue-800 hover:underline" %>
+                  <% if school.featured %>
+                    <span class="inline-block bg-yellow-400 text-gray-800 text-sm font-semibold px-2 py-1 rounded-full ml-2">Featured</span>
+                  <% end %>
                   <% if school.website.present? %>
                     <%= link_to "(Website)", school.website, target: "_blank", class: "text-blue-500 hover:text-blue-600 ml-1" %>
                   <% end %>
                   <% if school.phone.present? %>
                     <span class="text-gray-500 ml-1">(<%= school.phone %>)</span>
                   <% end %>
+                  <% if school.training_types.any? %>
+                    <span class="text-gray-600 ml-2">Training: <%= school.training_types.join(", ").capitalize %></span>
+                  <% end %>
+                  <% if school.part_141 || school.part_61 %>
+                    <span class="ml-2">(<%= [school.part_141 ? "Part 141" : nil, school.part_61 ? "Part 61" : nil].compact.join(", ") %>)</span>
+                  <% end %>
                 </li>
               <% end %>
             </ul>
+          <% else %>
+            <p class="text-gray-500 italic text-sm mt-2">No flight schools listed yet.</p>
           <% end %>
         </li>
       <% end %>
@@ -41,21 +56,34 @@
     <ul class="space-y-4">
       <% @nearby_airports.each do |airport| %>
         <li class="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
-          <%= link_to airport.name, airport_path(airport.code), class: "text-blue-600 hover:text-blue-800 hover:underline font-medium text-lg" %>
-          <% if airport.icao_code.present? %>
-            <span class="text-gray-500 text-sm ml-1">(<%= airport.icao_code %>)</span>
-          <% end %>
-          <p class="text-gray-600 text-sm">In: <%= airport.cities.map(&:name).join(", ") %></p>
+          <div class="flex items-center justify-between">
+            <div>
+              <%= link_to airport.name, airport_path(airport.code), class: "text-blue-600 hover:text-blue-800 hover:underline font-medium text-lg" %>
+              <% if airport.icao_code.present? %>
+                <span class="text-gray-500 text-sm ml-1">(<%= airport.icao_code %>)</span>
+              <% end %>
+            </div>
+          </div>
+          <p class="text-gray-600 text-sm">In: <%= airport.city.name %></p>
           <% if airport.schools.any? %>
             <ul class="mt-2 space-y-2 pl-4">
               <% airport.schools.order(:name).each do |school| %>
                 <li class="text-gray-700 text-sm">
                   <%= link_to school.name, airport_school_path(airport.code, school), class: "text-blue-600 hover:text-blue-800 hover:underline" %>
+                  <% if school.featured %>
+                    <span class="inline-block bg-yellow-400 text-gray-800 text-sm font-semibold px-2 py-1 rounded-full ml-2">Featured</span>
+                  <% end %>
                   <% if school.website.present? %>
                     <%= link_to "(Website)", school.website, target: "_blank", class: "text-blue-500 hover:text-blue-600 ml-1" %>
                   <% end %>
                   <% if school.phone.present? %>
                     <span class="text-gray-500 ml-1">(<%= school.phone %>)</span>
+                  <% end %>
+                  <% if school.training_types.any? %>
+                    <span class="text-gray-600 ml-2">Training: <%= school.training_types.join(", ").capitalize %></span>
+                  <% end %>
+                  <% if school.part_141 || school.part_61 %>
+                    <span class="ml-2">(<%= [school.part_141 ? "Part 141" : nil, school.part_61 ? "Part 61" : nil].compact.join(", ") %>)</span>
                   <% end %>
                 </li>
               <% end %>
@@ -64,5 +92,7 @@
         </li>
       <% end %>
     </ul>
+  <% else %>
+    <p class="text-gray-600 mt-8">No nearby airports listed yet.</p>
   <% end %>
 </div>
