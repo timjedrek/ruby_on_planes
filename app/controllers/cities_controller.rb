@@ -4,7 +4,7 @@ class CitiesController < ApplicationController
     @city = @state.cities.find_by!(name: params[:name])
     @airports = @city.airports.order(:name)
     # Nearby airports: from nearby cities in the same state
-    @nearby_airports = Airport.where(city_id: @city.nearby_city_records.pluck(:id), state_id: @state.id)
+    @nearby_airports = Airport.where(city_id: @city.nearby_cities.pluck(:id), state_id: @state.id)
                               .where.not(id: @airports.pluck(:id))
                               .order(:name)
                               .distinct

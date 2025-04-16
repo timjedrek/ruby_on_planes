@@ -25,18 +25,34 @@ cities_data.each do |city_data|
 end
 puts "Seeded #{City.count} cities."
 
-# Set nearby_cities for Phoenix
+# Set nearby cities relationships
 phoenix = City.find_by(name: "Phoenix", state: State.find_by(abbreviation: "AZ"))
 tempe = City.find_by(name: "Tempe", state: State.find_by(abbreviation: "AZ"))
 mesa = City.find_by(name: "Mesa", state: State.find_by(abbreviation: "AZ"))
 
-phoenix.update!(nearby_cities: ["Tempe", "Mesa"])
-tempe.update!(nearby_cities: ["Phoenix"])
-mesa.update!(nearby_cities: ["Phoenix"])
+# Clean up existing nearby city relationships
+NearbyCity.destroy_all
 
-# Seed 1 airport
+# Phoenix is near Tempe and Mesa
+NearbyCity.create!(city: phoenix, nearby_city: tempe)
+NearbyCity.create!(city: phoenix, nearby_city: mesa)
+
+# Tempe is near Phoenix and Mesa
+NearbyCity.create!(city: tempe, nearby_city: phoenix)
+NearbyCity.create!(city: tempe, nearby_city: mesa)
+
+# Mesa is near Phoenix and Tempe
+NearbyCity.create!(city: mesa, nearby_city: phoenix)
+NearbyCity.create!(city: mesa, nearby_city: tempe)
+
+puts "Set up nearby city relationships."
+
+# Seed airports for each city
 airports_data = [
-  { code: "PHX", icao_code: "KPHX", name: "Phoenix Sky Harbor International Airport", state_abbr: "AZ", city_name: "Phoenix" }
+  { code: "PHX", icao_code: "KPHX", name: "Phoenix Sky Harbor International Airport", state_abbr: "AZ", city_name: "Phoenix" },
+  { code: "AZA", icao_code: "KIWA", name: "Phoenix-Mesa Gateway Airport", state_abbr: "AZ", city_name: "Mesa" },
+  { code: "CHD", icao_code: "KCHD", name: "Chandler Municipal Airport", state_abbr: "AZ", city_name: "Tempe" },
+  { code: "FFZ", icao_code: "KFFZ", name: "Falcon Field Airport", state_abbr: "AZ", city_name: "Mesa" }
 ]
 
 Airport.destroy_all
@@ -59,10 +75,10 @@ puts "Seeded #{Airport.count} airports."
 schools_data = [
   {
     name: "SimpliFly",
-    airport_code: "PHX",
+    airport_code: "FFZ",
     website: "https://simpliflyco.com",
     phone: "480-555-1234",
-    description: "SimpliFly offers top-notch flight training in the heart of Phoenix, with a focus on personalized instruction.",
+    description: "SimpliFly offers top-notch flight training at Falcon Field, with a focus on personalized instruction.",
     est_planes: 10,
     est_cfis: 5,
     part_141: true,
@@ -72,6 +88,57 @@ schools_data = [
     examining_authority: false,
     date_established: Date.new(2015, 6, 1),
     featured: true,
+    approved: true
+  },
+  {
+    name: "Sky Harbor Flight School",
+    airport_code: "PHX",
+    website: "https://skyharborflightschool.com",
+    phone: "602-555-1234",
+    description: "Sky Harbor Flight School offers training in the heart of Phoenix with access to a major international airport.",
+    est_planes: 15,
+    est_cfis: 12,
+    part_141: true,
+    part_61: true,
+    training_types: ["private", "commercial", "instrument", "multi", "atp"],
+    accelerated_programs: false,
+    examining_authority: true,
+    date_established: Date.new(2010, 1, 15),
+    featured: true,
+    approved: true
+  },
+  {
+    name: "Mesa Flight Academy",
+    airport_code: "AZA",
+    website: "https://mesaflightacademy.com",
+    phone: "480-555-5678",
+    description: "Mesa Flight Academy provides comprehensive flight training in the East Valley.",
+    est_planes: 8,
+    est_cfis: 6,
+    part_141: false,
+    part_61: true,
+    training_types: ["private", "commercial", "instrument", "multi"],
+    accelerated_programs: true,
+    examining_authority: false,
+    date_established: Date.new(2018, 3, 15),
+    featured: false,
+    approved: true
+  },
+  {
+    name: "Chandler Aviation",
+    airport_code: "CHD",
+    website: "https://chandleraviation.com",
+    phone: "480-555-9012",
+    description: "Chandler Aviation specializes in accelerated flight training programs in a relaxed environment.",
+    est_planes: 5,
+    est_cfis: 3,
+    part_141: false,
+    part_61: true,
+    training_types: ["private", "instrument"],
+    accelerated_programs: false,
+    examining_authority: false,
+    date_established: Date.new(2020, 1, 10),
+    featured: false,
     approved: true
   }
 ]
