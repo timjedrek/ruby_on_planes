@@ -20,20 +20,13 @@ Rails.application.routes.draw do
   get "confirmation_pending", to: "pages#confirmation_pending" 
   get "account_confirmed", to: "pages#account_confirmed"
   resources :states, only: [:index, :show], param: :abbreviation do
-    resources :cities, only: [:show, :new, :create], param: :name
+    resources :cities, only: [:show, :new, :create, :edit, :update], param: :name do
+      resources :nearby_cities, only: [:create, :destroy]
+    end
   end
   resources :airports, only: [:index, :show], param: :code do
     resources :schools, only: [:show] # Nested, uses id by default
   end
 
   get "up" => "rails/health#show", as: :rails_health_check
-
-  # Admin routes
-  namespace :admin do
-    resources :cities do
-      resources :nearby_cities, only: [:create, :destroy]
-    end
-    resources :airports
-    resources :schools
-  end
 end

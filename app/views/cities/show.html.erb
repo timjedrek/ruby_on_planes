@@ -1,8 +1,9 @@
 <div class="max-w-4xl mx-auto px-4 py-8">
   <h1 class="text-4xl font-bold text-gray-900 mb-2"><%= @city.name %>, <%= @state.abbreviation %></h1>
 
-  <div class="mb-8">
+  <div class="mb-8 flex space-x-4">
     <%= link_to "Back to #{@state.name}", state_path(@state.abbreviation), class: "inline-block bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200" %>
+    <%= link_to "Edit City", edit_state_city_path(@state.abbreviation, @city.name), class: "inline-block bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200" %>
   </div>
 
   <% if @city.nearby_cities.any? %>

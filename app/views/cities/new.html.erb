@@ -1,0 +1,52 @@
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <h1 class="text-4xl font-bold text-gray-900 mb-2">Add New City in <%= @state.name %></h1>
+
+  <div class="mb-8">
+    <%= link_to "Back to #{@state.name}", state_path(@state.abbreviation), class: "inline-block bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200" %>
+  </div>
+
+  <div class="bg-white rounded-lg shadow p-6 border border-gray-200">
+    <%= form_with(model: [@state, @city], url: state_cities_path(@state.abbreviation), local: true, class: "space-y-6") do |form| %>
+      <% if @city.errors.any? %>
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+          <div class="text-red-700 font-medium">
+            <%= pluralize(@city.errors.count, "error") %> prohibited this city from being saved:
+          </div>
+          <ul class="list-disc pl-5 mt-2 text-red-600">
+            <% @city.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div>
+        <%= form.label :name, class: "block text-gray-700 font-medium mb-2" %>
+        <%= form.text_field :name, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500", placeholder: "City name" %>
+        <p class="mt-1 text-gray-500 text-sm">Enter the full city name (e.g., "Phoenix")</p>
+      </div>
+
+      <% if @cities.any? %>
+        <div>
+          <label class="block text-gray-700 font-medium mb-2">Nearby Cities</label>
+          <div class="bg-gray-50 p-4 rounded-md border border-gray-200">
+            <p class="text-gray-600 mb-2 text-sm">Select cities that are near this new city:</p>
+            <div class="space-y-2">
+              <% @cities.each do |city| %>
+                <div class="flex items-center">
+                  <%= check_box_tag "nearby_city_ids[]", city.id, false, id: "nearby_city_#{city.id}", class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" %>
+                  <%= label_tag "nearby_city_#{city.id}", city.name, class: "ml-2 text-gray-700" %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+          <p class="mt-1 text-gray-500 text-sm">Cities selected here will be considered "nearby" to this city.</p>
+        </div>
+      <% end %>
+
+      <div class="flex justify-end">
+        <%= form.submit "Create City", class: "px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
+      </div>
+    <% end %>
+  </div>
+</div> 
