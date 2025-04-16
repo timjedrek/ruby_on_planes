@@ -25,7 +25,7 @@ Rails.application.routes.draw do
     end
   end
   resources :airports, param: :code do
-    resources :schools, only: [:show] # Nested, uses id by default
+    resources :schools, only: [:show, :edit, :update]
   end
 
   get "up" => "rails/health#show", as: :rails_health_check

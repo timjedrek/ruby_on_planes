@@ -2,6 +2,8 @@ class School < ApplicationRecord
   belongs_to :airport
   has_one :city, through: :airport
   has_one :state, through: :airport
+  has_many :contact_people, dependent: :destroy
+  accepts_nested_attributes_for :contact_people, allow_destroy: true, reject_if: :all_blank
 
   validates :name, presence: true
   validates :est_planes, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, allow_nil: true

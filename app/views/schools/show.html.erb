@@ -14,6 +14,7 @@
   <div class="mb-8">
     <%= link_to "Back to #{@airport.name}", airport_path(@airport.code), class: "inline-block bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200 mr-4" %>
     <%= link_to "All Airports in #{@state.abbreviation}", airports_path(state: @state.abbreviation), class: "inline-block bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200" %>
+    <%= link_to "Edit School", edit_airport_school_path(@airport.code, @school), class: "inline-block bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition duration-200 ml-4" %>
   </div>
 
   <% if @school.description.present? %>
@@ -50,6 +51,34 @@
       </li>
     <% end %>
   </ul>
+
+  <% if @contact_people.any? %>
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b-2 border-gray-200 pb-2">Contact People</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <% @contact_people.each do |contact| %>
+        <div class="bg-white rounded-lg shadow-sm p-4 border border-gray-200">
+          <h3 class="font-medium text-gray-900"><%= contact.name %></h3>
+          <% if contact.title.present? %>
+            <p class="text-gray-600 text-sm"><%= contact.title %></p>
+          <% end %>
+          <div class="mt-2 space-y-1">
+            <% if contact.email.present? %>
+              <p class="text-gray-700 text-sm">
+                <span class="font-medium">Email:</span>
+                <%= mail_to contact.email, contact.email, class: "text-blue-600 hover:text-blue-800" %>
+              </p>
+            <% end %>
+            <% if contact.phone.present? %>
+              <p class="text-gray-700 text-sm">
+                <span class="font-medium">Phone:</span>
+                <%= contact.phone %>
+              </p>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
 
   <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b-2 border-gray-200 pb-2">Training Programs</h2>
   <ul class="space-y-2 mb-6">

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_16_085617) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_16_090010) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -36,6 +36,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_16_085617) do
     t.datetime "updated_at", null: false
     t.index ["state_id", "name"], name: "index_cities_on_state_id_and_name", unique: true
     t.index ["state_id"], name: "index_cities_on_state_id"
+  end
+
+  create_table "contact_people", force: :cascade do |t|
+    t.string "name"
+    t.string "title"
+    t.string "phone"
+    t.string "email"
+    t.bigint "school_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["school_id"], name: "index_contact_people_on_school_id"
   end
 
   create_table "nearby_cities", force: :cascade do |t|
@@ -99,6 +110,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_16_085617) do
   add_foreign_key "airports", "cities"
   add_foreign_key "airports", "states"
   add_foreign_key "cities", "states"
+  add_foreign_key "contact_people", "schools"
   add_foreign_key "nearby_cities", "cities"
   add_foreign_key "nearby_cities", "cities", column: "nearby_city_id"
   add_foreign_key "schools", "airports"
