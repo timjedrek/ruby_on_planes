@@ -1,0 +1,57 @@
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <h1 class="text-4xl font-bold text-gray-900 mb-2">Edit <%= @airport.name %></h1>
+  <p class="text-lg text-gray-600 mb-6">
+    <%= @airport.code %>
+    <% if @airport.icao_code.present? %>
+      <span class="text-gray-500">(<%= @airport.icao_code %>)</span>
+    <% end %>
+  </p>
+
+  <div class="mb-8">
+    <%= link_to "Back to Airport", airport_path(@airport.code), class: "inline-block bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200" %>
+  </div>
+
+  <div class="bg-white rounded-lg shadow p-6 border border-gray-200">
+    <%= form_with(model: @airport, url: airport_path(@airport.code), method: :patch, local: true, class: "space-y-6") do |form| %>
+      <% if @airport.errors.any? %>
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+          <div class="text-red-700 font-medium">
+            <%= pluralize(@airport.errors.count, "error") %> prohibited this airport from being saved:
+          </div>
+          <ul class="list-disc pl-5 mt-2 text-red-600">
+            <% @airport.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div>
+        <%= form.label :name, class: "block text-gray-700 font-medium mb-2" %>
+        <%= form.text_field :name, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+      </div>
+
+      <div>
+        <%= form.label :code, class: "block text-gray-700 font-medium mb-2" %>
+        <%= form.text_field :code, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+        <p class="mt-1 text-gray-500 text-sm">Airport identifier code (e.g., "FFZ")</p>
+      </div>
+
+      <div>
+        <%= form.label :icao_code, class: "block text-gray-700 font-medium mb-2" %>
+        <%= form.text_field :icao_code, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+        <p class="mt-1 text-gray-500 text-sm">ICAO code if different from identifier (optional)</p>
+      </div>
+
+      <div>
+        <%= form.label :description, class: "block text-gray-700 font-medium mb-2" %>
+        <%= form.text_area :description, rows: 5, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+        <p class="mt-1 text-gray-500 text-sm">General information about the airport (optional)</p>
+      </div>
+
+      <div class="flex justify-end">
+        <%= form.submit "Update Airport", class: "px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
+      </div>
+    <% end %>
+  </div>
+</div> 

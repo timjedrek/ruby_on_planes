@@ -24,7 +24,7 @@ Rails.application.routes.draw do
       resources :nearby_cities, only: [:create, :destroy]
     end
   end
-  resources :airports, only: [:index, :show], param: :code do
+  resources :airports, param: :code do
     resources :schools, only: [:show] # Nested, uses id by default
   end
 
