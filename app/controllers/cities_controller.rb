@@ -1,10 +1,15 @@
 class CitiesController < ApplicationController
   before_action :set_state
-  before_action :set_city, only: [:show, :edit, :update]
+  before_action :set_city, only: [:show, :edit, :update, :destroy]
   
   def show
-    @state = State.find_by!(abbreviation: params[:state_abbreviation].upcase)
-    @city = @state.cities.find_by!(name: params[:name])
+    decoded_name = CGI.unescape(params[:name]).titleize
+    @city = @state.cities.where("LOWER(name) = LOWER(?)", decoded_name).first
+    unless @city
+      redirect_to state_path(@state.abbreviation), 
+                  alert: "City '#{decoded_name}' was not found in #{@state.name}."
+      return
+    end
     @airports = @city.airports.order(:name)
     # Nearby airports: from nearby cities in the same state
     @nearby_airports = Airport.where(city_id: @city.nearby_cities.pluck(:id), state_id: @state.id)
@@ -62,6 +67,16 @@ class CitiesController < ApplicationController
       render :edit, status: :unprocessable_entity
     end
   end
+
+  def destroy
+    begin
+      @city.destroy!
+      redirect_to state_path(@state.abbreviation), notice: 'City was successfully deleted.'
+    rescue => e
+      redirect_to state_city_path(@state.abbreviation, @city.name), 
+                  alert: 'Unable to delete this city. It may have associated records.'
+    end
+  end
   
   private
   
@@ -70,7 +85,13 @@ class CitiesController < ApplicationController
   end
 
   def set_city
-    @city = @state.cities.find_by!(name: params[:name])
+    decoded_name = CGI.unescape(params[:name]).titleize
+    @city = @state.cities.where("LOWER(name) = LOWER(?)", decoded_name).first
+    unless @city
+      redirect_to state_path(@state.abbreviation), 
+                  alert: "City '#{decoded_name}' was not found in #{@state.name}."
+      return
+    end
   end
   
   def city_params

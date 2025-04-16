@@ -20,7 +20,7 @@ Rails.application.routes.draw do
   get "confirmation_pending", to: "pages#confirmation_pending" 
   get "account_confirmed", to: "pages#account_confirmed"
   resources :states, only: [:index, :show], param: :abbreviation do
-    resources :cities, only: [:show, :new, :create, :edit, :update], param: :name do
+    resources :cities, only: [:show, :new, :create, :edit, :update, :destroy], param: :name, constraints: { name: /[^\/]+/ } do
       resources :nearby_cities, only: [:create, :destroy]
     end
   end
