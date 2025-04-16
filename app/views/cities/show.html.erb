@@ -7,12 +7,15 @@
     <%= button_to "Delete City", state_city_path(@state.abbreviation, @city.name), method: :delete, class: "inline-block bg-red-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-700 transition duration-200", data: { turbo_confirm: "Are you sure you want to delete this city? This action cannot be undone." } %>
   </div>
 
-  <% if @city.nearby_cities.any? %>
+  <% if @city.nearby_cities.any? || @city.inverse_nearby_cities.any? %>
     <div class="bg-blue-50 rounded-lg p-4 mb-6 shadow-sm border border-blue-100">
       <h2 class="text-lg font-medium text-blue-800 mb-2">Nearby Cities</h2>
       <p class="text-gray-700">
         <span class="font-medium"><%= @city.name %></span> is near: 
-        <%= @city.nearby_cities.map { |city| link_to city.name, state_city_path(@state.abbreviation, city.name), class: "text-blue-600 hover:underline" }.to_sentence.html_safe %>
+        <%= (@city.nearby_cities + @city.inverse_nearby_cities).uniq.map { |city| 
+          link_to city.name, state_city_path(@state.abbreviation, city.name), 
+          class: "text-blue-600 hover:underline" 
+        }.to_sentence.html_safe %>
       </p>
     </div>
   <% end %>

@@ -31,10 +31,12 @@ class CitiesController < ApplicationController
     @city.state = @state
     
     if @city.save
-      # Add nearby cities if selected
+      # Add nearby cities if selected (bidirectional)
       if params[:nearby_city_ids].present?
         params[:nearby_city_ids].each do |nearby_city_id|
+          # Create both directions of the relationship
           NearbyCity.create(city: @city, nearby_city_id: nearby_city_id)
+          NearbyCity.create(city_id: nearby_city_id, nearby_city: @city)
         end
       end
       
@@ -52,11 +54,16 @@ class CitiesController < ApplicationController
 
   def update
     if @city.update(city_params)
-      # Update nearby cities
+      # Update nearby cities (bidirectional)
       @city.nearby_city_relationships.destroy_all
+      # Also destroy inverse relationships
+      NearbyCity.where(nearby_city: @city).destroy_all
+      
       if params[:nearby_city_ids].present?
         params[:nearby_city_ids].each do |nearby_city_id|
+          # Create both directions of the relationship
           NearbyCity.create(city: @city, nearby_city_id: nearby_city_id)
+          NearbyCity.create(city_id: nearby_city_id, nearby_city: @city)
         end
       end
       
