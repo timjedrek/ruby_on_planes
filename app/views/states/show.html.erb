@@ -1,54 +1,74 @@
 <div class="max-w-4xl mx-auto px-4 py-8">
-  <h1 class="text-4xl font-bold text-gray-900 mb-2"><%= @state.name %></h1>
-  <p class="text-lg text-gray-600 mb-6">Abbreviation: <%= @state.abbreviation %></p>
+  <h1 class="text-4xl font-bold text-gray-900 mb-2"><%= @state.name %> (<%= @state.abbreviation %>)</h1>
 
   <div class="mb-8">
-    <%= link_to "List All Airports", airports_path(state: @state.abbreviation), class: "inline-block bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200" %>
+    <%= link_to "Back to All States", states_path, class: "inline-block bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200" %>
   </div>
 
   <% if @cities.any? %>
-    <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b-2 border-gray-200 pb-2">Cities in <%= @state.name %></h2>
-    <div class="space-y-8">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b-2 border-gray-200 pb-2">Cities in <%= @state.name %></h2>
+    <ul class="space-y-4">
       <% @cities.each do |city| %>
-        <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-100">
-          <h3 class="text-xl font-medium text-gray-800 mb-4"><%= city.name %></h3>
+        <li class="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
+          <%= link_to city.name, state_city_path(@state.abbreviation, city.name), class: "text-blue-600 hover:text-blue-800 hover:underline font-medium text-lg" %>
           <% if city.airports.any? %>
-            <div class="space-y-4">
+            <ul class="mt-2 space-y-2 pl-4">
               <% city.airports.order(:name).each do |airport| %>
-                <div>
-                  <p class="text-gray-700 font-medium">
-                    <%= link_to airport.name, airport_path(airport.code), class: "text-blue-600 hover:text-blue-800 hover:underline" %>
-                    <% if airport.icao_code.present? %>
-                      <span class="text-gray-500 text-sm">(<%= airport.icao_code %>)</span>
-                    <% end %>
-                  </p>
-                  <% if airport.schools.any? %>
-                    <ul class="mt-2 space-y-2 pl-4">
-                      <% airport.schools.order(:name).each do |school| %>
-                        <li class="text-gray-700 text-sm">
-                          <%= school.name %>
-                          <% if school.website.present? %>
-                            <%= link_to "(Website)", school.website, target: "_blank", class: "text-blue-500 hover:text-blue-600 ml-1" %>
-                          <% end %>
-                          <% if school.phone.present? %>
-                            <span class="text-gray-500 ml-1">(<%= school.phone %>)</span>
-                          <% end %>
-                        </li>
-                      <% end %>
-                    </ul>
-                  <% else %>
-                    <p class="text-gray-500 italic text-sm mt-1">No flight schools listed yet.</p>
+                <li class="text-gray-700 text-sm">
+                  <%= link_to airport.name, airport_path(airport.code), class: "text-blue-600 hover:text-blue-800 hover:underline" %>
+                  <% if airport.icao_code.present? %>
+                    <span class="text-gray-500">(<%= airport.icao_code %>)</span>
                   <% end %>
-                </div>
+                </li>
+              <% end %>
+            </ul>
+          <% else %>
+            <p class="text-gray-500 italic text-sm mt-2">No airports listed yet for <%= city.name %>.</p>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="text-gray-600">No cities listed yet for <%= @state.name %>.</p>
+  <% end %>
+
+  <% airports = @state.airports.order(:name).distinct %>
+  <% if airports.any? %>
+    <h2 class="text-2xl font-semibold text-gray-800 mt-8 mb-4 border-b-2 border-gray-200 pb-2">Airports in <%= @state.name %></h2>
+    <ul class="space-y-4">
+      <% airports.each do |airport| %>
+        <li class="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
+          <div class="flex items-center justify-between">
+            <div>
+              <%= link_to airport.name, airport_path(airport.code), class: "text-blue-600 hover:text-blue-800 hover:underline font-medium text-lg" %>
+              <% if airport.icao_code.present? %>
+                <span class="text-gray-500 text-sm ml-1">(<%= airport.icao_code %>)</span>
               <% end %>
             </div>
-          <% else %>
-            <p class="text-gray-500 italic text-sm">No airports listed yet.</p>
+          </div>
+          <p class="text-gray-600 text-sm">In: <%= link_to airport.city.name, state_city_path(@state.abbreviation, airport.city.name), class: "text-blue-600 hover:text-blue-800" %></p>
+          <% if airport.schools.any? %>
+            <ul class="mt-2 space-y-2 pl-4">
+              <% airport.schools.order(:name).each do |school| %>
+                <li class="text-gray-700 text-sm">
+                  <%= link_to school.name, airport_school_path(airport.code, school), class: "text-blue-600 hover:text-blue-800 hover:underline" %>
+                  <% if school.featured %>
+                    <span class="inline-block bg-yellow-400 text-gray-800 text-sm font-semibold px-2 py-1 rounded-full ml-2">Featured</span>
+                  <% end %>
+                  <% if school.training_types.any? %>
+                    <span class="text-gray-600 ml-2">Training: <%= school.training_types.join(", ").capitalize %></span>
+                  <% end %>
+                  <% if school.part_141 || school.part_61 %>
+                    <span class="ml-2">(<%= [school.part_141 ? "Part 141" : nil, school.part_61 ? "Part 61" : nil].compact.join(", ") %>)</span>
+                  <% end %>
+                </li>
+              <% end %>
+            </ul>
           <% end %>
-        </div>
+        </li>
       <% end %>
-    </div>
+    </ul>
   <% else %>
-    <p class="text-gray-600 text-lg">No cities listed yet for <%= @state.name %>.</p>
+    <p class="text-gray-600 mt-8">No airports listed yet for <%= @state.name %>.</p>
   <% end %>
 </div>

@@ -1,13 +1,16 @@
-<div class="bg-gray-100 min-h-screen">
-  <div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold text-gray-800 mb-6">Flight Schools by State</h1>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <h1 class="text-4xl font-bold text-gray-900 mb-6">Flight Schools by State</h1>
+
+  <% if @states.any? %>
+    <ul class="space-y-4">
       <% @states.each do |state| %>
-        <div class="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow">
-          <%= link_to state.name, state_path(state.abbreviation), class: "text-blue-600 hover:text-blue-800 font-semibold" %>
-          <p class="text-gray-600 text-sm">(<%= state.abbreviation %>)</p>
-        </div>
+        <li class="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
+          <%= link_to state.name, state_path(state.abbreviation), class: "text-blue-600 hover:text-blue-800 hover:underline font-medium text-lg" %>
+          <span class="text-gray-500 text-sm ml-1">(<%= state.abbreviation %>)</span>
+        </li>
       <% end %>
-    </div>
-  </div>
+    </ul>
+  <% else %>
+    <p class="text-gray-600 text-lg">No states listed yet.</p>
+  <% end %>
 </div>
