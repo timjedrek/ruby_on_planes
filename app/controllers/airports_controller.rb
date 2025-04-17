@@ -4,7 +4,24 @@ class AirportsController < ApplicationController
 
   def index
     @state = State.find_by!(abbreviation: params[:state].upcase) if params[:state].present?
-    @airports = @state ? @state.airports.order(:name).distinct : Airport.order(:name).distinct
+
+    # Base query
+    base_query = @state ? @state.airports : Airport.all
+
+    # Apply sorting
+    case params[:sort]
+    when "name"
+      @airports = base_query.order(:name)
+    when "schools"
+      @airports = base_query.left_joins(:schools)
+                           .group(:id)
+                           .order(Arel.sql("COUNT(schools.id) DESC, airports.code"))
+    when "code", nil, ""
+      @airports = base_query.order(:code)
+    else
+      @airports = base_query.order(:code)
+    end
+
     @title = @state ? "All Airports in #{@state.name} (#{@state.abbreviation})" : "All Airports"
     set_meta_tags title: "#{@title} | Pilot Training Near Me",
                   description: "Browse all airports#{@state ? " in #{@state.name}" : ""} for flight training.",
