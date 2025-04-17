@@ -1,15 +1,40 @@
-<div class="max-w-4xl mx-auto px-4 py-8">
+<div class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
   <h1 class="text-4xl font-bold text-gray-900 mb-6">Flight Schools by State</h1>
+  
+  <div class="flex flex-wrap gap-4 mb-8" data-controller="sort" data-sort-param-name-value="sort">
+    <div class="font-medium text-gray-700 mr-2 sm:mr-4 self-center">Sort by: </div>
+    <button data-sort-target="button" data-action="sort#toggle" data-sort-type="name" data-current="<%= @current_sort == 'name_desc' ? 'desc' : 'asc' %>" class="px-4 py-2 bg-white <%= @current_sort == 'name_asc' || @current_sort == 'name_desc' ? 'bg-blue-50 border-blue-500' : 'border-gray-300' %> border rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+      Alphabetical
+      <span class="ml-1 inline-block">
+        <% if @current_sort == 'name_asc' %>↑<% elsif @current_sort == 'name_desc' %>↓<% end %>
+      </span>
+    </button>
+    <button data-sort-target="button" data-action="sort#toggle" data-sort-type="schools" data-current="<%= @current_sort == 'schools_desc' ? 'desc' : 'asc' %>" class="px-4 py-2 bg-white <%= @current_sort == 'schools_asc' || @current_sort == 'schools_desc' ? 'bg-blue-50 border-blue-500' : 'border-gray-300' %> border rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+      Number of Schools
+      <span class="ml-1 inline-block">
+        <% if @current_sort == 'schools_asc' %>↑<% elsif @current_sort == 'schools_desc' %>↓<% end %>
+      </span>
+    </button>
+  </div>
 
   <% if @states.any? %>
-    <ul class="space-y-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
       <% @states.each do |state| %>
-        <li class="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
-          <%= link_to state.name, state_path(state.abbreviation), class: "text-blue-600 hover:text-blue-800 hover:underline font-medium text-lg" %>
-          <span class="text-gray-500 text-sm ml-1">(<%= state.abbreviation %>)</span>
-        </li>
+        <div class="bg-white rounded-lg shadow-sm p-4 border border-gray-100 hover:shadow-md transition-shadow duration-200">
+          <%= link_to state_path(state.abbreviation), class: "block h-full", data: { turbo: false } do %>
+            <div class="flex justify-between items-start">
+              <div>
+                <h2 class="text-blue-600 font-medium text-lg"><%= state.name %></h2>
+                <span class="text-gray-500 text-sm">(<%= state.abbreviation %>)</span>
+              </div>
+              <div class="bg-blue-50 text-blue-700 px-2 py-1 rounded-full text-xs font-semibold">
+                <%= state.school_count || 0 %> <span class="hidden sm:inline">school<%= state.school_count == 1 ? '' : 's' %></span>
+              </div>
+            </div>
+          <% end %>
+        </div>
       <% end %>
-    </ul>
+    </div>
   <% else %>
     <p class="text-gray-600 text-lg">No states listed yet.</p>
   <% end %>
