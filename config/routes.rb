@@ -21,6 +21,10 @@ Rails.application.routes.draw do
   get "account_confirmed", to: "pages#account_confirmed"
   get "featured-flight-schools", to: "pages#featured_schools", as: :featured_schools
   get "top-rated-flight-schools", to: "pages#top_rated_schools", as: :top_rated_schools
+
+  # User profile section
+  resources :user_reviews, only: [ :index ]
+
   resources :states, only: [ :index, :show ], param: :abbreviation do
     resources :cities, only: [ :show, :new, :create, :edit, :update, :destroy ], param: :name, constraints: { name: /[^\/]+/ } do
       resources :nearby_cities, only: [ :create, :destroy ]
