@@ -12,7 +12,7 @@
             </div>
           <% end %>
         </div>
-        <div class="hidden lg:ml-6 sm:flex sm:items-center space-x-4">
+        <div class="hidden xl:ml-6 xl:flex xl:items-center space-x-4">
           <!-- Navigation Links -->
           <div class="px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-blue-500">
             <%= link_to "Featured Flight Schools", "#", class: "text-white hover:text-white" %>
@@ -32,7 +32,7 @@
         </div>
       </div>
       
-      <div class="hidden sm:ml-6 sm:flex sm:items-center">
+      <div class="hidden xl:ml-6 xl:flex xl:items-center">
         <div class="ml-3 relative">
           <% if user_signed_in? %>
             <div class="flex items-center space-x-4">
@@ -46,7 +46,7 @@
       </div>
       
       <!-- Toggle Button (Mobile only) -->
-      <button id="nav-toggle" type="button" class="nav-toggle sm:hidden z-50 p-2 text-white focus:outline-none" aria-expanded="false" aria-controls="menu">
+      <button id="nav-toggle" type="button" class="nav-toggle xl:hidden z-50 p-2 text-white focus:outline-none" aria-expanded="false" aria-controls="menu">
         <svg class="menuicon w-10 h-10 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
           <title>Toggle Menu</title>
           <g>
@@ -66,12 +66,12 @@
   </div>
 
   <!-- Circular Splash Background (Mobile only) -->
-  <div id="splash" class="sm:hidden absolute top-8 right-8 w-px h-px">
+  <div id="splash" class="xl:hidden absolute top-8 right-8 w-px h-px">
     <!-- The ::after element will be created via CSS -->
   </div>
 
   <!-- Mobile Navigation Menu -->
-  <div id="nav-menu" class="nav-menu sm:hidden fixed inset-0 flex flex-col justify-center items-center z-40 opacity-0 pointer-events-none transition-opacity duration-300">
+  <div id="nav-menu" class="nav-menu xl:hidden fixed inset-0 flex flex-col justify-center items-center z-40 opacity-0 pointer-events-none transition-opacity duration-300">
     <ul id="menu" class="text-center space-y-6" aria-label="main navigation" hidden>
       <li class="nav-item opacity-0 transform translate-y-[-40px] transition-all duration-500 ease-custom">
         <%= link_to "Featured Flight Schools", "#", class: "block px-4 py-2 text-white uppercase tracking-widest text-xl hover:bg-opacity-20 hover:bg-black" %>
@@ -154,85 +154,44 @@
     transition-timing-function: cubic-bezier(0.000, 0.995, 0.990, 1.000);
   }
 
-  /* Dynamic animation for menu items */
-  .nav-item {
-    opacity: 0;
-    transform: translateY(-40px);
-    transition: all 0.5s cubic-bezier(0.000, 0.995, 0.990, 1.000);
-    transition-delay: 0s;
-    will-change: transform, opacity;
-  }
-  
-  /* Initial state explicitly set */
-  #menu[hidden] .nav-item {
-    opacity: 0;
-    transform: translateY(-40px);
-  }
+  /* Base styles for nav items */
+.nav-item {
+  opacity: 0;
+  transform: translateY(-40px);
+  transition: all 0.5s cubic-bezier(0.000, 0.995, 0.990, 1.000);
+  will-change: transform, opacity;
+  --delay: 0s; /* Default delay */
+}
 
-  .nav-open .nav-item:nth-child(1) {
-    transition-delay: 0.5s; /* Start after background animation completes */
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Open state */
+.nav-open .nav-item {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: var(--delay);
+}
 
-  .nav-open .nav-item:nth-child(2) {
-    transition-delay: 0.6s;
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Closing state */
+.nav-menu.closing .nav-item {
+  opacity: 0;
+  transform: translateY(-40px);
+  transition: all 0.3s cubic-bezier(0.000, 0.995, 0.990, 1.000);
+  transition-delay: var(--delay);
+}
 
-  .nav-open .nav-item:nth-child(3) {
-    transition-delay: 0.7s;
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Staggered delays for open animation */
+.nav-open .nav-item:nth-child(1) { --delay: 0.5s; }
+.nav-open .nav-item:nth-child(2) { --delay: 0.6s; }
+.nav-open .nav-item:nth-child(3) { --delay: 0.7s; }
+.nav-open .nav-item:nth-child(4) { --delay: 0.8s; }
+.nav-open .nav-item:nth-child(5) { --delay: 0.9s; }
 
-  .nav-open .nav-item:nth-child(4) {
-    transition-delay: 0.8s;
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Staggered delays for closing animation */
+.nav-menu.closing .nav-item:nth-child(1) { --delay: 0.5s; }
+.nav-menu.closing .nav-item:nth-child(2) { --delay: 0.4s; }
+.nav-menu.closing .nav-item:nth-child(3) { --delay: 0.3s; }
+.nav-menu.closing .nav-item:nth-child(4) { --delay: 0.2s; }
+.nav-menu.closing .nav-item:nth-child(5) { --delay: 0.1s; }
 
-  .nav-open .nav-item:nth-child(5) {
-    transition-delay: 0.9s;
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* Animation for closing */
-  .nav-menu.closing .nav-item {
-    opacity: 0;
-    transform: translateY(-40px);
-    transition: all 0.3s cubic-bezier(0.000, 0.995, 0.990, 1.000);
-  }
-
-  .nav-menu.closing .nav-item:nth-child(5) {
-    transition-delay: 0.1s;
-  }
-
-  .nav-menu.closing .nav-item:nth-child(4) {
-    transition-delay: 0.2s;
-  }
-
-  .nav-menu.closing .nav-item:nth-child(3) {
-    transition-delay: 0.3s;
-  }
-
-  .nav-menu.closing .nav-item:nth-child(2) {
-    transition-delay: 0.4s;
-  }
-
-  .nav-menu.closing .nav-item:nth-child(1) {
-    transition-delay: 0.5s;
-  }
-
-  @media (min-width: 640px) {
-    /* Ensure desktop menu styles are not affected by the mobile menu styles */
-    .nav-open .menuicon,
-    .nav-open #splash::after {
-      display: none;
-    }
-  }
 </style>
 
 <script>
