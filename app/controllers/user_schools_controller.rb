@@ -1,8 +1,9 @@
 class UserSchoolsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_school, only: [ :show, :verify_review ]
+  before_action :set_school, only: [ :show, :verify_review, :unverify_review ]
   before_action :authorize_school_owner, only: [ :show, :verify_review ]
-  before_action :set_review, only: [ :verify_review ]
+  before_action :authorize_admin, only: [ :unverify_review ]
+  before_action :set_review, only: [ :verify_review, :unverify_review ]
 
   def index
     @schools = current_user.schools.includes(:airport, :reviews).order(name: :asc)
@@ -24,6 +25,18 @@ class UserSchoolsController < ApplicationController
     end
   end
 
+  def unverify_review
+    @review = @school.reviews.find(params[:review_id])
+    @review.update(verified: false)
+
+    # Determine the redirect path based on where the request came from
+    if request.referer&.include?("airport")
+      redirect_to airport_school_path(@school.airport.code, @school), notice: "Review has been unmarked as verified."
+    else
+      redirect_to user_school_path(@school), notice: "Review has been unmarked as verified."
+    end
+  end
+
   private
 
   def set_school
@@ -34,6 +47,12 @@ class UserSchoolsController < ApplicationController
   def authorize_school_owner
     unless current_user.owns_school?(@school) || current_user.admin?
       redirect_to user_schools_path, alert: "You don't have permission to manage this school"
+    end
+  end
+
+  def authorize_admin
+    unless current_user.admin?
+      redirect_to user_schools_path, alert: "You don't have permission to perform this action"
     end
   end
 
