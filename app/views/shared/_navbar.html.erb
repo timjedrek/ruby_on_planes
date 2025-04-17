@@ -8,25 +8,22 @@
               <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-2" viewBox="0 0 20 20" fill="currentColor">
                 <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
               </svg>
-              <span>Flight Schools</span>
+              <span>Flight School Finder</span>
             </div>
           <% end %>
         </div>
         <div class="hidden sm:ml-6 sm:flex sm:items-center space-x-4">
           <!-- Navigation Links -->
+          <div class="px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-blue-500">
+            <%= link_to "Featured Flight Schools", "#", class: "text-white hover:text-white" %>
+          </div>
+          
           <div class="relative group">
-            <%= link_to "States", states_path, class: "px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-blue-500" %>
-            <div class="absolute z-10 hidden group-hover:block pt-2 w-48">
-              <div class="bg-white rounded-md shadow-lg py-1">
-                <% State.order(:name).each do |state| %>
-                  <%= link_to state.name, state_path(state.abbreviation), class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
-                <% end %>
-              </div>
-            </div>
+            <%= link_to "Find School By State", states_path, class: "px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-blue-500" %>
           </div>
           
           <div class="px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-blue-500">
-            <%= link_to "Cities", "#", class: "text-white hover:text-white" %>
+            <%= link_to "Find School By City", "#", class: "text-white hover:text-white" %>
           </div>
           
           <div class="px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-blue-500">
@@ -62,8 +59,9 @@
   <!-- Mobile menu, show/hide based on menu state. -->
   <div class="mobile-menu hidden sm:hidden bg-blue-700">
     <div class="px-2 pt-2 pb-3 space-y-1">
-      <%= link_to "States", states_path, class: "block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-blue-500" %>
-      <%= link_to "Cities", "#", class: "block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-blue-500" %>
+      <%= link_to "Featured Flight Schools", "#", class: "block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-blue-500" %>
+      <%= link_to "Find School By State", states_path, class: "block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-blue-500" %>
+      <%= link_to "Find School By City", "#", class: "block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-blue-500" %>
       <%= link_to "Airports", airports_path, class: "block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-blue-500" %>
     </div>
     
