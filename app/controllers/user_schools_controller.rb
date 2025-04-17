@@ -15,7 +15,13 @@ class UserSchoolsController < ApplicationController
   def verify_review
     @review = @school.reviews.find(params[:review_id])
     @review.update(verified: true)
-    redirect_to user_school_path(@school), notice: "Review has been marked as verified."
+
+    # Determine the redirect path based on where the request came from
+    if request.referer&.include?("airport")
+      redirect_to airport_school_path(@school.airport.code, @school), notice: "Review has been marked as verified."
+    else
+      redirect_to user_school_path(@school), notice: "Review has been marked as verified."
+    end
   end
 
   private
@@ -26,7 +32,7 @@ class UserSchoolsController < ApplicationController
   end
 
   def authorize_school_owner
-    unless current_user.owns_school?(@school)
+    unless current_user.owns_school?(@school) || current_user.admin?
       redirect_to user_schools_path, alert: "You don't have permission to manage this school"
     end
   end

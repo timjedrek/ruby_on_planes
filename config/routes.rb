@@ -29,6 +29,10 @@ Rails.application.routes.draw do
       patch :verify_review
     end
   end
+
+  # Additional route for verifying reviews from school show page
+  patch "schools/:id/verify_review", to: "user_schools#verify_review", as: :verify_school_review
+
   resources :claim_requests, only: [ :index, :show ] do
     member do
       post :approve

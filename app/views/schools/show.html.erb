@@ -228,11 +228,20 @@
                 <h3 class="font-semibold text-gray-900 text-lg mb-1"><%= review.title %></h3>
               </div>
               
-              <% if user_signed_in? && (current_user == review.user || current_user.admin?) %>
-                <div>
+              <div class="flex items-center space-x-2">
+                <% if user_signed_in? && (current_user.owns_school?(@school) || current_user.admin?) && !review.verified? %>
+                  <%= button_to verify_school_review_path(@school, review_id: review.id), method: :patch, class: "inline-flex items-center px-2 py-1 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" do %>
+                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Verify
+                  <% end %>
+                <% end %>
+                
+                <% if user_signed_in? && (current_user == review.user || current_user.admin?) %>
                   <%= link_to "Edit", edit_airport_school_review_path(@airport.code, @school, review), class: "text-indigo-600 hover:text-indigo-900 text-sm font-medium" %>
-                </div>
-              <% end %>
+                <% end %>
+              </div>
             </div>
             
             <div class="flex items-center text-sm text-gray-500 mb-3">
