@@ -18,6 +18,10 @@
             <%= link_to "Featured Flight Schools", featured_schools_path, class: "text-white hover:text-white" %>
           </div>
           
+          <div class="px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-blue-500">
+            <%= link_to "Top Rated Flight Schools", top_rated_schools_path, class: "text-white hover:text-white" %>
+          </div>
+          
           <div class="relative group">
             <%= link_to "Find School By State", states_path, class: "px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-blue-500" %>
           </div>
@@ -75,6 +79,9 @@
     <ul id="menu" class="text-center space-y-6" aria-label="main navigation" hidden>
       <li class="nav-item opacity-0 transform translate-y-[-40px] transition-all duration-500 ease-custom">
         <%= link_to "Featured Flight Schools", featured_schools_path, class: "block px-4 py-2 text-white uppercase tracking-widest text-xl hover:bg-opacity-20 hover:bg-black" %>
+      </li>
+      <li class="nav-item opacity-0 transform translate-y-[-40px] transition-all duration-500 ease-custom">
+        <%= link_to "Top Rated Flight Schools", top_rated_schools_path, class: "block px-4 py-2 text-white uppercase tracking-widest text-xl hover:bg-opacity-20 hover:bg-black" %>
       </li>
       <li class="nav-item opacity-0 transform translate-y-[-40px] transition-all duration-500 ease-custom">
         <%= link_to "Find School By State", states_path, class: "block px-4 py-2 text-white uppercase tracking-widest text-xl hover:bg-opacity-20 hover:bg-black" %>

@@ -17,4 +17,12 @@ class PagesController < ApplicationController
                  description: "Discover our handpicked selection of top flight schools across the country offering exceptional pilot training programs.",
                  keywords: "featured flight schools, best flight training, top pilot schools, aviation training programs"
   end
+
+  def top_rated_schools
+    @top_rated_schools = School.where("avg_rating >= ?", 4.0).includes(:airport, airport: [ :city, :state ]).order(avg_rating: :desc)
+
+    set_meta_tags title: "Top Rated Flight Schools | Best Reviewed Pilot Training",
+                 description: "Browse the highest-rated flight schools based on student reviews and satisfaction scores.",
+                 keywords: "top rated flight schools, best reviewed flight training, highly rated pilot schools, best aviation programs"
+  end
 end
