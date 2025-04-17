@@ -65,6 +65,6 @@ group :test do
 end
 
 gem "devise", "~> 4.9"
-gem 'dotenv', '~> 3.1', '>= 3.1.7'
+gem 'dotenv', '~> 3.1'
 gem "meta-tags"
 gem "kaminari", "~> 1.2"
