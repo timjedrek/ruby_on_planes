@@ -6,6 +6,8 @@ class User < ApplicationRecord
 
   has_many :reviews, dependent: :nullify
 
+  validates :name, presence: true, length: { minimum: 2, maximum: 50 }, allow_blank: true
+
   def admin?
     role == "admin"
   end

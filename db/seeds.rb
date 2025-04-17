@@ -1,8 +1,83 @@
 # db/seeds.rb
 
-# Seed 1 state
+# Create users (admin and test)
+User.destroy_all
+
+# Admin user
+admin_user = User.new(
+  name: "Tim Jedrek",
+  email: "tim@rightruddermarketing.com",
+  password: "123456",
+  password_confirmation: "123456",
+  role: "admin"
+)
+admin_user.skip_confirmation!
+admin_user.save!
+
+# Test user
+test_user = User.new(
+  name: "Tonie Santos",
+  email: "timsts@gmail.com",
+  password: "123456",
+  password_confirmation: "123456"
+)
+test_user.skip_confirmation!
+test_user.save!
+
+puts "Created users: #{User.count}"
+
+# Create all 50 states
 states_data = [
-  { name: "Arizona", abbreviation: "AZ" }
+  { name: "Alabama", abbreviation: "AL" },
+  { name: "Alaska", abbreviation: "AK" },
+  { name: "Arizona", abbreviation: "AZ" },
+  { name: "Arkansas", abbreviation: "AR" },
+  { name: "California", abbreviation: "CA" },
+  { name: "Colorado", abbreviation: "CO" },
+  { name: "Connecticut", abbreviation: "CT" },
+  { name: "Delaware", abbreviation: "DE" },
+  { name: "Florida", abbreviation: "FL" },
+  { name: "Georgia", abbreviation: "GA" },
+  { name: "Hawaii", abbreviation: "HI" },
+  { name: "Idaho", abbreviation: "ID" },
+  { name: "Illinois", abbreviation: "IL" },
+  { name: "Indiana", abbreviation: "IN" },
+  { name: "Iowa", abbreviation: "IA" },
+  { name: "Kansas", abbreviation: "KS" },
+  { name: "Kentucky", abbreviation: "KY" },
+  { name: "Louisiana", abbreviation: "LA" },
+  { name: "Maine", abbreviation: "ME" },
+  { name: "Maryland", abbreviation: "MD" },
+  { name: "Massachusetts", abbreviation: "MA" },
+  { name: "Michigan", abbreviation: "MI" },
+  { name: "Minnesota", abbreviation: "MN" },
+  { name: "Mississippi", abbreviation: "MS" },
+  { name: "Missouri", abbreviation: "MO" },
+  { name: "Montana", abbreviation: "MT" },
+  { name: "Nebraska", abbreviation: "NE" },
+  { name: "Nevada", abbreviation: "NV" },
+  { name: "New Hampshire", abbreviation: "NH" },
+  { name: "New Jersey", abbreviation: "NJ" },
+  { name: "New Mexico", abbreviation: "NM" },
+  { name: "New York", abbreviation: "NY" },
+  { name: "North Carolina", abbreviation: "NC" },
+  { name: "North Dakota", abbreviation: "ND" },
+  { name: "Ohio", abbreviation: "OH" },
+  { name: "Oklahoma", abbreviation: "OK" },
+  { name: "Oregon", abbreviation: "OR" },
+  { name: "Pennsylvania", abbreviation: "PA" },
+  { name: "Rhode Island", abbreviation: "RI" },
+  { name: "South Carolina", abbreviation: "SC" },
+  { name: "South Dakota", abbreviation: "SD" },
+  { name: "Tennessee", abbreviation: "TN" },
+  { name: "Texas", abbreviation: "TX" },
+  { name: "Utah", abbreviation: "UT" },
+  { name: "Vermont", abbreviation: "VT" },
+  { name: "Virginia", abbreviation: "VA" },
+  { name: "Washington", abbreviation: "WA" },
+  { name: "West Virginia", abbreviation: "WV" },
+  { name: "Wisconsin", abbreviation: "WI" },
+  { name: "Wyoming", abbreviation: "WY" }
 ]
 
 State.destroy_all
@@ -11,7 +86,7 @@ states_data.each do |state_data|
 end
 puts "Seeded #{State.count} states."
 
-# Seed 1 city with 2 nearby towns
+# Seed city information for Arizona (keeping the original data)
 cities_data = [
   { name: "Phoenix", state_abbr: "AZ" },
   { name: "Tempe", state_abbr: "AZ" },
@@ -83,7 +158,7 @@ schools_data = [
     est_cfis: 5,
     part_141: true,
     part_61: true,
-    training_types: ["private", "commercial", "instrument"],
+    training_types: [ "private", "commercial", "instrument" ],
     accelerated_programs: true,
     examining_authority: false,
     date_established: Date.new(2015, 6, 1),
@@ -100,7 +175,7 @@ schools_data = [
     est_cfis: 12,
     part_141: true,
     part_61: true,
-    training_types: ["private", "commercial", "instrument", "multi", "atp"],
+    training_types: [ "private", "commercial", "instrument", "multi", "atp" ],
     accelerated_programs: false,
     examining_authority: true,
     date_established: Date.new(2010, 1, 15),
@@ -117,7 +192,7 @@ schools_data = [
     est_cfis: 6,
     part_141: false,
     part_61: true,
-    training_types: ["private", "commercial", "instrument", "multi"],
+    training_types: [ "private", "commercial", "instrument", "multi" ],
     accelerated_programs: true,
     examining_authority: false,
     date_established: Date.new(2018, 3, 15),
@@ -134,7 +209,7 @@ schools_data = [
     est_cfis: 3,
     part_141: false,
     part_61: true,
-    training_types: ["private", "instrument"],
+    training_types: [ "private", "instrument" ],
     accelerated_programs: false,
     examining_authority: false,
     date_established: Date.new(2020, 1, 10),
