@@ -1,6 +1,7 @@
 class SchoolsController < ApplicationController
   before_action :set_airport
   before_action :set_school, only: [ :show, :edit, :update ]
+  before_action :authorize_admin, only: [ :edit, :update ]
 
   def show
     @state = @airport.state
@@ -54,6 +55,12 @@ class SchoolsController < ApplicationController
     if @school.nil?
       Rails.logger.error "Could not find school with ID or slug: #{params[:id]}"
       render plain: "Could not find school with ID or slug: #{params[:id]}", status: :not_found
+    end
+  end
+
+  def authorize_admin
+    unless user_signed_in? && current_user.admin?
+      redirect_to airport_school_path(@airport.code, @school), alert: "You are not authorized to perform this action."
     end
   end
 
