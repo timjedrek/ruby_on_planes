@@ -16,7 +16,7 @@
             <% if school.website.present? %>
               <img src="https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=<%= school.website %>&size=128" 
                    alt="<%= school.name %> logo" class="max-h-32 max-w-32 p-4" 
-                   onerror="this.onerror=null; this.src='<%= asset_path('default_school_logo.png') %>'; this.classList.add('opacity-50');">
+                   onerror="this.onerror=null; this.src='<%#= asset_path('default_school_logo.png') %>'; this.classList.add('opacity-50');">
             <% else %>
               <div class="text-gray-400 flex flex-col items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">

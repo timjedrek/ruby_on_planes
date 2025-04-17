@@ -117,8 +117,9 @@
         });
       });
       
+      // Mouseleave effect - restore selected rating
       star.addEventListener('mouseleave', function() {
-        const selectedValue = parseInt(ratingInput.value);
+        const selectedValue = parseInt(ratingInput.value) || 0;
         
         stars.forEach((s, index) => {
           if (index < selectedValue) {
