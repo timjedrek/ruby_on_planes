@@ -4,12 +4,8 @@
   <h1 class="text-5xl font-bold tracking-tight">Welcome to Flight School Finder</h1>
   <p class="mt-4 text-xl text-blue-200">Find the best flight schools near you to start your aviation journey!</p>
   <div class="mt-8 space-x-4">
-    <% if user_signed_in? %>
-      <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "inline-block bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition duration-200" %>
-    <% else %>
-      <%= link_to "Sign In", new_user_session_path, class: "inline-block bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition duration-200" %>
-      <%= link_to "Create Account", new_user_registration_path, class: "inline-block bg-green-600 text-white px-6 py-3 rounded-md hover:bg-green-700 transition duration-200" %>
-    <% end %>
+    <%= link_to "Review a School", new_user_registration_path, class: "inline-block bg-yellow-600 text-white px-6 py-3 rounded-md hover:bg-yellow-700 transition duration-200" %>
+    <%= link_to "Add a Listing", new_user_registration_path, class: "inline-block bg-green-600 text-white px-6 py-3 rounded-md hover:bg-green-700 transition duration-200" %>
   </div>
 </div>
 
