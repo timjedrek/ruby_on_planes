@@ -1,0 +1,65 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <h1 class="text-3xl font-bold text-gray-900 mb-8">Admin Dashboard</h1>
+  
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Pending Claim Requests -->
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+      <div class="px-4 py-5 sm:px-6 bg-blue-50 border-b border-blue-100">
+        <h2 class="text-lg font-medium text-gray-900">Claim Requests</h2>
+      </div>
+      <div class="p-6">
+        <div class="text-3xl font-bold text-blue-600 mb-2"><%= @pending_claim_requests_count %></div>
+        <p class="text-sm text-gray-500 mb-4">Pending claim requests</p>
+        <%= link_to "View All Requests", admin_claim_requests_path, class: "text-blue-600 hover:text-blue-800 font-medium" %>
+      </div>
+    </div>
+    
+    <!-- Unpublished Reviews -->
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+      <div class="px-4 py-5 sm:px-6 bg-orange-50 border-b border-orange-100">
+        <h2 class="text-lg font-medium text-gray-900">Reviews</h2>
+      </div>
+      <div class="p-6">
+        <div class="text-3xl font-bold text-orange-600 mb-2"><%= @unpublished_reviews_count %></div>
+        <p class="text-sm text-gray-500 mb-4">Unpublished reviews</p>
+        <%= link_to "Manage Reviews", admin_reviews_path(filter: "unpublished"), class: "text-orange-600 hover:text-orange-800 font-medium" %>
+      </div>
+    </div>
+    
+    <!-- Unapproved Schools -->
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+      <div class="px-4 py-5 sm:px-6 bg-green-50 border-b border-green-100">
+        <h2 class="text-lg font-medium text-gray-900">Schools</h2>
+      </div>
+      <div class="p-6">
+        <div class="text-3xl font-bold text-green-600 mb-2"><%= @unapproved_schools_count %></div>
+        <p class="text-sm text-gray-500 mb-4">Pending school submissions</p>
+        <%= link_to "Manage Schools", admin_schools_path(filter: "unapproved"), class: "text-green-600 hover:text-green-800 font-medium" %>
+      </div>
+    </div>
+  </div>
+  
+  <div class="mt-8 bg-white rounded-lg shadow overflow-hidden">
+    <div class="px-4 py-5 sm:px-6 bg-gray-50 border-b border-gray-200">
+      <h2 class="text-lg font-medium text-gray-900">Admin Tools</h2>
+    </div>
+    <div class="p-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <%= link_to admin_reviews_path, class: "block p-4 border border-gray-200 rounded-lg text-center hover:bg-gray-50" do %>
+          <div class="text-lg font-medium text-gray-900 mb-1">Manage Reviews</div>
+          <div class="text-sm text-gray-500">Review, approve and moderate user reviews</div>
+        <% end %>
+        
+        <%= link_to admin_schools_path, class: "block p-4 border border-gray-200 rounded-lg text-center hover:bg-gray-50" do %>
+          <div class="text-lg font-medium text-gray-900 mb-1">Manage Schools</div>
+          <div class="text-sm text-gray-500">Edit, approve and manage flight school listings</div>
+        <% end %>
+        
+        <%= link_to admin_claim_requests_path, class: "block p-4 border border-gray-200 rounded-lg text-center hover:bg-gray-50" do %>
+          <div class="text-lg font-medium text-gray-900 mb-1">Claim Requests</div>
+          <div class="text-sm text-gray-500">Review and process school ownership claims</div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div> 

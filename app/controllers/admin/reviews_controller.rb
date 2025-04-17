@@ -1,6 +1,4 @@
-class Admin::ReviewsController < ApplicationController
-  before_action :authenticate_user!
-  before_action :ensure_admin
+class Admin::ReviewsController < Admin::BaseController
   before_action :set_review, only: [ :edit, :update, :publish, :unpublish, :verify, :unverify, :destroy ]
 
   def index
@@ -59,11 +57,5 @@ class Admin::ReviewsController < ApplicationController
 
   def review_params
     params.require(:review).permit(:rating, :title, :comment, :published, :verified)
-  end
-
-  def ensure_admin
-    unless current_user.admin?
-      redirect_to root_path, alert: "You are not authorized to access this page."
-    end
   end
 end

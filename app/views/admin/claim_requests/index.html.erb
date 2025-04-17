@@ -42,10 +42,10 @@
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 <%= claim_request.user.email %><br>
-                <span class="text-xs text-gray-400"><%= claim_request.user.full_name %></span>
+                <span class="text-xs text-gray-400"><%= claim_request.user.name %></span>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                <%= link_to claim_request.school.name, school_path(claim_request.school), class: "text-blue-600 hover:underline" %>
+                <%= link_to claim_request.school.name, airport_school_path(claim_request.school.airport.code, claim_request.school), class: "text-blue-600 hover:underline" %>
                 <div class="text-xs text-gray-400">
                   <%= [claim_request.school.city&.name, claim_request.school.state&.name].compact.join(', ') %>
                 </div>

@@ -24,7 +24,13 @@ Rails.application.routes.draw do
 
   # User profile section
   resources :user_reviews, only: [ :index ]
-  resources :claim_requests, only: [ :index, :show ]
+  resources :claim_requests, only: [ :index, :show ] do
+    member do
+      post :approve
+      post :reject
+      patch :update_notes
+    end
+  end
 
   # School submissions and claims
   resources :school_submissions, only: [ :new, :create ]
@@ -45,6 +51,7 @@ Rails.application.routes.draw do
 
   # Admin routes
   namespace :admin do
+    root to: "dashboard#index"
     resources :reviews do
       member do
         patch :publish
@@ -65,8 +72,9 @@ Rails.application.routes.draw do
 
     resources :claim_requests, only: [ :index, :show ] do
       member do
-        patch :approve
-        patch :reject
+        post :approve
+        post :reject
+        patch :update_notes
       end
     end
   end

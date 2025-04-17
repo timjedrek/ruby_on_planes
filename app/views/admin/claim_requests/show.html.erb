@@ -28,7 +28,7 @@
           <div class="space-y-3">
             <div>
               <p class="text-sm font-medium text-gray-500">Full Name</p>
-              <p class="text-base"><%= @claim_request.user.full_name %></p>
+              <p class="text-base"><%= @claim_request.user.name %></p>
             </div>
             
             <div>
@@ -55,7 +55,7 @@
             <div>
               <p class="text-sm font-medium text-gray-500">School Name</p>
               <p class="text-base">
-                <%= link_to @claim_request.school.name, school_path(@claim_request.school), class: "text-blue-600 hover:underline" %>
+                <%= link_to @claim_request.school.name, airport_school_path(@claim_request.school.airport.code, @claim_request.school), class: "text-blue-600 hover:underline" %>
               </p>
             </div>
             
@@ -82,9 +82,9 @@
             <div>
               <p class="text-sm font-medium text-gray-500">Current Owner</p>
               <p class="text-base">
-                <% if @claim_request.school.owner %>
-                  <%= @claim_request.school.owner.email %> 
-                  <span class="text-sm text-gray-500">(<%= @claim_request.school.owner.full_name %>)</span>
+                <% if @claim_request.school.users.any? %>
+                  <%= @claim_request.school.users.first.email %> 
+                  <span class="text-sm text-gray-500">(<%= @claim_request.school.users.first.name %>)</span>
                 <% else %>
                   No owner assigned
                 <% end %>
@@ -97,8 +97,8 @@
       <div class="mt-8">
         <h3 class="text-lg font-semibold mb-4">Supporting Information</h3>
         <div class="bg-gray-50 p-4 rounded-md">
-          <% if @claim_request.supporting_information.present? %>
-            <p class="whitespace-pre-line"><%= @claim_request.supporting_information %></p>
+          <% if @claim_request.message.present? %>
+            <p class="whitespace-pre-line"><%= @claim_request.message %></p>
           <% else %>
             <p class="text-gray-500 italic">No supporting information provided</p>
           <% end %>

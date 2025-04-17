@@ -1,6 +1,4 @@
-class Admin::SchoolsController < ApplicationController
-  before_action :authenticate_user!
-  before_action :ensure_admin
+class Admin::SchoolsController < Admin::BaseController
   before_action :set_school, only: [ :show, :edit, :update, :approve, :unapprove, :add_owner, :remove_owner ]
 
   def index
@@ -76,11 +74,5 @@ class Admin::SchoolsController < ApplicationController
       :part_141, :part_61, :accelerated_programs, :examining_authority, :featured, :approved,
       training_types: []
     )
-  end
-
-  def ensure_admin
-    unless current_user.admin?
-      redirect_to root_path, alert: "You are not authorized to access this page."
-    end
   end
 end
