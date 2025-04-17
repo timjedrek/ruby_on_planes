@@ -48,7 +48,7 @@
   <% end %>
 
   <div class="mt-4 mb-8">
-    <%= link_to "Write a Review", new_airport_school_review_path(@airport.code, @school), class: "inline-block bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200" %>
+    <%= link_to "Write a Review", new_airport_school_review_path(@airport.code, @school), data: { turbo: false }, class: "inline-block bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200" %>
   </div>
 
   <% if @school.description.present? %>
@@ -143,7 +143,7 @@
   <div class="mt-10">
     <div class="flex items-center justify-between mb-4 border-b-2 border-gray-200 pb-2">
       <h2 class="text-2xl font-semibold text-gray-800">Student Reviews</h2>
-      <%= link_to "Write a Review", new_airport_school_review_path(@airport.code, @school), class: "inline-block bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200" %>
+      <%= link_to "Write a Review", new_airport_school_review_path(@airport.code, @school), data: { turbo: false }, class: "inline-block bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200" %>
     </div>
     
     <% if @school.avg_rating.present? %>
@@ -235,7 +235,7 @@
         <h3 class="mt-2 text-lg font-medium text-gray-900">No reviews yet</h3>
         <p class="mt-1 text-gray-500">Be the first to share your experience at this flight school!</p>
         <div class="mt-4">
-          <%= link_to "Write a Review", new_airport_school_review_path(@airport.code, @school), class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700" %>
+          <%= link_to "Write a Review", new_airport_school_review_path(@airport.code, @school), data: { turbo: false }, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700" %>
         </div>
       </div>
     <% end %>
