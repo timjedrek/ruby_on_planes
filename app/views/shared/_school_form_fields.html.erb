@@ -1,0 +1,100 @@
+<div class="space-y-6">
+  <div>
+    <%= form.label :name, class: "block text-sm font-medium text-gray-700" %>
+    <%= form.text_field "#{form_name}[name]", value: school.name, class: "mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" %>
+  </div>
+
+  <div>
+    <%= form.label :website, class: "block text-sm font-medium text-gray-700" %>
+    <%= form.text_field "#{form_name}[website]", value: school.website, class: "mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" %>
+  </div>
+
+  <div>
+    <%= form.label :phone, class: "block text-sm font-medium text-gray-700" %>
+    <%= form.text_field "#{form_name}[phone]", value: school.phone, class: "mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" %>
+  </div>
+  
+  <div>
+    <%= form.label :description, class: "block text-sm font-medium text-gray-700" %>
+    <%= form.text_area "#{form_name}[description]", value: school.description, rows: 5, class: "mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" %>
+  </div>
+  
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+    <div>
+      <%= form.label :est_planes, "Estimated Planes", class: "block text-sm font-medium text-gray-700" %>
+      <%= form.number_field "#{form_name}[est_planes]", value: school.est_planes, min: 0, class: "mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" %>
+    </div>
+    
+    <div>
+      <%= form.label :est_cfis, "Estimated CFIs", class: "block text-sm font-medium text-gray-700" %>
+      <%= form.number_field "#{form_name}[est_cfis]", value: school.est_cfis, min: 0, class: "mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" %>
+    </div>
+    
+    <div>
+      <%= form.label :date_established, "Date Established", class: "block text-sm font-medium text-gray-700" %>
+      <%= form.date_field "#{form_name}[date_established]", value: school.date_established, class: "mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" %>
+    </div>
+  </div>
+  
+  <div class="border-t border-gray-200 pt-6">
+    <h2 class="text-lg font-medium text-gray-900 mb-4">Training Programs</h2>
+    
+    <div class="space-y-4">
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="flex items-center">
+          <%= form.check_box "#{form_name}[part_141]", { checked: school.part_141 }, true, false %>
+          <label for="<%= form_name %>_part_141" class="ml-2 block text-sm text-gray-900">Part 141</label>
+        </div>
+        
+        <div class="flex items-center">
+          <%= form.check_box "#{form_name}[part_61]", { checked: school.part_61 }, true, false %>
+          <label for="<%= form_name %>_part_61" class="ml-2 block text-sm text-gray-900">Part 61</label>
+        </div>
+        
+        <div class="flex items-center">
+          <%= form.check_box "#{form_name}[accelerated_programs]", { checked: school.accelerated_programs }, true, false %>
+          <label for="<%= form_name %>_accelerated_programs" class="ml-2 block text-sm text-gray-900">Accelerated Programs</label>
+        </div>
+        
+        <div class="flex items-center">
+          <%= form.check_box "#{form_name}[examining_authority]", { checked: school.examining_authority }, true, false %>
+          <label for="<%= form_name %>_examining_authority" class="ml-2 block text-sm text-gray-900">Examining Authority</label>
+        </div>
+      </div>
+      
+      <div>
+        <h3 class="text-sm font-medium text-gray-700 mb-2">Training Types</h3>
+        <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          <% training_options = ['Private Pilot', 'Instrument Rating', 'Commercial Pilot', 'Multi-Engine', 'CFI', 'CFII', 'MEI', 'ATP', 'Type Rating', 'Sport Pilot', 'Recreational Pilot', 'Night Rating', 'Tailwheel', 'Seaplane', 'Helicopter', 'Glider', 'Upset Recovery', 'Mountain Flying'] %>
+          
+          <% training_options.each do |option| %>
+            <div class="flex items-center">
+              <%= check_box_tag "#{form_name}[training_types][]", option, school.training_types&.include?(option), id: "training_type_#{option.parameterize}", class: "h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" %>
+              <label for="training_type_<%= option.parameterize %>" class="ml-2 block text-sm text-gray-900"><%= option %></label>
+            </div>
+          <% end %>
+          <%= hidden_field_tag "#{form_name}[training_types][]", "" %>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <% if defined?(current_user) && current_user.admin? %>
+    <div class="border-t border-gray-200 pt-6">
+      <h2 class="text-lg font-medium text-gray-900 mb-4">Admin Options</h2>
+      
+      <div class="flex items-center">
+        <%= form.check_box "#{form_name}[featured]", { checked: school.featured }, true, false %>
+        <label for="<%= form_name %>_featured" class="ml-2 block text-sm text-gray-900">Featured School</label>
+      </div>
+      
+      <p class="mt-1 text-sm text-gray-500">Featured schools appear on the homepage and the featured schools list.</p>
+    </div>
+  <% end %>
+
+  <div class="border-t border-gray-200 pt-6">
+    <h2 class="text-lg font-medium text-gray-900 mb-4">Contact People</h2>
+    
+    <%= render partial: 'shared/contact_form', locals: { form_obj: school, form_name: form_name } %>
+  </div>
+</div> 

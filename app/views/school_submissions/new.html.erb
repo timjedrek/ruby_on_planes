@@ -1,8 +1,11 @@
 <div class="max-w-4xl mx-auto px-4 py-8">
   <h1 class="text-3xl font-bold text-gray-900 mb-6">Submit a New Flight School</h1>
-  <p class="text-gray-600 mb-8">
+  <p class="text-gray-600 mb-4">
     Thank you for contributing to our flight school directory. Please fill out the form below with as much accurate information as possible.
     Your submission will be reviewed by our administrators before being published.
+  </p>
+  <p class="text-gray-600 mb-8">
+    If you're looking to edit a school that is already listed, please go to the school's page and click "Claim School" to get approval to manage your school.
   </p>
 
   <%= form_with(model: @school, url: school_submissions_path, class: "space-y-6") do |f| %>
@@ -30,184 +33,20 @@
 
     <div class="bg-white shadow overflow-hidden rounded-lg divide-y divide-gray-200">
       <div class="px-4 py-5 sm:px-6">
-        <h3 class="text-lg font-medium text-gray-900">Basic Information</h3>
-        <p class="mt-1 text-sm text-gray-500">General details about the flight school.</p>
+        <h3 class="text-lg font-medium text-gray-900">School Information</h3>
+        <p class="mt-1 text-sm text-gray-500">Please provide as much detail as possible about the flight school.</p>
       </div>
       <div class="px-4 py-5 sm:p-6">
-        <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-          <div class="sm:col-span-3">
-            <%= f.label :name, class: "block text-sm font-medium text-gray-700" %>
-            <div class="mt-1">
-              <%= f.text_field :name, class: "shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md", required: true %>
-            </div>
-          </div>
-
-          <div class="sm:col-span-3">
-            <%= f.label :airport_id, "Airport", class: "block text-sm font-medium text-gray-700" %>
-            <div class="mt-1">
-              <%= f.collection_select :airport_id, @airports, :id, lambda { |a| "#{a.name} (#{a.code})" }, 
-                    { include_blank: "-- Select Airport --" }, 
-                    { class: "shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md", required: true } %>
-            </div>
-          </div>
-
-          <div class="sm:col-span-3">
-            <%= f.label :website, class: "block text-sm font-medium text-gray-700" %>
-            <div class="mt-1">
-              <%= f.url_field :website, placeholder: "https://www.example.com", class: "shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
-            </div>
-          </div>
-
-          <div class="sm:col-span-3">
-            <%= f.label :phone, class: "block text-sm font-medium text-gray-700" %>
-            <div class="mt-1">
-              <%= f.telephone_field :phone, placeholder: "(123) 456-7890", class: "shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
-            </div>
-          </div>
-
-          <div class="sm:col-span-6">
-            <%= f.label :description, class: "block text-sm font-medium text-gray-700" %>
-            <div class="mt-1">
-              <%= f.text_area :description, rows: 5, class: "shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
-              <p class="mt-2 text-sm text-gray-500">Please provide a comprehensive description of the flight school, including its history, facilities, and special programs.</p>
-            </div>
+        <div class="sm:col-span-3 mb-6">
+          <%= f.label :airport_id, "Airport", class: "block text-sm font-medium text-gray-700" %>
+          <div class="mt-1">
+            <%= f.collection_select :airport_id, @airports, :id, lambda { |a| "#{a.name} (#{a.code})" }, 
+                  { include_blank: "-- Select Airport --" }, 
+                  { class: "shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md", required: true } %>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Training Details -->
-    <div class="bg-white shadow overflow-hidden rounded-lg divide-y divide-gray-200">
-      <div class="px-4 py-5 sm:px-6">
-        <h3 class="text-lg font-medium text-gray-900">Training Programs</h3>
-        <p class="mt-1 text-sm text-gray-500">Details about the training offered by the school.</p>
-      </div>
-      <div class="px-4 py-5 sm:p-6">
-        <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-          <div class="sm:col-span-6">
-            <fieldset>
-              <legend class="block text-sm font-medium text-gray-700 mb-2">Training Types</legend>
-              <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
-                <% %w[private instrument commercial multi atp cfi cfii mei].each do |type| %>
-                  <div class="flex items-center">
-                    <%= f.check_box :training_types, { multiple: true, class: "focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded" }, type, nil %>
-                    <label class="ml-2 text-sm text-gray-700 capitalize"><%= type %></label>
-                  </div>
-                <% end %>
-              </div>
-            </fieldset>
-          </div>
-
-          <div class="sm:col-span-3">
-            <div class="flex items-center">
-              <%= f.check_box :part_141, class: "focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded" %>
-              <%= f.label :part_141, "Part 141", class: "ml-2 text-sm text-gray-700" %>
-            </div>
-          </div>
-
-          <div class="sm:col-span-3">
-            <div class="flex items-center">
-              <%= f.check_box :part_61, class: "focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded" %>
-              <%= f.label :part_61, "Part 61", class: "ml-2 text-sm text-gray-700" %>
-            </div>
-          </div>
-
-          <div class="sm:col-span-3">
-            <div class="flex items-center">
-              <%= f.check_box :accelerated_programs, class: "focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded" %>
-              <%= f.label :accelerated_programs, "Accelerated Programs", class: "ml-2 text-sm text-gray-700" %>
-            </div>
-          </div>
-
-          <div class="sm:col-span-3">
-            <div class="flex items-center">
-              <%= f.check_box :examining_authority, class: "focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded" %>
-              <%= f.label :examining_authority, "Examining Authority", class: "ml-2 text-sm text-gray-700" %>
-            </div>
-          </div>
-
-          <div class="sm:col-span-3">
-            <%= f.label :est_planes, "Estimated Number of Aircraft", class: "block text-sm font-medium text-gray-700" %>
-            <div class="mt-1">
-              <%= f.number_field :est_planes, min: 0, class: "shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
-            </div>
-          </div>
-
-          <div class="sm:col-span-3">
-            <%= f.label :est_cfis, "Estimated Number of CFIs", class: "block text-sm font-medium text-gray-700" %>
-            <div class="mt-1">
-              <%= f.number_field :est_cfis, min: 0, class: "shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
-            </div>
-          </div>
-
-          <div class="sm:col-span-6">
-            <%= f.label :date_established, "Date Established", class: "block text-sm font-medium text-gray-700" %>
-            <div class="mt-1">
-              <%= f.date_field :date_established, class: "shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Contact People -->
-    <div class="bg-white shadow overflow-hidden rounded-lg divide-y divide-gray-200">
-      <div class="px-4 py-5 sm:px-6">
-        <h3 class="text-lg font-medium text-gray-900">Contact People</h3>
-        <p class="mt-1 text-sm text-gray-500">Add key contacts at this flight school.</p>
-      </div>
-      <div class="px-4 py-5 sm:p-6">
-        <div id="contact-people" class="space-y-6">
-          <%= f.fields_for :contact_people do |cp| %>
-            <div class="contact-person-fields border border-gray-200 rounded-md p-4">
-              <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                <div class="sm:col-span-3">
-                  <%= cp.label :name, class: "block text-sm font-medium text-gray-700" %>
-                  <div class="mt-1">
-                    <%= cp.text_field :name, class: "shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
-                  </div>
-                </div>
-
-                <div class="sm:col-span-3">
-                  <%= cp.label :title, class: "block text-sm font-medium text-gray-700" %>
-                  <div class="mt-1">
-                    <%= cp.text_field :title, class: "shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
-                  </div>
-                </div>
-
-                <div class="sm:col-span-3">
-                  <%= cp.label :email, class: "block text-sm font-medium text-gray-700" %>
-                  <div class="mt-1">
-                    <%= cp.email_field :email, class: "shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
-                  </div>
-                </div>
-
-                <div class="sm:col-span-3">
-                  <%= cp.label :phone, class: "block text-sm font-medium text-gray-700" %>
-                  <div class="mt-1">
-                    <%= cp.telephone_field :phone, class: "shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
-                  </div>
-                </div>
-
-                <div class="sm:col-span-6">
-                  <div class="flex justify-end">
-                    <%= cp.hidden_field :_destroy %>
-                    <button type="button" class="remove-contact text-red-600 hover:text-red-900">Remove Contact</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          <% end %>
-        </div>
-
-        <div class="mt-4">
-          <button type="button" id="add-contact" class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-            <svg class="-ml-0.5 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-            </svg>
-            Add Contact Person
-          </button>
-        </div>
+        <%= render partial: 'shared/school_form_fields', locals: { form: f, school: @school, form_name: 'school' } %>
       </div>
     </div>
 
@@ -216,57 +55,4 @@
       <%= f.submit "Submit School for Review", class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
     </div>
   <% end %>
-</div>
-
-<%= javascript_tag do %>
-  document.addEventListener("turbo:load", function() {
-    setupContactPeople();
-  });
-  
-  function setupContactPeople() {
-    // Add contact person button
-    const addButton = document.getElementById('add-contact');
-    if (addButton) {
-      addButton.addEventListener('click', function() {
-        // Clone the first contact person template
-        const container = document.getElementById('contact-people');
-        const template = container.querySelector('.contact-person-fields');
-        const newFields = template.cloneNode(true);
-        
-        // Clear values and set a unique index
-        const timestamp = new Date().getTime();
-        newFields.querySelectorAll('input').forEach(input => {
-          const name = input.name;
-          input.name = name.replace(/\[\d+\]/, '[' + timestamp + ']');
-          input.id = input.id.replace(/\d+/, timestamp);
-          if (input.type !== 'hidden') {
-            input.value = '';
-          }
-        });
-        
-        // Set up removal button
-        const removeButton = newFields.querySelector('.remove-contact');
-        if (removeButton) {
-          removeButton.addEventListener('click', function() {
-            const fields = this.closest('.contact-person-fields');
-            const destroyInput = fields.querySelector('input[name$="[_destroy]"]');
-            destroyInput.value = "1";
-            fields.style.display = 'none';
-          });
-        }
-        
-        container.appendChild(newFields);
-      });
-    }
-    
-    // Remove contact person buttons
-    document.querySelectorAll('.remove-contact').forEach(button => {
-      button.addEventListener('click', function() {
-        const fields = this.closest('.contact-person-fields');
-        const destroyInput = fields.querySelector('input[name$="[_destroy]"]');
-        destroyInput.value = "1";
-        fields.style.display = 'none';
-      });
-    });
-  }
-<% end %> 
+</div> 

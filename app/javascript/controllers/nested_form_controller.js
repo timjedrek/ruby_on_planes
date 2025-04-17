@@ -1,106 +1,45 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["template", "add_item"]
+  static targets = ["template", "container", "add_item"]
 
   connect() {
     this.wrapperClass = this.data.get("wrapperClass") || "nested-fields"
+    this.ensureAtLeastOneField();
   }
 
   add(event) {
-    event.preventDefault()
-    const content = this.templateTarget.innerHTML.replace(/NEW_RECORD/g, new Date().getTime().toString())
-    this.add_itemTarget.insertAdjacentHTML('beforebegin', content)
+    if (event) event.preventDefault();
+    const content = this.templateTarget.innerHTML.replace(/NEW_RECORD/g, new Date().getTime().toString());
+    this.containerTarget.insertAdjacentHTML('beforeend', content);
   }
 
   remove(event) {
-    event.preventDefault()
-    const wrapper = event.target.closest("." + this.wrapperClass)
+    event.preventDefault();
+    const item = event.target.closest("." + this.wrapperClass);
     
-    // New records are simply removed from the page
-    if (wrapper.dataset.newRecord == "true") {
-      wrapper.remove()
-      return
+    // If it's a persisted record, we need to mark it for deletion
+    if (item.dataset.newRecord === "false") {
+      const destroyField = item.querySelector("input[name*='_destroy']");
+      destroyField.value = "1";
+      item.style.display = "none";
+    } else {
+      // If it's a new record, we can just remove it from the DOM
+      item.remove();
     }
     
-    // Get contact person ID for persisted records
-    const contactId = wrapper.querySelector('input[name*="[id]"]')?.value
-    
-    if (!contactId) {
-      console.error("Cannot find contact ID for deletion")
-      return
+    // Make sure we always have at least one field
+    this.ensureAtLeastOneField();
+  }
+
+  ensureAtLeastOneField() {
+    // Get all visible fields (exclude hidden ones marked for deletion)
+    const visibleFields = Array.from(this.containerTarget.querySelectorAll("." + this.wrapperClass))
+                         .filter(field => field.style.display !== "none");
+                         
+    if (visibleFields.length === 0) {
+      this.add();
     }
-    
-    // Show removal indicator
-    wrapper.classList.add('opacity-50')
-    wrapper.style.position = 'relative'
-    
-    const loadingOverlay = document.createElement('div')
-    loadingOverlay.className = 'absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-10'
-    loadingOverlay.innerHTML = `
-      <svg class="animate-spin h-8 w-8 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-      </svg>
-    `
-    wrapper.appendChild(loadingOverlay)
-    
-    // Get airport code and school ID from page URL
-    const pageUrl = window.location.pathname
-    const urlMatch = pageUrl.match(/\/airports\/([^\/]+)\/schools\/([^\/]+)/)
-    
-    if (!urlMatch || urlMatch.length < 3) {
-      console.error("Cannot extract airport code and school slug from URL")
-      wrapper.classList.remove('opacity-50')
-      loadingOverlay.remove()
-      return
-    }
-    
-    const airportCode = urlMatch[1]
-    const schoolSlug = urlMatch[2]
-    
-    // Build URL for the AJAX delete request
-    const url = `/airports/${airportCode}/schools/${schoolSlug}/contact_people/${contactId}`
-    console.log("Making DELETE request to:", url)
-    
-    // Add CSRF token
-    const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-    
-    // Send AJAX delete request
-    fetch(url, {
-      method: 'DELETE',
-      headers: {
-        'X-CSRF-Token': token,
-        'Accept': 'application/json'
-      }
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error("Failed to delete contact")
-      }
-      
-      // For successful deletion, remove the element
-      wrapper.remove()
-    })
-    .catch(error => {
-      console.error('Error deleting contact:', error)
-      
-      // In case of error, mark as deleted in the form but show an error
-      wrapper.classList.remove('opacity-50')
-      loadingOverlay.remove()
-      
-      // Set the _destroy flag but keep the element visible with error styling
-      wrapper.querySelector("input[name*='_destroy']").value = 1
-      
-      // Add error message
-      const messageDiv = document.createElement('div')
-      messageDiv.className = 'text-red-600 text-sm mt-2 error-message'
-      messageDiv.textContent = "Error deleting contact. The contact will be removed when you save the form."
-      wrapper.querySelector('.mt-4').prepend(messageDiv)
-      
-      // Style to indicate pending deletion
-      wrapper.classList.add('border-red-300', 'bg-red-50')
-    })
   }
 
   saveContact(event) {

@@ -1,0 +1,15 @@
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <h1 class="text-4xl font-bold text-gray-900 mb-2">Edit <%= @school.name %></h1>
+  <p class="text-lg text-gray-600 mb-6">
+    At <%= @school.airport.name %> (<%= @school.airport.code %>)
+  </p>
+
+  <div class="mb-8">
+    <%= link_to "Back to School", admin_school_path(@school), class: "inline-block bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200" %>
+  </div>
+
+  <div class="bg-white rounded-lg shadow p-6 border border-gray-200">
+    <% @airport ||= @school.airport %>
+    <%= render partial: 'schools/form' %>
+  </div>
+</div> 

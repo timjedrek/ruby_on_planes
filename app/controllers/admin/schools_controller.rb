@@ -65,7 +65,7 @@ class Admin::SchoolsController < Admin::BaseController
   private
 
   def set_school
-    @school = School.find(params[:id])
+    @school = School.find_by_slug_or_id(params[:id])
   end
 
   def school_params

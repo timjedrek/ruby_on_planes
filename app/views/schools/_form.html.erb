@@ -1,140 +1,47 @@
-<%= form_with(url: airport_school_path(@airport.code, @school.slug), method: :patch, local: true, class: "space-y-6", id: "school-form", data: { turbo: false }) do |form| %>
-  <% if @school.errors.any? %>
-    <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
-      <div class="text-red-700 font-medium">
-        <%= pluralize(@school.errors.count, "error") %> prohibited this school from being saved:
-      </div>
-      <ul class="list-disc pl-5 mt-2 text-red-600">
-        <% @school.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="space-y-6">
-    <div>
-      <%= form.label :name, class: "block text-sm font-medium text-gray-700" %>
-      <%= form.text_field "school[name]", value: @school.name, class: "mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" %>
-    </div>
-
-    <div>
-      <%= form.label :website, class: "block text-sm font-medium text-gray-700" %>
-      <%= form.text_field "school[website]", value: @school.website, class: "mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" %>
-    </div>
-
-    <div>
-      <%= form.label :phone, class: "block text-sm font-medium text-gray-700" %>
-      <%= form.text_field "school[phone]", value: @school.phone, class: "mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" %>
-    </div>
-
-    <div class="border-t border-gray-200 pt-6">
-      <h2 class="text-lg font-medium text-gray-900 mb-4">Contact People</h2>
-      
-      <div data-controller="nested-form">
-        <template data-nested-form-target="template">
-          <% contact = ContactPerson.new %>
-          <div class="nested-fields border rounded-lg p-4 mb-4 relative" data-new-record="true" data-index="NEW_RECORD">
-            <input type="hidden" name="school[contact_people_attributes][NEW_RECORD][_destroy]" value="0">
-            
-            <div class="absolute top-2 right-2">
-              <a href="#" class="text-red-600 hover:text-red-800" data-action="click->nested-form#remove">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </a>
-            </div>
-
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div>
-                <label class="block text-sm font-medium text-gray-700">Name</label>
-                <input type="text" name="school[contact_people_attributes][NEW_RECORD][name]" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700">Title</label>
-                <input type="text" name="school[contact_people_attributes][NEW_RECORD][title]" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700">Email</label>
-                <input type="email" name="school[contact_people_attributes][NEW_RECORD][email]" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700">Phone</label>
-                <input type="tel" name="school[contact_people_attributes][NEW_RECORD][phone]" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-              </div>
-            </div>
-
-            <div class="mt-4 flex justify-end">
-              <button type="button" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" data-action="click->nested-form#saveContact">
-                <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                Save Contact
-              </button>
-            </div>
-          </div>
-        </template>
-
-        <% @school.contact_people.each_with_index do |contact, index| %>
-          <div class="nested-fields border rounded-lg p-4 mb-4 relative" data-new-record="<%= contact.new_record? %>" data-index="<%= index %>">
-            <input type="hidden" name="school[contact_people_attributes][<%= index %>][_destroy]" value="0">
-            <% if contact.persisted? %>
-              <input type="hidden" name="school[contact_people_attributes][<%= index %>][id]" value="<%= contact.id %>">
-            <% end %>
-            
-            <div class="absolute top-2 right-2">
-              <a href="#" class="text-red-600 hover:text-red-800" data-action="click->nested-form#remove">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </a>
-            </div>
-
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div>
-                <label class="block text-sm font-medium text-gray-700">Name</label>
-                <input type="text" name="school[contact_people_attributes][<%= index %>][name]" value="<%= contact.name %>" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700">Title</label>
-                <input type="text" name="school[contact_people_attributes][<%= index %>][title]" value="<%= contact.title %>" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700">Email</label>
-                <input type="email" name="school[contact_people_attributes][<%= index %>][email]" value="<%= contact.email %>" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700">Phone</label>
-                <input type="tel" name="school[contact_people_attributes][<%= index %>][phone]" value="<%= contact.phone %>" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-              </div>
-            </div>
-
-            <div class="mt-4 flex justify-end">
-              <button type="button" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" data-action="click->nested-form#saveContact">
-                <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                Save Contact
-              </button>
-            </div>
-          </div>
-        <% end %>
-
-        <div class="mt-4" data-nested-form-target="add_item">
-          <a href="#" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" data-action="click->nested-form#add">
-            <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-            Add Another Contact Person
-          </a>
+<% if controller_path.include?('admin') %>
+  <%= form_with(model: [:admin, @school], method: :patch, local: true, class: "space-y-6", id: "school-form", data: { turbo: false }) do |form| %>
+    <% if @school.errors.any? %>
+      <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+        <div class="text-red-700 font-medium">
+          <%= pluralize(@school.errors.count, "error") %> prohibited this school from being saved:
         </div>
+        <ul class="list-disc pl-5 mt-2 text-red-600">
+          <% @school.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
       </div>
-    </div>
+    <% end %>
+
+    <%= render partial: 'shared/school_form_fields', locals: { form: form, school: @school, form_name: 'school' } %>
 
     <div class="pt-5">
       <div class="flex justify-end">
-        <%= form.submit "Update School", class: "ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500", data: { disable_with: "Updating..." } %>
+        <%= form.submit "Update School", class: "ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500", data: { disable_with: "Updating..." } %>
       </div>
     </div>
-  </div>
+  <% end %>
+<% else %>
+  <%= form_with(url: airport_school_path(@airport.code, @school.slug), method: :patch, local: true, class: "space-y-6", id: "school-form", data: { turbo: false }) do |form| %>
+    <% if @school.errors.any? %>
+      <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+        <div class="text-red-700 font-medium">
+          <%= pluralize(@school.errors.count, "error") %> prohibited this school from being saved:
+        </div>
+        <ul class="list-disc pl-5 mt-2 text-red-600">
+          <% @school.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <%= render partial: 'shared/school_form_fields', locals: { form: form, school: @school, form_name: 'school' } %>
+
+    <div class="pt-5">
+      <div class="flex justify-end">
+        <%= form.submit "Update School", class: "ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500", data: { disable_with: "Updating..." } %>
+      </div>
+    </div>
+  <% end %>
 <% end %> 

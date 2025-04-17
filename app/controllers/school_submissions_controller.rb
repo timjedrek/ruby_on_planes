@@ -5,7 +5,7 @@ class SchoolSubmissionsController < ApplicationController
 
   def new
     @school = School.new
-    @school.contact_people.build
+    @school.contact_people.build if @school.contact_people.empty?
   end
 
   def create
