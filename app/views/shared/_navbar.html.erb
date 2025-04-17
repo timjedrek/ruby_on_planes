@@ -51,6 +51,7 @@
                 <%= link_to "Your Reviews", user_reviews_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
                 <%= link_to "Comments", "#", class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
                 <%= link_to "Add/Edit School", new_school_submission_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
+                <%= link_to "Manage Your Schools", user_schools_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
                 
                 <% if current_user.admin? %>
                   <div class="border-t border-gray-100 my-1"></div>
@@ -122,6 +123,7 @@
             <%= link_to "Your Reviews", user_reviews_path, class: "block px-4 py-2 text-white text-lg hover:bg-blue-500 rounded" %>
             <%= link_to "Comments", "#", class: "block px-4 py-2 text-white text-lg hover:bg-blue-500 rounded" %>
             <%= link_to "Add/Edit School", new_school_submission_path, class: "block px-4 py-2 text-white text-lg hover:bg-blue-500 rounded" %>
+            <%= link_to "Manage Your Schools", user_schools_path, class: "block px-4 py-2 text-white text-lg hover:bg-blue-500 rounded" %>
             
             <% if current_user.admin? %>
               <%= link_to "Manage Reviews", admin_reviews_path, class: "block px-4 py-2 text-white text-lg hover:bg-blue-500 rounded" %>

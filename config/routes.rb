@@ -24,6 +24,11 @@ Rails.application.routes.draw do
 
   # User profile section
   resources :user_reviews, only: [ :index ]
+  resources :user_schools, only: [ :index, :show ] do
+    member do
+      patch :verify_review
+    end
+  end
   resources :claim_requests, only: [ :index, :show ] do
     member do
       post :approve

@@ -1,0 +1,118 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="mb-4">
+    <%= link_to user_schools_path, class: "inline-flex items-center text-blue-600 hover:text-blue-800" do %>
+      <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+      </svg>
+      Back to Your Schools
+    <% end %>
+  </div>
+
+  <div class="bg-white rounded-lg shadow p-6 mb-8">
+    <div class="flex flex-col md:flex-row justify-between mb-4">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900 mb-2"><%= @school.name %></h1>
+        <p class="text-gray-600"><%= @school.airport.code %> - <%= @school.airport.name %></p>
+      </div>
+      <div class="mt-4 md:mt-0">
+        <%= link_to "View School Profile", airport_school_path(@school.airport.code, @school), class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+      <div class="p-4 bg-gray-50 rounded-lg">
+        <h3 class="font-semibold text-gray-900 mb-2">Reviews</h3>
+        <p class="text-2xl font-bold"><%= @school.reviews.published.count %></p>
+      </div>
+      <div class="p-4 bg-gray-50 rounded-lg">
+        <h3 class="font-semibold text-gray-900 mb-2">Verified Reviews</h3>
+        <p class="text-2xl font-bold"><%= @school.reviews.published.verified.count %></p>
+      </div>
+      <div class="p-4 bg-gray-50 rounded-lg">
+        <h3 class="font-semibold text-gray-900 mb-2">Average Rating</h3>
+        <div class="flex items-center">
+          <p class="text-2xl font-bold mr-2"><%= @school.avg_rating || "N/A" %></p>
+          <% if @school.avg_rating %>
+            <div class="flex">
+              <% @school.avg_rating.floor.times do %>
+                <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                </svg>
+              <% end %>
+              <% (5 - @school.avg_rating.floor).times do %>
+                <svg class="w-5 h-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                </svg>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-6">
+    <h2 class="text-2xl font-bold text-gray-900 mb-4">Reviews</h2>
+    
+    <% if @reviews.any? %>
+      <div class="space-y-6">
+        <% @reviews.each do |review| %>
+          <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <h3 class="text-xl font-semibold text-gray-900"><%= review.title %></h3>
+                <div class="flex items-center mt-1">
+                  <div class="flex mr-2">
+                    <% review.rating.times do %>
+                      <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                      </svg>
+                    <% end %>
+                    <% (5 - review.rating).times do %>
+                      <svg class="w-5 h-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                      </svg>
+                    <% end %>
+                  </div>
+                  <span class="text-gray-500 text-sm">by <%= review.reviewer_display_name %> • <%= time_ago_in_words(review.created_at) %> ago</span>
+                </div>
+              </div>
+              <div class="flex flex-col items-end">
+                <div class="flex space-x-2">
+                  <% if review.published? %>
+                    <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Published</span>
+                  <% else %>
+                    <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">Pending</span>
+                  <% end %>
+                  
+                  <% if review.verified? %>
+                    <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">Verified</span>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+            
+            <div class="text-gray-700 mb-4">
+              <%= simple_format(review.comment) %>
+            </div>
+            
+            <% unless review.verified? %>
+              <div class="mt-4 text-right">
+                <%= button_to verify_review_user_school_path(@school, review_id: review.id), method: :patch, class: "inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" do %>
+                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  Verify Review
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="bg-white rounded-lg shadow p-8 text-center">
+        <p class="text-gray-600">No reviews have been submitted for this school yet.</p>
+      </div>
+    <% end %>
+  </div>
+</div> 
