@@ -1,19 +1,40 @@
-<div class="max-w-7xl mx-auto px-4 py-8">
+<div class="max-w-7xl mx-auto px-4 py-8" data-controller="airport-search">
   <h1 class="text-4xl font-bold text-gray-900 mb-4"><%= @title %></h1>
   
   <% if @airports.any? %>
-    <div class="mb-6">
+    <div class="mb-6 flex flex-col sm:flex-row-reverse justify-between items-start gap-4">
       <div class="flex flex-wrap gap-2">
         <span class="font-medium text-gray-700">Sort by:</span>
         <%= link_to "Airport Code", request.params.merge(sort: "code"), class: "px-3 py-1 rounded-full #{params[:sort] == 'code' || params[:sort].blank? ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" %>
         <%= link_to "Name", request.params.merge(sort: "name"), class: "px-3 py-1 rounded-full #{params[:sort] == 'name' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" %>
         <%= link_to "Schools", request.params.merge(sort: "schools"), class: "px-3 py-1 rounded-full #{params[:sort] == 'schools' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" %>
       </div>
+      
+      <div class="relative w-full sm:w-64">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <svg class="w-4 h-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+          </svg>
+        </div>
+        <input 
+          type="search" 
+          data-airport-search-target="query"
+          data-action="input->airport-search#filter"
+          class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500" 
+          placeholder="Search airports..."
+        >
+      </div>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
       <% @airports.each do |airport| %>
-        <div class="bg-white rounded-lg shadow-sm p-4 border border-gray-100 flex flex-col h-full">
+        <div class="bg-white rounded-lg shadow-sm p-4 border border-gray-100 flex flex-col h-full" 
+             data-airport-search-target="card"
+             data-code="<%= airport.code.downcase %>"
+             data-name="<%= airport.name.downcase %>"
+             data-city="<%= airport.city.name.downcase %>"
+             data-state="<%= airport.state.name.downcase %> <%= airport.state.abbreviation.downcase %>"
+             data-icao="<%= airport.icao_code&.downcase || '' %>">
           <div class="flex justify-between items-start mb-2">
             <div class="flex-1 min-w-0">
               <h2 class="text-2xl font-bold text-gray-700">
@@ -57,6 +78,10 @@
           <% end %> -->
         </div>
       <% end %>
+    </div>
+    
+    <div class="mt-4 text-center hidden" data-airport-search-target="noResults">
+      <p class="text-gray-600 italic">No airports match your search.</p>
     </div>
   <% else %>
     <p class="text-gray-600 text-lg">No airports listed yet<%= @state ? " for #{@state.name}" : "" %>.</p>
