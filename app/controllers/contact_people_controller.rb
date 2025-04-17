@@ -51,12 +51,12 @@ class ContactPeopleController < ApplicationController
         return render json: { success: false, message: "Airport not found with code: #{params[:airport_code]}" }, status: :not_found
       end
       
-      @school = @airport.schools.find(params[:school_id])
+      @school = School.find_by_slug_or_id_in_airport(params[:school_id], @airport.id)
       Rails.logger.debug "Found school: #{@school.inspect}"
       
       if @school.nil?
-        Rails.logger.error "School not found with id: #{params[:school_id]}"
-        return render json: { success: false, message: "School not found with id: #{params[:school_id]}" }, status: :not_found
+        Rails.logger.error "School not found with slug or ID: #{params[:school_id]}"
+        return render json: { success: false, message: "School not found with slug or ID: #{params[:school_id]}" }, status: :not_found
       end
     rescue => e
       Rails.logger.error "Error in set_school: #{e.message}"

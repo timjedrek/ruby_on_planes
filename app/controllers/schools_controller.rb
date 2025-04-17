@@ -1,7 +1,8 @@
 class SchoolsController < ApplicationController
+  before_action :set_airport
+  before_action :set_school, only: [:show, :edit, :update]
+
   def show
-    @airport = Airport.find_by!(code: params[:airport_code].upcase)
-    @school = @airport.schools.find(params[:id])
     @state = @airport.state
     @contact_people = @school.contact_people.order(:name)
     set_meta_tags title: "#{@school.name} at #{@airport.name} | Pilot Training Near Me",
@@ -10,35 +11,11 @@ class SchoolsController < ApplicationController
   end
 
   def edit
-    @airport = Airport.find_by!(code: params[:airport_code].upcase)
-    @school = @airport.schools.find(params[:id])
     @school.contact_people.build if @school.contact_people.empty?
   end
 
   def update
     Rails.logger.debug "UPDATE PARAMS: #{params.inspect}"
-    
-    # Try to find airport using different parameter names
-    airport_code = params[:airport_code] || params[:code]
-    
-    # Log what we're looking for
-    Rails.logger.debug "Looking for airport with code: #{airport_code.inspect}"
-    
-    if airport_code.blank?
-      Rails.logger.error "Airport code parameter is missing or blank"
-      return render plain: "Airport code parameter is missing", status: :bad_request
-    end
-    
-    @airport = Airport.find_by(code: airport_code.upcase)
-    
-    if @airport.nil?
-      Rails.logger.error "Could not find airport with code: #{airport_code.upcase}"
-      return render plain: "Could not find airport with code: #{airport_code.upcase}", status: :not_found
-    end
-    
-    @school = @airport.schools.find(params[:id])
-    
-    Rails.logger.debug "School params: #{school_params.inspect}"
     
     respond_to do |format|
       if @school.update(school_params)
@@ -60,6 +37,24 @@ class SchoolsController < ApplicationController
   end
 
   private
+
+  def set_airport
+    @airport = Airport.find_by(code: params[:airport_code].upcase)
+    
+    if @airport.nil?
+      Rails.logger.error "Could not find airport with code: #{params[:airport_code]}"
+      render plain: "Could not find airport with code: #{params[:airport_code]}", status: :not_found
+    end
+  end
+  
+  def set_school
+    @school = @airport.schools.find_by_slug_or_id(params[:id])
+    
+    if @school.nil?
+      Rails.logger.error "Could not find school with ID or slug: #{params[:id]}"
+      render plain: "Could not find school with ID or slug: #{params[:id]}", status: :not_found
+    end
+  end
 
   def school_params
     params.require(:school).permit(

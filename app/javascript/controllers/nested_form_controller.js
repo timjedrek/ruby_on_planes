@@ -47,20 +47,20 @@ export default class extends Controller {
     
     // Get airport code and school ID from page URL
     const pageUrl = window.location.pathname
-    const urlMatch = pageUrl.match(/\/airports\/([^\/]+)\/schools\/(\d+)/)
+    const urlMatch = pageUrl.match(/\/airports\/([^\/]+)\/schools\/([^\/]+)/)
     
     if (!urlMatch || urlMatch.length < 3) {
-      console.error("Cannot extract airport code and school ID from URL")
+      console.error("Cannot extract airport code and school slug from URL")
       wrapper.classList.remove('opacity-50')
       loadingOverlay.remove()
       return
     }
     
     const airportCode = urlMatch[1]
-    const schoolId = urlMatch[2]
+    const schoolSlug = urlMatch[2]
     
     // Build URL for the AJAX delete request
-    const url = `/airports/${airportCode}/schools/${schoolId}/contact_people/${contactId}`
+    const url = `/airports/${airportCode}/schools/${schoolSlug}/contact_people/${contactId}`
     console.log("Making DELETE request to:", url)
     
     // Add CSRF token
@@ -128,38 +128,37 @@ export default class extends Controller {
     // Extract the contact person ID if it exists (for updates)
     const contactId = wrapper.querySelector('input[name*="[id]"]')?.value
 
-    // Get the airport code and school ID from the page path, not just the form action
-    // The form action might be /airports/KGAI/schools/123/edit?params which needs careful parsing
-    let airportCode, schoolId
+    // Get the airport code and school slug from the page path
+    let airportCode, schoolSlug
     
-    // Try to get airport code and school ID from the page URL first
+    // Try to get airport code and school slug from the page URL
     const pageUrl = window.location.pathname
     console.log("Page URL:", pageUrl)
     
-    const urlMatch = pageUrl.match(/\/airports\/([^\/]+)\/schools\/(\d+)/)
+    const urlMatch = pageUrl.match(/\/airports\/([^\/]+)\/schools\/([^\/]+)/)
     if (urlMatch && urlMatch.length >= 3) {
       airportCode = urlMatch[1]
-      schoolId = urlMatch[2]
-      console.log("From page URL - Airport code:", airportCode, "School ID:", schoolId)
+      schoolSlug = urlMatch[2]
+      console.log("From page URL - Airport code:", airportCode, "School slug:", schoolSlug)
     } else {
       // Fallback to form action if page URL doesn't match expected pattern
       const formAction = form.getAttribute('action')
       console.log("Form action:", formAction)
       
-      const formMatch = formAction.match(/\/airports\/([^\/]+)\/schools\/(\d+)/)
+      const formMatch = formAction.match(/\/airports\/([^\/]+)\/schools\/([^\/]+)/)
       if (!formMatch || formMatch.length < 3) {
-        this._showError(wrapper, "Could not determine airport code and school ID from URL", button, originalText)
+        this._showError(wrapper, "Could not determine airport code and school slug from URL", button, originalText)
         return
       }
       
       airportCode = formMatch[1]
-      schoolId = formMatch[2]
-      console.log("From form action - Airport code:", airportCode, "School ID:", schoolId)
+      schoolSlug = formMatch[2]
+      console.log("From form action - Airport code:", airportCode, "School slug:", schoolSlug)
     }
     
     // Final check
-    if (!airportCode || !schoolId) {
-      this._showError(wrapper, "Missing airport code or school ID", button, originalText)
+    if (!airportCode || !schoolSlug) {
+      this._showError(wrapper, "Missing airport code or school slug", button, originalText)
       return
     }
     
@@ -169,11 +168,11 @@ export default class extends Controller {
     
     if (contactId && contactId !== '') {
       // Update existing contact
-      url = `/airports/${airportCode}/schools/${schoolId}/contact_people/${contactId}`
+      url = `/airports/${airportCode}/schools/${schoolSlug}/contact_people/${contactId}`
       method = 'PATCH'
     } else {
       // Create new contact
-      url = `/airports/${airportCode}/schools/${schoolId}/contact_people`
+      url = `/airports/${airportCode}/schools/${schoolSlug}/contact_people`
       method = 'POST'
     }
     

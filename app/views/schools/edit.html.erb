@@ -10,6 +10,7 @@
       <h3 class="font-bold mb-2">Debug Info:</h3>
       <p>Airport Code: <%= @airport.code %></p>
       <p>School ID: <%= @school.id %></p>
+      <p>School Slug: <%= @school.slug %></p>
       <p>Form URL should be: <%= airport_school_path(@airport.code, @school) %></p>
       <p>Edit path: <%= edit_airport_school_path(@airport.code, @school) %></p>
     </div>

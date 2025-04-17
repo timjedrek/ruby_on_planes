@@ -25,7 +25,7 @@ Rails.application.routes.draw do
     end
   end
   resources :airports, param: :code do
-    resources :schools, only: [:show, :edit, :update] do
+    resources :schools, only: [:show, :edit, :update], param: :id do
       resources :contact_people, only: [:create, :update, :destroy]
     end
   end

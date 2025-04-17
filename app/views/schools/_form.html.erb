@@ -1,4 +1,4 @@
-<%= form_with(url: airport_school_path(@airport.code, @school), method: :patch, local: true, class: "space-y-6", id: "school-form", data: { turbo: false }) do |form| %>
+<%= form_with(url: airport_school_path(@airport.code, @school.slug), method: :patch, local: true, class: "space-y-6", id: "school-form", data: { turbo: false }) do |form| %>
   <% if @school.errors.any? %>
     <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
       <div class="text-red-700 font-medium">
