@@ -18,8 +18,10 @@
   <div class="mb-8 flex space-x-4">
     <%= link_to "Back to #{@state.name}", state_path(@state.abbreviation), class: "inline-block bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200" %>
     <%= link_to "All Airports in #{@state.abbreviation}", airports_path(state: @state.abbreviation), class: "inline-block bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200" %>
-    <%= link_to "Edit Airport", edit_airport_path(@airport.code), class: "inline-block bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200" %>
-    <%= button_to "Delete Airport", airport_path(@airport.code), method: :delete, class: "inline-block bg-red-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-700 transition duration-200", data: { turbo_confirm: "Are you sure you want to delete this airport? This action cannot be undone." } %>
+    <% if user_signed_in? && current_user.admin? %>
+      <%= link_to "Edit Airport", edit_airport_path(@airport.code), class: "inline-block bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200" %>
+      <%= button_to "Delete Airport", airport_path(@airport.code), method: :delete, class: "inline-block bg-red-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-700 transition duration-200", data: { turbo_confirm: "Are you sure you want to delete this airport? This action cannot be undone." } %>
+    <% end %>
   </div>
 
   <% nearby_cities = (@airport.city.nearby_cities + @airport.city.inverse_nearby_cities).uniq %>

@@ -25,6 +25,10 @@ Rails.application.routes.draw do
   # User profile section
   resources :user_reviews, only: [ :index ]
 
+  # School submissions and claims
+  resources :school_submissions, only: [ :new, :create ]
+  post "schools/:id/claim", to: "school_submissions#claim", as: :claim_school
+
   resources :states, only: [ :index, :show ], param: :abbreviation do
     resources :cities, only: [ :show, :new, :create, :edit, :update, :destroy ], param: :name, constraints: { name: /[^\/]+/ } do
       resources :nearby_cities, only: [ :create, :destroy ]
@@ -45,6 +49,22 @@ Rails.application.routes.draw do
         patch :unpublish
         patch :verify
         patch :unverify
+      end
+    end
+
+    resources :schools do
+      member do
+        patch :approve
+        patch :unapprove
+        post :add_owner
+        delete "owners/:user_id", to: "schools#remove_owner", as: :remove_owner
+      end
+    end
+
+    resources :claim_requests, only: [ :index, :show ] do
+      member do
+        patch :approve
+        patch :reject
       end
     end
   end

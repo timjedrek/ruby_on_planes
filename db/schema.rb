@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_17_063135) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_17_080515) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -36,6 +36,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_17_063135) do
     t.datetime "updated_at", null: false
     t.index ["state_id", "name"], name: "index_cities_on_state_id_and_name", unique: true
     t.index ["state_id"], name: "index_cities_on_state_id"
+  end
+
+  create_table "claim_requests", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "school_id", null: false
+    t.text "message", null: false
+    t.string "status", default: "pending", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["school_id"], name: "index_claim_requests_on_school_id"
+    t.index ["user_id", "school_id"], name: "index_claim_requests_on_user_id_and_school_id", unique: true
+    t.index ["user_id"], name: "index_claim_requests_on_user_id"
   end
 
   create_table "contact_people", force: :cascade do |t|
@@ -106,6 +118,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_17_063135) do
     t.index ["abbreviation"], name: "index_states_on_abbreviation", unique: true
   end
 
+  create_table "user_schools", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "school_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["school_id"], name: "index_user_schools_on_school_id"
+    t.index ["user_id", "school_id"], name: "index_user_schools_on_user_id_and_school_id", unique: true
+    t.index ["user_id"], name: "index_user_schools_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -129,10 +151,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_17_063135) do
   add_foreign_key "airports", "cities"
   add_foreign_key "airports", "states"
   add_foreign_key "cities", "states"
+  add_foreign_key "claim_requests", "schools"
+  add_foreign_key "claim_requests", "users"
   add_foreign_key "contact_people", "schools"
   add_foreign_key "nearby_cities", "cities"
   add_foreign_key "nearby_cities", "cities", column: "nearby_city_id"
   add_foreign_key "reviews", "schools"
   add_foreign_key "reviews", "users"
   add_foreign_key "schools", "airports"
+  add_foreign_key "user_schools", "schools"
+  add_foreign_key "user_schools", "users"
 end

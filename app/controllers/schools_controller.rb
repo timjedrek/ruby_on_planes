@@ -59,7 +59,7 @@ class SchoolsController < ApplicationController
   end
 
   def authorize_admin
-    unless user_signed_in? && current_user.admin?
+    unless user_signed_in? && (current_user.admin? || current_user.owns_school?(@school))
       redirect_to airport_school_path(@airport.code, @school), alert: "You are not authorized to perform this action."
     end
   end

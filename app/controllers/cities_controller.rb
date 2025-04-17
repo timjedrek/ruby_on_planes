@@ -1,12 +1,13 @@
 class CitiesController < ApplicationController
   before_action :set_state
-  before_action :set_city, only: [:show, :edit, :update, :destroy]
-  
+  before_action :set_city, only: [ :show, :edit, :update, :destroy ]
+  before_action :authorize_admin, only: [ :new, :create, :edit, :update, :destroy ]
+
   def show
     decoded_name = CGI.unescape(params[:name]).titleize
     @city = @state.cities.where("LOWER(name) = LOWER(?)", decoded_name).first
     unless @city
-      redirect_to state_path(@state.abbreviation), 
+      redirect_to state_path(@state.abbreviation),
                   alert: "City '#{decoded_name}' was not found in #{@state.name}."
       return
     end
@@ -20,16 +21,16 @@ class CitiesController < ApplicationController
                   description: "Explore flight schools in #{@city.name}, #{@state.name} and nearby areas.",
                   keywords: "flight schools #{@city.name}, pilot training #{@state.abbreviation}"
   end
-  
+
   def new
     @city = City.new(state: @state)
     @cities = @state.cities.order(:name)
   end
-  
+
   def create
     @city = City.new(city_params)
     @city.state = @state
-    
+
     if @city.save
       # Add nearby cities if selected (bidirectional)
       if params[:nearby_city_ids].present?
@@ -39,7 +40,7 @@ class CitiesController < ApplicationController
           NearbyCity.create(city_id: nearby_city_id, nearby_city: @city)
         end
       end
-      
+
       redirect_to state_city_path(@state.abbreviation, @city.name), notice: "City was successfully created."
     else
       @cities = @state.cities.order(:name)
@@ -58,7 +59,7 @@ class CitiesController < ApplicationController
       @city.nearby_city_relationships.destroy_all
       # Also destroy inverse relationships
       NearbyCity.where(nearby_city: @city).destroy_all
-      
+
       if params[:nearby_city_ids].present?
         params[:nearby_city_ids].each do |nearby_city_id|
           # Create both directions of the relationship
@@ -66,7 +67,7 @@ class CitiesController < ApplicationController
           NearbyCity.create(city_id: nearby_city_id, nearby_city: @city)
         end
       end
-      
+
       redirect_to state_city_path(@state.abbreviation, @city.name), notice: "City was successfully updated."
     else
       @cities = @state.cities.where.not(id: @city.id).order(:name)
@@ -78,15 +79,15 @@ class CitiesController < ApplicationController
   def destroy
     begin
       @city.destroy!
-      redirect_to state_path(@state.abbreviation), notice: 'City was successfully deleted.'
+      redirect_to state_path(@state.abbreviation), notice: "City was successfully deleted."
     rescue => e
-      redirect_to state_city_path(@state.abbreviation, @city.name), 
-                  alert: 'Unable to delete this city. It may have associated records.'
+      redirect_to state_city_path(@state.abbreviation, @city.name),
+                  alert: "Unable to delete this city. It may have associated records."
     end
   end
-  
+
   private
-  
+
   def set_state
     @state = State.find_by!(abbreviation: params[:state_abbreviation].upcase)
   end
@@ -95,13 +96,19 @@ class CitiesController < ApplicationController
     decoded_name = CGI.unescape(params[:name]).titleize
     @city = @state.cities.where("LOWER(name) = LOWER(?)", decoded_name).first
     unless @city
-      redirect_to state_path(@state.abbreviation), 
+      redirect_to state_path(@state.abbreviation),
                   alert: "City '#{decoded_name}' was not found in #{@state.name}."
-      return
+      nil
     end
   end
-  
+
   def city_params
     params.require(:city).permit(:name)
+  end
+
+  def authorize_admin
+    unless user_signed_in? && current_user.admin?
+      redirect_to state_path(@state.abbreviation), alert: "You are not authorized to perform this action."
+    end
   end
 end

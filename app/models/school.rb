@@ -4,6 +4,8 @@ class School < ApplicationRecord
   has_one :state, through: :airport
   has_many :contact_people, dependent: :destroy
   has_many :reviews, dependent: :destroy
+  has_many :user_schools, dependent: :destroy
+  has_many :users, through: :user_schools
   accepts_nested_attributes_for :contact_people, allow_destroy: true, reject_if: :all_blank
 
   validates :name, presence: true
@@ -12,6 +14,9 @@ class School < ApplicationRecord
   validates :training_types, presence: true, if: -> { training_types.present? }
   validates :website, format: { with: URI::DEFAULT_PARSER.make_regexp(%w[http https]), message: "must be a valid URL" }, allow_blank: true
   validates :phone, format: { with: /\A\+?\d{1,3}[-.\s]?\(?\d{1,3}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}\z/, message: "must be a valid phone number" }, allow_blank: true
+
+  scope :approved, -> { where(approved: true) }
+  scope :unapproved, -> { where(approved: false) }
 
   # Generate a slug from the name
   def slug

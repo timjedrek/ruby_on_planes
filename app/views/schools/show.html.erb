@@ -245,7 +245,7 @@
   <div class="flex items-center justify-between mt-10 mb-4 border-b-2 border-gray-200 pb-2">
     <h2 class="text-2xl font-semibold text-gray-800">Additional Links</h2>
   </div>
-  <div class="mt-4 mb-8 grid grid-cols-2 lg:grid-cols-4 gap-10">
+  <div class="mt-4 mb-8 grid grid-cols-1 lg:grid-cols-3 gap-10">
     <%= link_to "#{@airport.name}", airport_path(@airport.code), class: "inline-block bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200" %>
     <%= link_to "All Airports in #{@state.abbreviation}", airports_path(state: @state.abbreviation), class: "inline-block bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200" %>
     <% if user_signed_in? && current_user.admin? %>

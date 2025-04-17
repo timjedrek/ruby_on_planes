@@ -1,6 +1,7 @@
 class AirportsController < ApplicationController
-  before_action :set_airport, only: [:show, :edit, :update, :destroy]
-  
+  before_action :set_airport, only: [ :show, :edit, :update, :destroy ]
+  before_action :authorize_admin, only: [ :edit, :update, :destroy ]
+
   def index
     @state = State.find_by!(abbreviation: params[:state].upcase) if params[:state].present?
     @airports = @state ? @state.airports.order(:name).distinct : Airport.order(:name).distinct
@@ -12,17 +13,23 @@ class AirportsController < ApplicationController
 
   def show
     @state = @airport.state
-    @schools = @airport.schools.order(:name)
-    
+
+    # Show all schools to admins, but only approved schools to the public
+    @schools = if user_signed_in? && current_user.admin?
+                @airport.schools.order(:name)
+    else
+                @airport.schools.approved.order(:name)
+    end
+
     # Get all nearby cities (both direct and inverse relationships)
     nearby_city_ids = (@airport.city.nearby_cities + @airport.city.inverse_nearby_cities).uniq.pluck(:id)
-    
+
     # Get airports from nearby cities in the same state
     @nearby_airports = Airport.where(city_id: nearby_city_ids, state_id: @state.id)
                              .where.not(id: @airport.id)
                              .order(:name)
                              .distinct
-    
+
     set_meta_tags title: "#{@airport.name} (#{@airport.code}) | Pilot Training Near Me",
                   description: "Explore flight schools at #{@airport.name} in #{@airport.city.name}, #{@state.abbreviation}.",
                   keywords: "flight schools #{@airport.name}, pilot training #{@airport.code}, #{@airport.city.name} aviation"
@@ -33,7 +40,7 @@ class AirportsController < ApplicationController
 
   def update
     if @airport.update(airport_params)
-      redirect_to airport_path(@airport.code), notice: 'Airport was successfully updated.'
+      redirect_to airport_path(@airport.code), notice: "Airport was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -42,10 +49,10 @@ class AirportsController < ApplicationController
   def destroy
     begin
       @airport.destroy!
-      redirect_to airports_path(state: @airport.state.abbreviation), notice: 'Airport was successfully deleted.'
+      redirect_to airports_path(state: @airport.state.abbreviation), notice: "Airport was successfully deleted."
     rescue => e
-      redirect_to airport_path(@airport.code), 
-                  alert: 'Unable to delete this airport. It may have associated schools.'
+      redirect_to airport_path(@airport.code),
+                  alert: "Unable to delete this airport. It may have associated schools."
     end
   end
 
@@ -58,5 +65,11 @@ class AirportsController < ApplicationController
 
   def airport_params
     params.require(:airport).permit(:name, :code, :icao_code, :description)
+  end
+
+  def authorize_admin
+    unless user_signed_in? && current_user.admin?
+      redirect_to airport_path(@airport.code), alert: "You are not authorized to perform this action."
+    end
   end
 end
