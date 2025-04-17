@@ -73,6 +73,9 @@ Rails.application.routes.draw do
     end
 
     resources :schools do
+      collection do
+        get "new/:airport_code", to: "schools#new", as: :new_with_airport
+      end
       member do
         patch :approve
         patch :unapprove

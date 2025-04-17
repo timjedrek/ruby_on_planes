@@ -1,0 +1,37 @@
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <h1 class="text-4xl font-bold text-gray-900 mb-2">Add New School</h1>
+  <p class="text-lg text-gray-600 mb-6">
+    At <%= @airport.name %> (<%= @airport.code %>)
+  </p>
+
+  <div class="mb-8">
+    <%= link_to "Back to Airport", airport_path(@airport.code), class: "inline-block bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200" %>
+    <%= link_to "Back to Schools", admin_schools_path, class: "inline-block bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200 ml-2" %>
+  </div>
+
+  <div class="bg-white rounded-lg shadow p-6 border border-gray-200">
+    <%= form_with(model: [:admin, @school], method: :post, local: true, class: "space-y-6", id: "school-form", data: { turbo: false }) do |form| %>
+      <%= hidden_field_tag :airport_code, @airport.code %>
+      <% if @school.errors.any? %>
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+          <div class="text-red-700 font-medium">
+            <%= pluralize(@school.errors.count, "error") %> prohibited this school from being saved:
+          </div>
+          <ul class="list-disc pl-5 mt-2 text-red-600">
+            <% @school.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <%= render partial: 'shared/school_form_fields', locals: { form: form, school: @school, form_name: 'school' } %>
+
+      <div class="pt-5">
+        <div class="flex justify-end">
+          <%= form.submit "Create School", class: "ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500", data: { disable_with: "Creating..." } %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div> 

@@ -1,5 +1,6 @@
 class Admin::SchoolsController < Admin::BaseController
   before_action :set_school, only: [ :show, :edit, :update, :approve, :unapprove, :add_owner, :remove_owner ]
+  before_action :set_airport, only: [ :new, :create ]
 
   def index
     @schools = School.includes(:airport, :state, :city).order(created_at: :desc)
@@ -62,17 +63,42 @@ class Admin::SchoolsController < Admin::BaseController
     redirect_to admin_school_path(@school), notice: "User has been removed as an owner of this school."
   end
 
+  def new
+    @school = @airport.schools.new
+    @school.contact_people.build
+  end
+
+  def create
+    @school = @airport.schools.new(school_params)
+    @school.approved = true # Auto-approve admin-created schools
+
+    if @school.save
+      redirect_to admin_school_path(@school), notice: "School was successfully created."
+    else
+      render :new, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def set_school
     @school = School.find_by_slug_or_id(params[:id])
   end
 
+  def set_airport
+    @airport = Airport.find_by(code: params[:airport_code].upcase)
+
+    if @airport.nil?
+      redirect_to admin_schools_path, alert: "Airport not found."
+    end
+  end
+
   def school_params
     params.require(:school).permit(
       :name, :website, :phone, :description, :est_planes, :est_cfis, :date_established,
       :part_141, :part_61, :accelerated_programs, :examining_authority, :featured, :approved,
-      training_types: []
+      training_types: [],
+      contact_people_attributes: [ :id, :name, :title, :phone, :email, :_destroy ]
     )
   end
 end

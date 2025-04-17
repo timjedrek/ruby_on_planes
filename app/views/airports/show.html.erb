@@ -21,6 +21,14 @@
     <% if user_signed_in? && current_user.admin? %>
       <%= link_to "Edit Airport", edit_airport_path(@airport.code), class: "inline-block bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200" %>
       <%= button_to "Delete Airport", airport_path(@airport.code), method: :delete, class: "inline-block bg-red-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-700 transition duration-200", data: { turbo_confirm: "Are you sure you want to delete this airport? This action cannot be undone." } %>
+      <div class="">
+        <%= link_to new_with_airport_admin_schools_path(@airport.code), class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" do %>
+          <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+          Add School
+        <% end %>
+      </div>
     <% end %>
   </div>
 
@@ -60,7 +68,18 @@
       <% end %>
     </ul>
   <% else %>
-    <p class="text-gray-600 mt-6">No flight schools listed yet for <%= @airport.name %>.</p>
+    <h2 class="text-2xl font-semibold text-gray-800 mt-6 mb-4 border-b-2 border-gray-200 pb-2">Flight Schools</h2>
+    <p class="text-gray-600">No flight schools listed yet for <%= @airport.name %>.</p>
+    <% if user_signed_in? && current_user.admin? %>
+      <div class="mt-4">
+        <%= link_to new_with_airport_admin_schools_path(@airport.code), class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" do %>
+          <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+          Add School
+        <% end %>
+      </div>
+    <% end %>
   <% end %>
 
   <% if @nearby_airports.any? %>
