@@ -4,6 +4,17 @@
     At <%= @airport.name %> (<%= @airport.code %>)
   </p>
 
+  <!-- Debug info -->
+  <% if Rails.env.development? %>
+    <div class="bg-gray-100 p-4 mb-4 rounded text-sm overflow-auto">
+      <h3 class="font-bold mb-2">Debug Info:</h3>
+      <p>Airport Code: <%= @airport.code %></p>
+      <p>School ID: <%= @school.id %></p>
+      <p>Form URL should be: <%= airport_school_path(@airport.code, @school) %></p>
+      <p>Edit path: <%= edit_airport_school_path(@airport.code, @school) %></p>
+    </div>
+  <% end %>
+
   <div class="mb-8">
     <%= link_to "Back to School", airport_school_path(@airport.code, @school), class: "inline-block bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200" %>
   </div>

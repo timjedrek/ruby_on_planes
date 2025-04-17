@@ -25,7 +25,9 @@ Rails.application.routes.draw do
     end
   end
   resources :airports, param: :code do
-    resources :schools, only: [:show, :edit, :update]
+    resources :schools, only: [:show, :edit, :update] do
+      resources :contact_people, only: [:create, :update, :destroy]
+    end
   end
 
   get "up" => "rails/health#show", as: :rails_health_check

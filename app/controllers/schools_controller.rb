@@ -16,17 +16,46 @@ class SchoolsController < ApplicationController
   end
 
   def update
-    @airport = Airport.find_by!(code: params[:airport_code].upcase)
+    Rails.logger.debug "UPDATE PARAMS: #{params.inspect}"
+    
+    # Try to find airport using different parameter names
+    airport_code = params[:airport_code] || params[:code]
+    
+    # Log what we're looking for
+    Rails.logger.debug "Looking for airport with code: #{airport_code.inspect}"
+    
+    if airport_code.blank?
+      Rails.logger.error "Airport code parameter is missing or blank"
+      return render plain: "Airport code parameter is missing", status: :bad_request
+    end
+    
+    @airport = Airport.find_by(code: airport_code.upcase)
+    
+    if @airport.nil?
+      Rails.logger.error "Could not find airport with code: #{airport_code.upcase}"
+      return render plain: "Could not find airport with code: #{airport_code.upcase}", status: :not_found
+    end
+    
     @school = @airport.schools.find(params[:id])
     
     Rails.logger.debug "School params: #{school_params.inspect}"
-    Rails.logger.debug "Contact people params: #{school_params[:contact_people_attributes].inspect}"
     
-    if @school.update(school_params)
-      redirect_to airport_school_path(@airport.code, @school), notice: 'School was successfully updated.'
-    else
-      Rails.logger.debug "School errors: #{@school.errors.full_messages.inspect}"
-      render :edit, status: :unprocessable_entity
+    respond_to do |format|
+      if @school.update(school_params)
+        # Store the redirect URL for use in the Turbo Stream response
+        redirect_url = airport_school_path(@airport.code, @school)
+        
+        format.html { redirect_to redirect_url, notice: 'School was successfully updated.' }
+        format.turbo_stream { 
+          render turbo_stream: turbo_stream.redirect(redirect_url)
+        }
+        format.json { render json: { success: true, redirect_url: redirect_url } }
+      else
+        Rails.logger.debug "School errors: #{@school.errors.full_messages.inspect}"
+        format.html { render :edit, status: :unprocessable_entity }
+        format.turbo_stream { render :edit, status: :unprocessable_entity }
+        format.json { render json: { errors: @school.errors.full_messages }, status: :unprocessable_entity }
+      end
     end
   end
 
