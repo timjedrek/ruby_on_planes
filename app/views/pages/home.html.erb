@@ -3,7 +3,9 @@
 <div class="bg-blue-900 text-white py-16 px-4 text-center">
   <h1 class="text-5xl font-bold tracking-tight">Welcome to Flight School Finder</h1>
   <p class="mt-4 text-xl text-blue-200">Find the best flight schools near you to start your aviation journey!</p>
-  <div class="mt-8 space-x-4">
+  
+  
+  <div class="mt-4 space-x-4">
     <%= link_to "Review a School", new_user_registration_path, class: "inline-block bg-yellow-600 text-white px-6 py-3 rounded-md hover:bg-yellow-700 transition duration-200" %>
     <%= link_to "Add a Listing", new_user_registration_path, class: "inline-block bg-green-600 text-white px-6 py-3 rounded-md hover:bg-green-700 transition duration-200" %>
   </div>
@@ -14,6 +16,22 @@
     <h2 class="text-3xl font-semibold text-gray-800 mb-6">Ready to Become a Pilot?</h2>
     <p class="text-lg text-gray-600 max-w-2xl mx-auto">Search for top-rated flight schools in your area. Whether you're a beginner or advancing your wings, we've got you covered.</p>
     <!-- Add school search or listings here in Step 2 -->
+    <!-- Search Form -->
+    <div class="max-w-3xl mx-auto mt-8 mb-6">
+      <form class="flex flex-col sm:flex-row items-center justify-center">
+        <div class="relative w-full sm:w-2/3">
+          <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </div>
+          <input type="text" placeholder="Search for flight schools by location or name..." class="w-full py-4 pl-12 pr-4 text-gray-800 bg-white border-0 rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-md">
+        </div>
+        <button type="button" disabled class="w-full sm:w-auto px-6 py-4 mt-3 sm:mt-0 sm:ml-4 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none cursor-not-allowed">
+          Search
+        </button>
+      </form>
+    </div>
   </div>
 
   <!-- Why Create an Account -->
