@@ -1,4 +1,4 @@
-<nav class="bg-blue-600 shadow-md">
+<nav class="relative z-10 bg-blue-600 shadow-md">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between h-16">
       <div class="flex">
@@ -45,50 +45,214 @@
         </div>
       </div>
       
-      <!-- Mobile menu button -->
-      <div class="flex items-center sm:hidden">
-        <button type="button" class="mobile-menu-button inline-flex items-center justify-center p-2 rounded-md text-white hover:bg-blue-500 focus:outline-none" aria-expanded="false">
-          <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-      </div>
+      <!-- Toggle Button (Mobile only) -->
+      <button id="nav-toggle" type="button" class="nav-toggle sm:hidden z-50 p-2 text-white focus:outline-none" aria-expanded="false" aria-controls="menu">
+        <svg class="menuicon w-10 h-10 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+          <title>Toggle Menu</title>
+          <g>
+            <circle class="menuicon-circle stroke-current fill-blue-400 stroke-2 transition-all duration-300" r="23" cx="25" cy="25" />
+            <!-- Hamburger bars -->
+            <line class="hamburger-bar top stroke-white stroke-2 transition-all duration-300" x1="13" y1="17" x2="37" y2="17" stroke-linecap="round"/>
+            <line class="hamburger-bar middle stroke-white stroke-2 transition-all duration-300" x1="13" y1="25" x2="37" y2="25" stroke-linecap="round"/>
+            <line class="hamburger-bar bottom stroke-white stroke-2 transition-all duration-300" x1="13" y1="33" x2="37" y2="33" stroke-linecap="round"/>
+            
+            <!-- X bars (initially hidden) -->
+            <line class="x-bar diagonal1 stroke-white stroke-2 transition-all duration-300 opacity-0" x1="17" y1="17" x2="33" y2="33" stroke-linecap="round"/>
+            <line class="x-bar diagonal2 stroke-white stroke-2 transition-all duration-300 opacity-0" x1="17" y1="33" x2="33" y2="17" stroke-linecap="round"/>
+          </g>
+        </svg>
+      </button>
     </div>
   </div>
 
-  <!-- Mobile menu, show/hide based on menu state. -->
-  <div class="mobile-menu hidden sm:hidden bg-blue-700">
-    <div class="px-2 pt-2 pb-3 space-y-1">
-      <%= link_to "Featured Flight Schools", "#", class: "block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-blue-500" %>
-      <%= link_to "Find School By State", states_path, class: "block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-blue-500" %>
-      <%= link_to "Find School By City", "#", class: "block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-blue-500" %>
-      <%= link_to "Airports", airports_path, class: "block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-blue-500" %>
-    </div>
-    
-    <div class="pt-4 pb-3 border-t border-blue-500">
-      <div class="flex items-center px-5">
+  <!-- Circular Splash Background (Mobile only) -->
+  <div id="splash" class="sm:hidden absolute top-8 right-8 w-px h-px">
+    <!-- The ::after element will be created via CSS -->
+  </div>
+
+  <!-- Mobile Navigation Menu -->
+  <div id="nav-menu" class="nav-menu sm:hidden fixed inset-0 flex flex-col justify-center items-center z-40 opacity-0 pointer-events-none transition-opacity duration-300">
+    <ul id="menu" class="text-center space-y-6" aria-label="main navigation" hidden>
+      <li class="nav-item opacity-0 transform -translate-y-8 transition-all duration-500 ease-custom">
+        <%= link_to "Featured Flight Schools", "#", class: "block px-4 py-2 text-white uppercase tracking-widest text-xl hover:bg-opacity-20 hover:bg-black" %>
+      </li>
+      <li class="nav-item opacity-0 transform -translate-y-8 transition-all duration-500 ease-custom">
+        <%= link_to "Find School By State", states_path, class: "block px-4 py-2 text-white uppercase tracking-widest text-xl hover:bg-opacity-20 hover:bg-black" %>
+      </li>
+      <li class="nav-item opacity-0 transform -translate-y-8 transition-all duration-500 ease-custom">
+        <%= link_to "Find School By City", "#", class: "block px-4 py-2 text-white uppercase tracking-widest text-xl hover:bg-opacity-20 hover:bg-black" %>
+      </li>
+      <li class="nav-item opacity-0 transform -translate-y-8 transition-all duration-500 ease-custom">
+        <%= link_to "Airports", airports_path, class: "block px-4 py-2 text-white uppercase tracking-widest text-xl hover:bg-opacity-20 hover:bg-black" %>
+      </li>
+      <li class="nav-item opacity-0 transform -translate-y-8 transition-all duration-500 ease-custom">
         <% if user_signed_in? %>
-          <div class="space-y-2">
-            <div class="text-white text-sm font-medium"><%= current_user.email %></div>
-            <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "w-full px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-600 bg-white hover:bg-gray-100 focus:outline-none" %>
+          <div class="flex flex-col items-center space-y-2">
+            <span class="text-white"><%= current_user.email %></span>
+            <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-600 bg-white hover:bg-gray-100 focus:outline-none" %>
           </div>
         <% else %>
-          <%= link_to "Sign In", new_user_session_path, class: "block px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-600 bg-white hover:bg-gray-100 focus:outline-none" %>
+          <%= link_to "Sign In", new_user_session_path, class: "block px-4 py-2 text-white uppercase tracking-widest text-xl hover:bg-opacity-20 hover:bg-black" %>
         <% end %>
-      </div>
-    </div>
+      </li>
+    </ul>
   </div>
 </nav>
 
+<style>
+  /* Custom styles that can't be easily done with Tailwind classes  - inspiration from https://codepen.io/mxbck/pen/xdaGNL*/
+  #splash::after {
+    content: "";
+    display: block;
+    position: absolute;
+    border-radius: 50%;
+    background-color: oklch(28.2% 0.091 267.935);
+    width: 284vmax;
+    height: 284vmax;
+    top: -142vmax;
+    left: -142vmax;
+    transform: scale(0);
+    transform-origin: 50% 50%;
+    transition: transform 0.5s cubic-bezier(0.755, 0.050, 0.855, 0.060);
+    will-change: transform;
+  }
+
+  .nav-open #splash::after {
+    transform: scale(1);
+  }
+
+  .nav-open .menuicon {
+    transform: rotate(180deg);
+  }
+
+  .nav-open .menuicon-circle {
+    stroke-dashoffset: 0;
+  }
+
+  .menuicon-circle {
+    stroke-dasharray: 144.513; /* circumference of circle with r=23 */
+    stroke-dashoffset: 144.513;
+    transition: stroke-dashoffset 0.3s linear 0.1s;
+  }
+
+  /* Menu icon animation - creating the X */
+  .nav-open .hamburger-bar {
+    opacity: 0;
+  }
+  
+  .nav-open .x-bar {
+    opacity: 1;
+  }
+
+  .nav-open .nav-menu {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Custom cubic-bezier curve to match the CodePen example */
+  .ease-custom {
+    transition-timing-function: cubic-bezier(0.000, 0.995, 0.990, 1.000);
+  }
+
+  /* Dynamic animation for menu items */
+  .nav-item {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  .nav-open .nav-item:nth-child(1) {
+    transition-delay: 0.5s; /* Start after background animation completes */
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .nav-open .nav-item:nth-child(2) {
+    transition-delay: 0.6s;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .nav-open .nav-item:nth-child(3) {
+    transition-delay: 0.7s;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .nav-open .nav-item:nth-child(4) {
+    transition-delay: 0.8s;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .nav-open .nav-item:nth-child(5) {
+    transition-delay: 0.9s;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (min-width: 640px) {
+    /* Ensure desktop menu styles are not affected by the mobile menu styles */
+    .nav-open .menuicon,
+    .nav-open #splash::after {
+      display: none;
+    }
+  }
+</style>
+
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Mobile menu toggle
-    const mobileMenuButton = document.querySelector('.mobile-menu-button');
-    const mobileMenu = document.querySelector('.mobile-menu');
-    
-    if (mobileMenuButton && mobileMenu) {
-      mobileMenuButton.addEventListener('click', function() {
-        mobileMenu.classList.toggle('hidden');
+    const nav = document.querySelector('nav');
+    const menu = document.querySelector('#menu');
+    const navToggle = document.querySelector('#nav-toggle');
+    const navMenu = document.querySelector('#nav-menu');
+    let isMenuOpen = false;
+
+    // TOGGLE MENU ACTIVE STATE
+    if (navToggle) {
+      navToggle.addEventListener('click', e => {
+        e.preventDefault();
+        isMenuOpen = !isMenuOpen;
+        
+        // toggle a11y attributes and active class
+        navToggle.setAttribute('aria-expanded', String(isMenuOpen));
+        menu.hidden = !isMenuOpen;
+        nav.classList.toggle('nav-open');
+        
+        if (isMenuOpen) {
+          // Prevent body scrolling when menu is open
+          document.body.style.overflow = 'hidden';
+        } else {
+          // Allow scrolling again when menu is closed
+          document.body.style.overflow = '';
+        }
+      });
+    }
+
+    // TRAP TAB INSIDE NAV WHEN OPEN
+    if (nav && menu) {
+      nav.addEventListener('keydown', e => {
+        // abort if menu isn't open or modifier keys are pressed
+        if (!isMenuOpen || e.ctrlKey || e.metaKey || e.altKey) {
+          return;
+        }
+        
+        // listen for tab press and move focus
+        // if we're on either end of the navigation
+        const menuLinks = menu.querySelectorAll('a, button');
+        if (e.keyCode === 9) {
+          if (e.shiftKey) {
+            if (document.activeElement === menuLinks[0]) {
+              navToggle.focus();
+              e.preventDefault();
+            }
+          } else if (document.activeElement === navToggle) {
+            menuLinks[0].focus();
+            e.preventDefault();
+          } else if (document.activeElement === menuLinks[menuLinks.length - 1]) {
+            navToggle.focus();
+            e.preventDefault();
+          }
+        }
       });
     }
   });
