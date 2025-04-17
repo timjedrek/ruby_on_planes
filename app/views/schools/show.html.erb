@@ -1,6 +1,6 @@
 <div class="max-w-4xl mx-auto px-4 py-8">
   <h1 class="text-4xl font-bold text-gray-900 mb-2"><%= @school.name %></h1>
-  <p class="text-lg text-gray-600 mb-6">
+  <p class="text-lg text-gray-600 mb-2">
     At <%= link_to @airport.name, airport_path(@airport.code), class: "text-blue-600 hover:text-blue-800" %>
     <% if @airport.icao_code.present? %>
       <span class="text-gray-500">(<%= @airport.icao_code %>)</span>
@@ -11,11 +11,44 @@
     <% end %>
   </p>
 
-  <div class="mb-8 grid grid-cols-2 lg:grid-cols-4 gap-10">
-    <%= link_to "#{@airport.name}", airport_path(@airport.code), class: "inline-block bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200" %>
-    <%= link_to "All Airports in #{@state.abbreviation}", airports_path(state: @state.abbreviation), class: "inline-block bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200" %>
+  <% if @school.avg_rating.present? %>
+    <div class="flex items-center mb-6">
+      <div class="flex items-center">
+        <% full_stars = @school.avg_rating.to_i %>
+        <% half_star = (@school.avg_rating - full_stars) >= 0.5 %>
+        
+        <% full_stars.times do %>
+          <svg class="w-6 h-6 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+          </svg>
+        <% end %>
+        
+        <% if half_star %>
+          <svg class="w-6 h-6 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="half-fill" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="50%" stop-color="currentColor" stop-opacity="1"></stop>
+                <stop offset="50%" stop-color="currentColor" stop-opacity="0.3"></stop>
+              </linearGradient>
+            </defs>
+            <path fill="url(#half-fill)" d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+          </svg>
+        <% end %>
+        
+        <% (5 - full_stars - (half_star ? 1 : 0)).times do %>
+          <svg class="w-6 h-6 text-gray-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+          </svg>
+        <% end %>
+      </div>
+      <span class="ml-2 text-xl text-gray-900 font-medium"><%= @school.avg_rating.to_f.round(1) %></span>
+      <span class="ml-1 text-gray-600">out of 5</span>
+      <span class="ml-3 text-gray-600">(<%= @school.reviews.published.count %> reviews)</span>
+    </div>
+  <% end %>
+
+  <div class="mt-4 mb-8">
     <%= link_to "Write a Review", new_airport_school_review_path(@airport.code, @school), class: "inline-block bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200" %>
-    <%= link_to "Edit School", edit_airport_school_path(@airport.code, @school), class: "inline-block bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition duration-200" %>
   </div>
 
   <% if @school.description.present? %>
@@ -206,5 +239,15 @@
         </div>
       </div>
     <% end %>
+  </div>
+
+
+  <div class="flex items-center justify-between mt-10 mb-4 border-b-2 border-gray-200 pb-2">
+    <h2 class="text-2xl font-semibold text-gray-800">Additional Links</h2>
+  </div>
+  <div class="mt-4 mb-8 grid grid-cols-2 lg:grid-cols-4 gap-10">
+    <%= link_to "#{@airport.name}", airport_path(@airport.code), class: "inline-block bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-200" %>
+    <%= link_to "All Airports in #{@state.abbreviation}", airports_path(state: @state.abbreviation), class: "inline-block bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200" %>
+    <%= link_to "Edit School", edit_airport_school_path(@airport.code, @school), class: "inline-block bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition duration-200" %>
   </div>
 </div>
