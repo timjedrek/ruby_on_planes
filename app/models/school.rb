@@ -3,6 +3,7 @@ class School < ApplicationRecord
   has_one :city, through: :airport
   has_one :state, through: :airport
   has_many :contact_people, dependent: :destroy
+  has_many :reviews, dependent: :destroy
   accepts_nested_attributes_for :contact_people, allow_destroy: true, reject_if: :all_blank
 
   validates :name, presence: true
@@ -26,37 +27,37 @@ class School < ApplicationRecord
   def self.find_by_slug_or_id(param)
     # First try direct slug matching
     school = where("LOWER(REPLACE(name, ' ', '-')) = LOWER(?)", param).first
-    
+
     # Then try to find by the slug-friendly version of the name
     if school.nil?
-      school = where("LOWER(name) = LOWER(?)", param.gsub('-', ' ')).first
+      school = where("LOWER(name) = LOWER(?)", param.gsub("-", " ")).first
     end
-    
+
     # Finally fall back to ID if slug not found and the param is numeric
     if school.nil? && param.to_i.to_s == param
       school = find_by(id: param)
     end
-    
+
     school
   end
-  
+
   # Find school by slug or ID within a specific airport
   def self.find_by_slug_or_id_in_airport(param, airport_id)
     schools = where(airport_id: airport_id)
-    
+
     # First try direct slug matching
     school = schools.where("LOWER(REPLACE(name, ' ', '-')) = LOWER(?)", param).first
-    
+
     # Then try to find by the slug-friendly version of the name
     if school.nil?
-      school = schools.where("LOWER(name) = LOWER(?)", param.gsub('-', ' ')).first
+      school = schools.where("LOWER(name) = LOWER(?)", param.gsub("-", " ")).first
     end
-    
+
     # Finally fall back to ID if slug not found and the param is numeric
     if school.nil? && param.to_i.to_s == param
       school = schools.find_by(id: param)
     end
-    
+
     school
   end
 end

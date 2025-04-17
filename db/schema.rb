@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_16_090010) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_17_052025) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -59,6 +59,22 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_16_090010) do
     t.index ["nearby_city_id"], name: "index_nearby_cities_on_nearby_city_id"
   end
 
+  create_table "reviews", force: :cascade do |t|
+    t.decimal "rating", precision: 3, scale: 1, null: false
+    t.text "comment", null: false
+    t.string "reviewer_name"
+    t.string "reviewer_email"
+    t.bigint "user_id"
+    t.bigint "school_id", null: false
+    t.boolean "published", default: true
+    t.boolean "verified", default: false
+    t.string "title"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["school_id"], name: "index_reviews_on_school_id"
+    t.index ["user_id"], name: "index_reviews_on_user_id"
+  end
+
   create_table "schools", force: :cascade do |t|
     t.string "name"
     t.string "website"
@@ -77,6 +93,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_16_090010) do
     t.date "date_established"
     t.boolean "featured", default: false, null: false
     t.boolean "approved", default: true, null: false
+    t.decimal "avg_rating", precision: 3, scale: 1
     t.index ["airport_id", "name"], name: "index_schools_on_airport_id_and_name", unique: true
     t.index ["airport_id"], name: "index_schools_on_airport_id"
   end
@@ -102,6 +119,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_16_090010) do
     t.boolean "admin", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "role", default: "user"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -113,5 +131,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_16_090010) do
   add_foreign_key "contact_people", "schools"
   add_foreign_key "nearby_cities", "cities"
   add_foreign_key "nearby_cities", "cities", column: "nearby_city_id"
+  add_foreign_key "reviews", "schools"
+  add_foreign_key "reviews", "users"
   add_foreign_key "schools", "airports"
 end

@@ -29,6 +29,19 @@ Rails.application.routes.draw do
   resources :airports, param: :code do
     resources :schools, only: [ :show, :edit, :update ], param: :id do
       resources :contact_people, only: [ :create, :update, :destroy ]
+      resources :reviews, only: [ :new, :create, :edit, :update, :destroy ]
+    end
+  end
+
+  # Admin routes
+  namespace :admin do
+    resources :reviews do
+      member do
+        patch :publish
+        patch :unpublish
+        patch :verify
+        patch :unverify
+      end
     end
   end
 

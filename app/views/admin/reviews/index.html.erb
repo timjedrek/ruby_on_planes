@@ -1,0 +1,139 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Manage Reviews</h1>
+    <p class="mt-2 text-gray-600">Review and moderate user-submitted flight school reviews.</p>
+  </div>
+  
+  <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-8">
+    <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
+      <h2 class="text-lg leading-6 font-medium text-gray-900">Filter Reviews</h2>
+      <div class="flex space-x-2">
+        <%= link_to "All Reviews", admin_reviews_path, class: "px-3 py-2 rounded-md text-sm font-medium #{@filter.nil? ? 'bg-indigo-600 text-white' : 'text-gray-700 hover:bg-gray-100'}" %>
+        <%= link_to "Published", admin_reviews_path(filter: 'published'), class: "px-3 py-2 rounded-md text-sm font-medium #{@filter == 'published' ? 'bg-indigo-600 text-white' : 'text-gray-700 hover:bg-gray-100'}" %>
+        <%= link_to "Unpublished", admin_reviews_path(filter: 'unpublished'), class: "px-3 py-2 rounded-md text-sm font-medium #{@filter == 'unpublished' ? 'bg-indigo-600 text-white' : 'text-gray-700 hover:bg-gray-100'}" %>
+      </div>
+    </div>
+  </div>
+  
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Review
+          </th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            School
+          </th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Reviewer
+          </th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Status
+          </th>
+          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Date
+          </th>
+          <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+            Actions
+          </th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <% @reviews.each do |review| %>
+          <tr>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="flex items-center">
+                <div class="flex items-center mr-2">
+                  <% review.rating.to_i.times do %>
+                    <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                    </svg>
+                  <% end %>
+                  <% (5 - review.rating.to_i).times do %>
+                    <svg class="w-4 h-4 text-gray-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                    </svg>
+                  <% end %>
+                </div>
+                <div>
+                  <div class="text-sm font-medium text-gray-900"><%= review.title %></div>
+                  <div class="text-sm text-gray-500 truncate max-w-sm"><%= review.comment.truncate(50) %></div>
+                </div>
+              </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm text-gray-900"><%= review.school.name %></div>
+              <div class="text-sm text-gray-500"><%= review.school.airport.code %></div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <% if review.user.present? %>
+                <div class="text-sm text-gray-900"><%= review.user.email %></div>
+                <div class="text-sm text-gray-500">Registered User</div>
+              <% else %>
+                <div class="text-sm text-gray-900"><%= review.reviewer_name %></div>
+                <div class="text-sm text-gray-500"><%= review.reviewer_email %></div>
+              <% end %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="flex space-x-2">
+                <% if review.published %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    Published
+                  </span>
+                <% else %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                    Unpublished
+                  </span>
+                <% end %>
+                
+                <% if review.verified %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    Verified
+                  </span>
+                <% end %>
+              </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <%= review.created_at.strftime("%b %d, %Y") %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+              <div class="flex justify-end space-x-2">
+                <%= link_to "View School", airport_school_path(review.school.airport.code, review.school), class: "text-indigo-600 hover:text-indigo-900" %>
+                <%= link_to "Edit", edit_admin_review_path(review), class: "text-indigo-600 hover:text-indigo-900" %>
+                
+                <% if review.published %>
+                  <%= button_to "Unpublish", unpublish_admin_review_path(review), method: :patch, class: "text-red-600 hover:text-red-900 bg-transparent border-none cursor-pointer" %>
+                <% else %>
+                  <%= button_to "Publish", publish_admin_review_path(review), method: :patch, class: "text-green-600 hover:text-green-900 bg-transparent border-none cursor-pointer" %>
+                <% end %>
+                
+                <% if review.verified %>
+                  <%= button_to "Unverify", unverify_admin_review_path(review), method: :patch, class: "text-blue-600 hover:text-blue-900 bg-transparent border-none cursor-pointer" %>
+                <% else %>
+                  <%= button_to "Verify", verify_admin_review_path(review), method: :patch, class: "text-blue-600 hover:text-blue-900 bg-transparent border-none cursor-pointer" %>
+                <% end %>
+                
+                <%= button_to "Delete", admin_review_path(review), method: :delete, data: { confirm: "Are you sure you want to delete this review?" }, class: "text-red-600 hover:text-red-900 bg-transparent border-none cursor-pointer" %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+        
+        <% if @reviews.empty? %>
+          <tr>
+            <td colspan="6" class="px-6 py-10 text-center text-gray-500">
+              No reviews found.
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  
+  <% if @reviews.respond_to?(:total_pages) %>
+    <div class="pagination mt-6 flex justify-center">
+      <%= paginate @reviews %>
+    </div>
+  <% end %>
+</div> 

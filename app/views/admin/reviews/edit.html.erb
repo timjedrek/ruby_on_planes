@@ -1,0 +1,130 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="mb-8">
+    <div class="flex justify-between items-center">
+      <h1 class="text-3xl font-bold text-gray-900">Edit Review</h1>
+      <%= link_to "Back to Reviews", admin_reviews_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+    </div>
+    <p class="mt-2 text-gray-600">Moderate and edit user-submitted review content.</p>
+  </div>
+  
+  <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-8">
+    <div class="px-4 py-5 sm:px-6">
+      <h2 class="text-lg leading-6 font-medium text-gray-900">Review Information</h2>
+      <p class="mt-1 max-w-2xl text-sm text-gray-500">Details about the review and reviewer.</p>
+    </div>
+    <div class="border-t border-gray-200 px-4 py-5 sm:px-6">
+      <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500">School</dt>
+          <dd class="mt-1 text-sm text-gray-900">
+            <%= link_to @review.school.name, airport_school_path(@review.school.airport.code, @review.school), class: "text-indigo-600 hover:text-indigo-900" %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500">Rating</dt>
+          <dd class="mt-1 text-sm text-gray-900">
+            <div class="flex items-center">
+              <% @review.rating.to_i.times do %>
+                <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                </svg>
+              <% end %>
+              <% (5 - @review.rating.to_i).times do %>
+                <svg class="w-5 h-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                </svg>
+              <% end %>
+              <span class="ml-1 text-gray-500"><%= @review.rating %> out of 5</span>
+            </div>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500">Reviewer</dt>
+          <dd class="mt-1 text-sm text-gray-900">
+            <% if @review.user.present? %>
+              <%= @review.user.email %> (Registered User)
+            <% else %>
+              <%= @review.reviewer_name %> (<%= @review.reviewer_email %>)
+            <% end %>
+          </dd>
+        </div>
+        <div class="sm:col-span-1">
+          <dt class="text-sm font-medium text-gray-500">Submitted On</dt>
+          <dd class="mt-1 text-sm text-gray-900"><%= @review.created_at.strftime("%B %d, %Y at %I:%M %p") %></dd>
+        </div>
+        <div class="sm:col-span-2">
+          <dt class="text-sm font-medium text-gray-500">Status</dt>
+          <dd class="mt-1 text-sm text-gray-900">
+            <div class="flex space-x-4">
+              <div>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= @review.published ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>">
+                  <%= @review.published ? 'Published' : 'Unpublished' %>
+                </span>
+                <div class="mt-2">
+                  <% if @review.published %>
+                    <%= button_to "Unpublish", unpublish_admin_review_path(@review), method: :patch, class: "inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" %>
+                  <% else %>
+                    <%= button_to "Publish", publish_admin_review_path(@review), method: :patch, class: "inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" %>
+                  <% end %>
+                </div>
+              </div>
+              <div>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= @review.verified ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800' %>">
+                  <%= @review.verified ? 'Verified Student' : 'Unverified' %>
+                </span>
+                <div class="mt-2">
+                  <% if @review.verified %>
+                    <%= button_to "Remove Verification", unverify_admin_review_path(@review), method: :patch, class: "inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+                  <% else %>
+                    <%= button_to "Mark as Verified", verify_admin_review_path(@review), method: :patch, class: "inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+  
+  <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+    <%= form_with(model: [:admin, @review], local: true) do |form| %>
+      <div class="px-4 py-5 sm:px-6">
+        <h2 class="text-lg leading-6 font-medium text-gray-900">Edit Review Content</h2>
+        <p class="mt-1 max-w-2xl text-sm text-gray-500">You can modify the content of this review.</p>
+      </div>
+      
+      <div class="border-t border-gray-200 px-4 py-5 sm:px-6 space-y-6">
+        <div>
+          <%= form.label :rating, class: "block text-sm font-medium text-gray-700" %>
+          <select name="review[rating]" id="review_rating" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+            <% (1..5).each do |rating_value| %>
+              <option value="<%= rating_value %>" <%= @review.rating == rating_value ? 'selected' : '' %>>
+                <%= rating_value %> <%= rating_value == 1 ? 'Star' : 'Stars' %>
+              </option>
+            <% end %>
+          </select>
+        </div>
+        
+        <div>
+          <%= form.label :title, "Review Title", class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_field :title, class: "mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" %>
+        </div>
+        
+        <div>
+          <%= form.label :comment, "Review Content", class: "block text-sm font-medium text-gray-700" %>
+          <%= form.text_area :comment, rows: 5, class: "mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" %>
+        </div>
+        
+        <div class="flex justify-between">
+          <div>
+            <%= button_to "Delete Review", admin_review_path(@review), method: :delete, data: { confirm: "Are you sure you want to delete this review?" }, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" %>
+          </div>
+          <div>
+            <%= form.submit "Update Review", class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div> 
