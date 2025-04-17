@@ -11,6 +11,31 @@
     <% end %>
   </p>
 
+  <div class="text-right mb-4">
+    <% if user_signed_in? %>
+      <% if current_user.admin? || current_user.owns_school?(@school) %>
+        <!-- User is admin or owner -->
+        <span class="text-gray-500 mr-3">
+          <% if current_user.admin? %>
+            <span class="bg-purple-100 text-purple-800 text-xs font-medium px-2.5 py-0.5 rounded">Admin</span>
+          <% else %>
+            <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded">Owner</span>
+          <% end %>
+        </span>
+        <%= link_to "Edit School", edit_airport_school_path(@airport.code, @school), class: "text-blue-600 hover:text-blue-800 font-medium" %>
+      <% else %>
+        <!-- User is logged in but not an owner -->
+        <%= link_to "Claim This Listing", claim_school_form_path(@school), 
+              class: "text-blue-600 hover:text-blue-800 font-medium" %>
+      <% end %>
+    <% else %>
+      <!-- User is not logged in -->
+      <%= link_to "Claim This Listing", new_user_registration_path, 
+            class: "text-blue-600 hover:text-blue-800 font-medium",
+            data: { turbo_frame: "_top" } %>
+    <% end %>
+  </div>
+
   <% if @school.avg_rating.present? %>
     <div class="flex items-center mb-6">
       <div class="flex items-center">

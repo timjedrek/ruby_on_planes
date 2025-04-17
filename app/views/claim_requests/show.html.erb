@@ -1,0 +1,134 @@
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <div class="mb-6 flex items-center justify-between">
+    <h1 class="text-3xl font-bold">Claim Request Details</h1>
+    <%= link_to "← Back to All Requests", claim_requests_path, class: "text-blue-600 hover:text-blue-800" %>
+  </div>
+
+  <div class="bg-white rounded-lg shadow overflow-hidden mb-8">
+    <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-semibold text-gray-800">Request for <%= @claim_request.school.name %></h2>
+        <div>
+          <% if @claim_request.pending? %>
+            <span class="px-3 py-1 text-sm font-medium rounded-full bg-yellow-100 text-yellow-800">Pending Review</span>
+          <% elsif @claim_request.approved? %>
+            <span class="px-3 py-1 text-sm font-medium rounded-full bg-green-100 text-green-800">Approved</span>
+          <% elsif @claim_request.rejected? %>
+            <span class="px-3 py-1 text-sm font-medium rounded-full bg-red-100 text-red-800">Rejected</span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    
+    <div class="p-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h3 class="text-lg font-semibold mb-4">School Information</h3>
+          
+          <div class="space-y-3">
+            <div>
+              <p class="text-sm font-medium text-gray-500">School Name</p>
+              <p class="text-base">
+                <%= link_to @claim_request.school.name, airport_school_path(@claim_request.school.airport.code, @claim_request.school), class: "text-blue-600 hover:underline" %>
+              </p>
+            </div>
+            
+            <div>
+              <p class="text-sm font-medium text-gray-500">Location</p>
+              <p class="text-base">
+                <%= @claim_request.school.city&.name %>, <%= @claim_request.school.state&.name %>
+              </p>
+            </div>
+            
+            <div>
+              <p class="text-sm font-medium text-gray-500">Airport</p>
+              <p class="text-base">
+                <% if @claim_request.school.airport %>
+                  <%= link_to "#{@claim_request.school.airport.code} - #{@claim_request.school.airport.name}", 
+                      airport_path(@claim_request.school.airport.code), 
+                      class: "text-blue-600 hover:underline" %>
+                <% else %>
+                  No airport assigned
+                <% end %>
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Request Information</h3>
+          
+          <div class="space-y-3">
+            <div>
+              <p class="text-sm font-medium text-gray-500">Date Submitted</p>
+              <p class="text-base"><%= @claim_request.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+            </div>
+            
+            <div>
+              <p class="text-sm font-medium text-gray-500">Status</p>
+              <p class="text-base">
+                <% if @claim_request.pending? %>
+                  <span class="font-medium text-yellow-600">Pending Review</span>
+                  <p class="mt-1 text-sm text-gray-500">Our administrators are reviewing your request.</p>
+                <% elsif @claim_request.approved? %>
+                  <span class="font-medium text-green-600">Approved</span>
+                  <p class="mt-1 text-sm text-gray-500">You now have ownership of this school listing.</p>
+                <% elsif @claim_request.rejected? %>
+                  <span class="font-medium text-red-600">Rejected</span>
+                  <p class="mt-1 text-sm text-gray-500">Unfortunately, your request was not approved.</p>
+                <% end %>
+              </p>
+            </div>
+            
+            <% if @claim_request.updated_at != @claim_request.created_at && !@claim_request.pending? %>
+              <div>
+                <p class="text-sm font-medium text-gray-500">Date Processed</p>
+                <p class="text-base"><%= @claim_request.updated_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      
+      <div class="mt-8">
+        <h3 class="text-lg font-semibold mb-4">Your Supporting Information</h3>
+        <div class="bg-gray-50 p-4 rounded-md">
+          <p class="whitespace-pre-line"><%= @claim_request.message %></p>
+        </div>
+      </div>
+      
+      <% if @claim_request.admin_notes.present? && !@claim_request.pending? %>
+        <div class="mt-8">
+          <h3 class="text-lg font-semibold mb-4">Admin Response</h3>
+          <div class="bg-gray-50 p-4 rounded-md">
+            <p class="whitespace-pre-line"><%= @claim_request.admin_notes %></p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    
+    <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
+      <div class="flex justify-between items-center">
+        <div>
+          <% if @claim_request.pending? %>
+            <p class="text-sm text-gray-600">
+              Your request is being reviewed. This typically takes 1-3 business days.
+            </p>
+          <% elsif @claim_request.approved? %>
+            <p class="text-sm text-gray-600">
+              You now have ownership of this school listing. Visit the school page to make updates.
+            </p>
+          <% elsif @claim_request.rejected? %>
+            <p class="text-sm text-gray-600">
+              If you believe this was in error, please contact our support team.
+            </p>
+          <% end %>
+        </div>
+        
+        <% if @claim_request.approved? %>
+          <%= link_to "Manage School", airport_school_path(@claim_request.school.airport.code, @claim_request.school), class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div> 

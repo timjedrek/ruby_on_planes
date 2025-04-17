@@ -1,6 +1,7 @@
 class SchoolSubmissionsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_airports, only: [ :new, :create ]
+  before_action :set_school, only: [ :claim_form, :claim ]
 
   def new
     @school = School.new
@@ -24,36 +25,62 @@ class SchoolSubmissionsController < ApplicationController
     end
   end
 
-  def claim
-    @school = School.find_by_slug_or_id(params[:id])
-
-    if @school.nil?
-      redirect_to root_path, alert: "School not found."
-      return
-    end
-
+  def claim_form
     if current_user.owns_school?(@school)
       redirect_to airport_school_path(@school.airport.code, @school),
                   alert: "You are already listed as an owner of this school."
       return
     end
 
-    # Create a claim request (you would implement this model)
-    ClaimRequest.create(
+    # Check if user already has a pending claim
+    existing_claim = ClaimRequest.find_by(user: current_user, school: @school)
+    if existing_claim && existing_claim.status == "pending"
+      redirect_to airport_school_path(@school.airport.code, @school),
+                  alert: "You already have a pending claim request for this school."
+      return
+    end
+
+    render :claim
+  end
+
+  def claim
+    if current_user.owns_school?(@school)
+      redirect_to airport_school_path(@school.airport.code, @school),
+                  alert: "You are already listed as an owner of this school."
+      return
+    end
+
+    # Create a claim request
+    claim_request = ClaimRequest.new(
       user: current_user,
       school: @school,
       message: params[:message],
       status: "pending"
     )
 
-    redirect_to airport_school_path(@school.airport.code, @school),
-                notice: "Your claim request has been submitted and will be reviewed by our team."
+    if claim_request.save
+      # Notify admins (you could implement email notifications here)
+
+      redirect_to airport_school_path(@school.airport.code, @school),
+                  notice: "Your claim request has been submitted and will be reviewed by our team."
+    else
+      flash.now[:alert] = "There was an error with your claim request: #{claim_request.errors.full_messages.join(", ")}"
+      render :claim, status: :unprocessable_entity
+    end
   end
 
   private
 
   def set_airports
     @airports = Airport.order(:name)
+  end
+
+  def set_school
+    @school = School.find_by_slug_or_id(params[:id])
+
+    if @school.nil?
+      redirect_to root_path, alert: "School not found."
+    end
   end
 
   def school_params

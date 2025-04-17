@@ -24,9 +24,11 @@ Rails.application.routes.draw do
 
   # User profile section
   resources :user_reviews, only: [ :index ]
+  resources :claim_requests, only: [ :index, :show ]
 
   # School submissions and claims
   resources :school_submissions, only: [ :new, :create ]
+  get "schools/:id/claim", to: "school_submissions#claim_form", as: :claim_school_form
   post "schools/:id/claim", to: "school_submissions#claim", as: :claim_school
 
   resources :states, only: [ :index, :show ], param: :abbreviation do

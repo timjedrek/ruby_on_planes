@@ -19,7 +19,31 @@ class ClaimRequest < ApplicationRecord
     end
   end
 
+  def approved!
+    approve!
+  end
+
   def reject!
     update!(status: "rejected")
+  end
+
+  def rejected!
+    reject!
+  end
+
+  def pending?
+    status == "pending"
+  end
+
+  def approved?
+    status == "approved"
+  end
+
+  def rejected?
+    status == "rejected"
+  end
+
+  def relationship
+    message
   end
 end

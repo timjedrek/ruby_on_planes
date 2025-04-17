@@ -1,0 +1,104 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="md:flex md:items-center md:justify-between mb-6">
+    <div class="flex-1 min-w-0">
+      <h1 class="text-3xl font-bold text-gray-900">Manage Flight Schools</h1>
+    </div>
+    <div class="mt-4 flex md:mt-0 md:ml-4">
+      <%= link_to "Back to Admin", admin_root_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+    </div>
+  </div>
+
+  <div class="mb-6 bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
+    <div class="px-4 py-5 sm:px-6">
+      <div class="flex justify-between">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">School Listings</h3>
+        <div class="flex space-x-3">
+          <%= link_to "All", admin_schools_path, class: "px-3 py-1 #{@filter.nil? ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-700'} rounded-md text-sm font-medium" %>
+          <%= link_to "Approved", admin_schools_path(filter: "approved"), class: "px-3 py-1 #{@filter == 'approved' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-700'} rounded-md text-sm font-medium" %>
+          <%= link_to "Unapproved", admin_schools_path(filter: "unapproved"), class: "px-3 py-1 #{@filter == 'unapproved' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-700'} rounded-md text-sm font-medium" %>
+        </div>
+      </div>
+    </div>
+    <div class="px-4 py-5 sm:p-6">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">School</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Owners</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% @schools.each do |school| %>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <div>
+                      <div class="text-sm font-medium text-gray-900">
+                        <%= link_to school.name, admin_school_path(school), class: "hover:text-blue-600" %>
+                      </div>
+                      <div class="text-sm text-gray-500">
+                        <% if school.website.present? %>
+                          <%= link_to school.website, school.website, target: "_blank", class: "hover:text-blue-600" %>
+                        <% end %>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900"><%= school.airport.name %> (<%= school.airport.code %>)</div>
+                  <div class="text-sm text-gray-500"><%= school.city.name %>, <%= school.state.abbreviation %></div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm text-gray-900">
+                    <% if school.users.any? %>
+                      <%= school.users.map(&:name).join(", ") %>
+                    <% else %>
+                      <span class="italic text-gray-500">No owners</span>
+                    <% end %>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <% if school.approved? %>
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Approved</span>
+                  <% else %>
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
+                  <% end %>
+                  <% if school.featured? %>
+                    <span class="ml-1 px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">Featured</span>
+                  <% end %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <%= school.created_at.strftime("%b %d, %Y") %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <div class="flex justify-end space-x-3">
+                    <%= link_to "View", admin_school_path(school), class: "text-blue-600 hover:text-blue-900" %>
+                    <%= link_to "Edit", edit_admin_school_path(school), class: "text-indigo-600 hover:text-indigo-900" %>
+                    <% if school.approved? %>
+                      <%= button_to "Unapprove", unapprove_admin_school_path(school), method: :patch, class: "text-yellow-600 hover:text-yellow-900", form: { data: { turbo_confirm: "Are you sure you want to unapprove this school? It will be hidden from public view." } } %>
+                    <% else %>
+                      <%= button_to "Approve", approve_admin_school_path(school), method: :patch, class: "text-green-600 hover:text-green-900" %>
+                    <% end %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+            
+            <% if @schools.empty? %>
+              <tr>
+                <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">
+                  No schools found.
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div> 

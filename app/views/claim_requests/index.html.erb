@@ -1,0 +1,58 @@
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold mb-6">Your School Claim Requests</h1>
+  
+  <% if @claim_requests.empty? %>
+    <div class="bg-gray-100 rounded-lg p-8 text-center">
+      <p class="text-lg text-gray-600">You haven't submitted any claim requests yet.</p>
+      <p class="mt-4">
+        <%= link_to "Browse Flight Schools", states_path, class: "text-blue-600 hover:text-blue-800 underline" %>
+      </p>
+    </div>
+  <% else %>
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">School</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Submitted</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% @claim_requests.each do |claim_request| %>
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900">
+                    <%= link_to claim_request.school.name, airport_school_path(claim_request.school.airport.code, claim_request.school), class: "text-blue-600 hover:underline" %>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <%= claim_request.school.city&.name %>, <%= claim_request.school.state&.abbreviation %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <%= time_ago_in_words(claim_request.created_at) %> ago<br>
+                  <span class="text-xs text-gray-400"><%= claim_request.created_at.strftime("%b %d, %Y") %></span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <% if claim_request.pending? %>
+                    <span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
+                  <% elsif claim_request.approved? %>
+                    <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Approved</span>
+                  <% elsif claim_request.rejected? %>
+                    <span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Rejected</span>
+                  <% end %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <%= link_to "View Details", claim_request_path(claim_request), class: "text-blue-600 hover:text-blue-900" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% end %>
+</div> 

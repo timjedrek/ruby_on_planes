@@ -7,6 +7,7 @@ class User < ApplicationRecord
   has_many :reviews, dependent: :nullify
   has_many :user_schools, dependent: :destroy
   has_many :schools, through: :user_schools
+  has_many :claim_requests, dependent: :destroy
 
   validates :name, presence: true, length: { minimum: 2, maximum: 50 }, allow_blank: true
 

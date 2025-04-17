@@ -1,0 +1,40 @@
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold text-gray-900 mb-6">Claim School Listing</h1>
+  
+  <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-8">
+    <div class="flex">
+      <div class="flex-shrink-0">
+        <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+        </svg>
+      </div>
+      <div class="ml-3">
+        <p class="text-sm text-blue-800">
+          You are requesting to claim ownership of <strong><%= @school.name %></strong>. This will allow you to edit the school's information.
+          Your request will be reviewed by our administrators.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <%= form_with(url: claim_school_path(@school), method: :post, class: "space-y-6") do |f| %>
+    <div class="bg-white shadow overflow-hidden rounded-lg">
+      <div class="px-4 py-5 sm:p-6">
+        <div class="grid grid-cols-1 gap-y-6">
+          <div>
+            <%= f.label :message, "Who are you and what is your relationship with #{@school.name}?", class: "block text-sm font-medium text-gray-700" %>
+            <div class="mt-1">
+              <%= f.text_area :message, rows: 5, class: "shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md", required: true, placeholder: "Example: I am John Smith, the Chief Flight Instructor at this school. I've been working here for 5 years and would like to keep our information up to date." %>
+            </div>
+            <p class="mt-2 text-sm text-gray-500">Please provide details about your position or affiliation with the school. This information will help our administrators verify your claim.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-end mt-8">
+      <%= link_to "Cancel", airport_school_path(@school.airport.code, @school), class: "bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-3" %>
+      <%= f.submit "Submit Claim Request", class: "inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+    </div>
+  <% end %>
+</div> 
